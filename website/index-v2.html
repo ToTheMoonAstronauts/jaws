@@ -289,6 +289,18 @@ footer .legal{grid-column:1/-1;border-top:1px solid color-mix(in srgb,var(--bg) 
   .hero2-inner{margin-top:-4px}
   .hero2-copy{max-width:none}
 }
+/* ===== Version 2b: full-bleed photo, semi-transparent text area ===== */
+.hero2-img{inset:0;width:100%}
+.hero2-img img{-webkit-mask-image:none;mask-image:none;object-position:62% 35%}
+.hero2-img::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(251,248,241,.90) 0%,rgba(251,248,241,.80) 28%,rgba(251,248,241,.45) 46%,rgba(251,248,241,0) 60%)}
+.hero2-copy{max-width:min(560px,calc(50vw - 32px))}
+@media (max-width:860px){
+  .hero2-img{position:relative;inset:auto;aspect-ratio:1/1;width:100%}
+  .hero2-img img{-webkit-mask-image:none;mask-image:none;object-position:60% 30%}
+  .hero2-img::after{background:linear-gradient(180deg,rgba(251,248,241,0) 62%,rgba(251,248,241,.6) 82%,rgba(251,248,241,.95) 100%)}
+  .hero2-inner{margin-top:-64px}
+  .hero2-copy{max-width:none}
+}
 </style>
 </head>
 <body>
