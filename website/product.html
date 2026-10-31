@@ -251,9 +251,9 @@
 </section>
 
 <section>
-  <div class="wrap" style="max-width:900px">
-    <div class="sec-head center"><p class="eyebrow">Reviews</p><h2>From people who chew it</h2></div>
-    <div class="reviews-empty"><b>Reviews open with our first orders.</b><span>Every review here will come from a verified buyer.</span></div>
+  <div class="wrap">
+    <div class="rv-head"><div class="sec-head" style="margin:0"><p class="eyebrow">Reviews</p><h2>From people who chew it</h2></div><span class="rv-note">Layout preview · sample cards are replaced by verified reviews at launch</span></div>
+    <div class="rv-grid" id="reviews"></div>
   </div>
 </section>
 
@@ -293,6 +293,7 @@
 
 <script src="assets/site.js"></script>
 <script>
+renderReviews($("reviews"),SAMPLE_REVIEWS,6);
 const INFO={
   hard:{eyebrow:"Hard · start here",
     bullets:["<b>Hardness and flavour</b> in balance","<b>Bigger pellets</b> for a higher range of motion","<b>Sugar-free and vegan</b>"],

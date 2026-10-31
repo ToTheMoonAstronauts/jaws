@@ -136,8 +136,8 @@
 
 <section style="padding-top:0">
   <div class="wrap">
-    <div class="sec-head center"><p class="eyebrow">Reviews</p><h2>From people who chew it</h2></div>
-    <div class="reviews-empty"><b>Reviews open with our first orders.</b><span>Every review here will come from a verified buyer.</span></div>
+    <div class="rv-head"><div class="sec-head" style="margin:0"><p class="eyebrow">Reviews</p><h2>From people who chew it</h2></div><span class="rv-note">Layout preview · sample cards are replaced by verified reviews at launch</span></div>
+    <div class="rv-grid" id="reviews"></div>
   </div>
 </section>
 
@@ -183,6 +183,7 @@
 
 <script src="assets/site.js"></script>
 <script>
+renderReviews($("reviews"),SAMPLE_REVIEWS,3);
 $("cv-hard").innerHTML=pouchHTML("hard","Mint");
 $("cv-ultra").innerHTML=pouchHTML("ultra","Blueberry Ice");
 $("cv-bundle").innerHTML=pouchHTML("hard","Mango","small")+pouchHTML("hard","Mint")+pouchHTML("ultra","Cherry Ice","small");

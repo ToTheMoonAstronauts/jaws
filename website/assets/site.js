@@ -58,3 +58,20 @@ document.addEventListener("submit",e=>{
   const f=e.target.closest("[data-news]");if(!f)return;e.preventDefault();
   f.hidden=true;const ok=f.nextElementSibling;if(ok)ok.hidden=false;
 });
+
+/* Review cards. SAMPLE_REVIEWS are layout placeholders only: replace with real,
+   order-linked reviews (e.g. from Judge.me / Loox) before launch. Never publish samples as real. */
+const SAMPLE_REVIEWS=[
+  {i:"A",name:"Customer name",lvl:"hard",fl:"Mint",pack:"6 Months Supply",text:"Sample review text. A real buyer's words about hardness, flavour and how the sessions feel will appear here."},
+  {i:"B",name:"Customer name",lvl:"ultra",fl:"Blueberry Ice",pack:"2 Months Supply",text:"Sample review text. Short, honest feedback from a verified order."},
+  {i:"C",name:"Customer name",lvl:"hard",fl:"Mango",pack:"12 Months Supply",text:"Sample review text. Longer reviews wrap naturally and the cards stack in columns, like on the reference store."},
+  {i:"D",name:"Customer name",lvl:"hard",fl:"Watermelon",pack:"6 Months Supply",text:"Sample review text."},
+  {i:"E",name:"Customer name",lvl:"ultra",fl:"Cherry Ice",pack:"6 Months Supply",text:"Sample review text. Customers can attach a photo of the pack or of themselves."},
+  {i:"F",name:"Customer name",lvl:"ultra",fl:"Ginger Lime",pack:"2 Months Supply",text:"Sample review text from a verified buyer."}
+];
+function renderReviews(el,list,n){
+  el.innerHTML=list.slice(0,n).map((r,k)=>`<article class="rv"><span class="rv-sample">Sample</span>
+    <div class="rv-photo"><div class="rv-tilt" style="--r:${k%2?4:-4}deg">${pouchHTML(r.lvl,r.fl)}</div></div>
+    <div class="rv-body"><span class="rv-stars" aria-label="Rating">★★★★★</span><p>${r.text}</p>
+    <div class="rv-meta"><span class="rv-av">${r.i}</span><span><b>${r.name}</b><small>${CATALOG[r.lvl].short} · ${r.fl} · ${r.pack}</small></span><span class="rv-ver">✓ Verified</span></div></div></article>`).join("");
+}
