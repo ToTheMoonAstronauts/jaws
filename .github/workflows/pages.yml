@@ -1,4 +1,5 @@
 name: Deploy website to GitHub Pages
+# Source: Settings > Pages > GitHub Actions
 
 on:
   push:
