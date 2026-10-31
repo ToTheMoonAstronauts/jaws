@@ -1,0 +1,9 @@
+# Never commit secrets
+Secrets/
+*.csv
+.env
+.env.*
+# Local junk
+_to_delete/
+.DS_Store
+node_modules/
