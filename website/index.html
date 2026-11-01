@@ -414,7 +414,7 @@ footer .legal{grid-column:1/-1;border-top:1px solid color-mix(in srgb,var(--bg) 
         <li><div><b>Slow, heavy chews<span class="t">3 min</span></b><p>Controlled tempo, pressure building on every bite. Keep it on the molars, never the front teeth.</p></div></li>
         <li><div><b>Faster chews<span class="t">2 min</span></b><p>Pick up the pace without losing control. Switch sides evenly.</p></div></li>
         <li><div><b>Rest<span class="t">3 min</span></b><p>Jaw relaxed, lips closed, breathe through your nose.</p></div></li>
-        <li><div><b>Repeat and stop<span class="t">2–3 rounds</span></b><p>Stay within 10–15 minutes of active chewing.</p></div></li>
+        <li><div><b>Repeat and stop<span class="t">2–3 rounds</span></b><p>Stay within 10–15 minutes of active chewing, then throw the piece away. Use a fresh one next session.</p></div></li>
         <li><div><b>Take the next day off</b><p>Train every other day. If your jaw clicks, aches or feels tight the next morning, take extra rest days.</p></div></li>
       </ol>
 
@@ -605,7 +605,7 @@ function fmt(s){return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60)
 function draw(){
   $("clock").textContent=fmt(ts.left);
   $("now").textContent=ts.done?"Session done":PH[ts.ph].n;
-  $("hint").textContent=ts.done?"Next session the day after tomorrow.":(ts.run?PH[ts.ph].h:"Press start when the gum is warm and seated on your molars.");
+  $("hint").textContent=ts.done?"Bin the piece. Next session the day after tomorrow, with a fresh one.":(ts.run?PH[ts.ph].h:"Press start when the gum is warm and seated on your molars.");
   $("round").textContent=`Round ${ts.round} of ${ROUNDS}`;
   PH.forEach((p,i)=>{$("g"+i).style.width=(i<ts.ph||ts.done?100:i===ts.ph?100*(1-ts.left/p.s):0)+"%";});
   $("tStart").textContent=ts.run?"Pause":(ts.done?"Again":"Start");

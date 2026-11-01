@@ -168,6 +168,7 @@
             <li><b>2 min:</b> faster chews, still controlled. Switch sides evenly.</li>
             <li><b>3 min:</b> rest with your jaw relaxed.</li>
             <li><b>Repeat</b> the block two or three times, 10–15 minutes in total.</li>
+            <li><b>Bin it.</b> Throw the piece away after the session. Start every session with a fresh one.</li>
             <li><b>Take a day off.</b> Train every other day so the muscle can recover and grow.</li>
           </ol>
           <a href="#plan" style="font-weight:600">Open the session timer →</a>
@@ -260,7 +261,7 @@
   <div class="wrap" style="max-width:860px">
     <div class="sec-head center"><p class="eyebrow">FAQ</p><h2>Hard gum questions</h2></div>
     <div class="faq">
-      <details open><summary>Why does it cost more than shop gum?</summary><p>It's a training tool, not candy. The dense gum base takes far more raw material, and the hardness needs slower production. One piece also lasts several sessions, so the cost per workout is low.</p></details>
+      <details open><summary>Why does it cost more than shop gum?</summary><p>It's a training tool, not candy. The dense gum base takes far more raw material, and the hardness needs slower production. Bundles cut the price per pack by up to 50%.</p></details>
       <details><summary>How long does the flavour last?</summary><p>Hard keeps its flavour for a good part of the session. Ultra Hard gives a short burst, because flavour oils soften gum. For both, chew one Hard and one Ultra Hard piece together.</p></details>
       <details><summary>When will I see results?</summary><p>You'll feel the burn after the first session. Visible change takes consistent training over weeks to months, and it shows most when your body fat is lower.</p></details>
       <details><summary>It's too hard to chew. What should I do?</summary><p>Warm it up longer and start with smaller bites. If Ultra Hard is too much, train with Hard first, or chew both together until your jaw adapts.</p></details>
@@ -357,7 +358,7 @@ const fmt=s=>String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(
 function draw(){
   $("clock").textContent=fmt(ts.left);
   $("now").textContent=ts.done?"Session done":PH[ts.ph].n;
-  $("hint").textContent=ts.done?"Session done. Next session the day after tomorrow.":(ts.run?PH[ts.ph].h:"Press start when the gum is warm and seated on your molars.");
+  $("hint").textContent=ts.done?"Session done. Bin the piece. Next session the day after tomorrow, with a fresh one.":(ts.run?PH[ts.ph].h:"Press start when the gum is warm and seated on your molars.");
   $("round").textContent=`Round ${ts.round} of ${ROUNDS}`;
   PH.forEach((p,i)=>{$("g"+i).style.width=(i<ts.ph||ts.done?100:i===ts.ph?100*(1-ts.left/p.s):0)+"%";});
   $("tStart").textContent=ts.run?"Pause":(ts.done?"Again":"Start");

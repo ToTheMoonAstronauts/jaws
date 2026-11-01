@@ -168,6 +168,7 @@
             <li><b>2 min.:</b> greitesnis, bet kontroliuojamas kramtymas. Tolygiai keisk puses.</li>
             <li><b>3 min.:</b> poilsis atpalaidavus žandikaulį.</li>
             <li><b>Pakartok</b> ciklą du ar tris kartus, iš viso 10–15 minučių.</li>
+            <li><b>Išmesk.</b> Po treniruotės gabalėlį išmesk. Kiekvieną treniruotę pradėk su nauju.</li>
             <li><b>Pailsėk dieną.</b> Treniruokis kas antrą dieną, kad raumuo atsigautų ir augtų.</li>
           </ol>
           <a href="#plan" style="font-weight:600">Atidaryti treniruotės laikmatį →</a>
@@ -260,7 +261,7 @@
   <div class="wrap" style="max-width:860px">
     <div class="sec-head center"><p class="eyebrow">DUK</p><h2>Klausimai apie kietą gumą</h2></div>
     <div class="faq">
-      <details open><summary>Kodėl ji brangesnė už parduotuvės gumą?</summary><p>Tai treniruočių priemonė, ne saldainis. Tankiai gumos bazei reikia daug daugiau žaliavų, o dėl kietumo gamyba lėtesnė. Be to, vienas gabalėlis tinka kelioms treniruotėms, todėl vienos treniruotės kaina nedidelė.</p></details>
+      <details open><summary>Kodėl ji brangesnė už parduotuvės gumą?</summary><p>Tai treniruočių priemonė, ne saldainis. Tankiai gumos bazei reikia daug daugiau žaliavų, o dėl kietumo gamyba lėtesnė. Rinkiniuose pakuotės kaina mažesnė iki 50 %.</p></details>
       <details><summary>Kiek laiko išlieka skonis?</summary><p>Kieta guma skonį išlaiko didelę treniruotės dalį. Ypač kietos skonis trumpas, nes kvapiųjų medžiagų aliejai minkština gumą. Norėdamas abiejų, kramtyk po vieną kietos ir ypač kietos gabalėlį kartu.</p></details>
       <details><summary>Kada pamatysiu rezultatą?</summary><p>Raumenų įtampą pajusi po pirmos treniruotės. Matomam pokyčiui reikia nuoseklių treniruočių kelias savaites ar mėnesius, ir jis labiausiai matosi, kai riebalų kiekis mažesnis.</p></details>
       <details><summary>Per kieta kramtyti. Ką daryti?</summary><p>Sušildyk ilgiau ir pradėk nuo mažesnių sukandimų. Jei ypač kieta per sunki, pirmiausia treniruokis su kieta arba kramtyk abi kartu, kol žandikaulis prisitaikys.</p></details>
@@ -357,7 +358,7 @@ const fmt=s=>String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(
 function draw(){
   $("clock").textContent=fmt(ts.left);
   $("now").textContent=ts.done?"Treniruotė baigta":PH[ts.ph].n;
-  $("hint").textContent=ts.done?"Treniruotė baigta. Kita treniruotė – poryt.":(ts.run?PH[ts.ph].h:"Spausk „Pradėti“, kai guma sušilusi ir padėta ant krūminių dantų.");
+  $("hint").textContent=ts.done?"Treniruotė baigta. Gabalėlį išmesk. Kita treniruotė – poryt, su nauju gabalėliu.":(ts.run?PH[ts.ph].h:"Spausk „Pradėti“, kai guma sušilusi ir padėta ant krūminių dantų.");
   $("round").textContent=`${ts.round} ratas iš ${ROUNDS}`;
   PH.forEach((p,i)=>{$("g"+i).style.width=(i<ts.ph||ts.done?100:i===ts.ph?100*(1-ts.left/p.s):0)+"%";});
   $("tStart").textContent=ts.run?"Pauzė":(ts.done?"Dar kartą":"Pradėti");

@@ -234,6 +234,7 @@ SAFETY = f'''<p>Cutline gum is much harder than regular chewing gum. It is a tra
 <li>Warm the piece in your mouth first and bite down gradually. A cold, hard bite can crack the gum or strain your teeth.</li>
 <li>Chew on your back molars, not your front teeth. Switch sides evenly.</li>
 <li>Never swallow the gum.</li>
+<li>Use a fresh piece for every session and throw it away afterwards. Don’t keep chewed gum for later.</li>
 </ul>
 <h2>Stop and seek advice if</h2>
 <ul>

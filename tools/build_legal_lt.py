@@ -188,6 +188,7 @@ SAFETY = '''<p>Cutline guma gerokai kietesnė už paprastą kramtomąją gumą. 
 <li>Pirmiausia sušildykite gabalėlį burnoje ir sukąskite palaipsniui. Staigiai sukandus šaltą, kietą gumą, ji gali suskilti arba pažeisti dantis.</li>
 <li>Kramtykite galiniais krūminiais, ne priekiniais dantimis. Tolygiai keiskite puses.</li>
 <li>Niekada neryk gumos.</li>
+<li>Kiekvienai treniruotei naudokite naują gabalėlį, o panaudotą išmeskite. Sukramtytos gumos nelaikykite vėlesniam kartui.</li>
 </ul>
 <h2>Nutraukite ir pasitarkite su specialistu, jei</h2>
 <ul>
