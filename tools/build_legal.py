@@ -18,6 +18,7 @@ def shell(title, eyebrow, body, extra_head="", extra_js=""):
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{html.escape(title)} · JAWZR</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">

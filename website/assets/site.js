@@ -13,9 +13,10 @@ const PACKS=[
 const FREE_SHIP=49;
 const eur=n=>"€"+n.toFixed(2).replace(".",",");
 const $=id=>document.getElementById(id);
+function inkOn(h){const n=parseInt(h.slice(1),16),r=n>>16,g=n>>8&255,b=n&255;return (0.299*r+0.587*g+0.114*b)>150?"#121614":"#fff"}
 function pouchHTML(level,flavour,extra=""){
   const L=CATALOG[level];const c=L.flavours[flavour]||Object.values(L.flavours)[0];
-  return `<div class="pouch ${L.cls} ${extra}" style="--fl:${c}"><div class="p-top"><small>Hard chewing gum</small><b>JAWZR</b></div><span class="p-lvl">${L.short}</span><span class="p-fl">${flavour}</span></div>`;
+  return `<div class="pouch ${L.cls} ${extra}" style="--fl:${c};--flt:${inkOn(c)}"><img src="images/jawzr-pack.webp" alt="JAWZR ${L.short} gum bag, ${flavour}" loading="lazy"><span class="p-lvl">${L.short}</span><span class="p-fl">${flavour}</span></div>`;
 }
 
 /* cart (kept in this browser only) */
