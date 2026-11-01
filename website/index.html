@@ -303,8 +303,8 @@ footer .legal{grid-column:1/-1;border-top:1px solid color-mix(in srgb,var(--bg) 
 
 <div class="ticker" aria-label="Store highlights">
   <div class="ticker-track">
-    <span>Sugar-free &amp; vegan</span><span>Ships from Lithuania</span><span>Free EU shipping from €<b class="ph">49</b></span><span>2 hardness levels</span><span>Reusable pieces</span><span>14-day returns on sealed packs</span>
-    <span aria-hidden="true">Sugar-free &amp; vegan</span><span aria-hidden="true">Ships from Lithuania</span><span aria-hidden="true">Free EU shipping from €49</span><span aria-hidden="true">2 hardness levels</span><span aria-hidden="true">Reusable pieces</span><span aria-hidden="true">14-day returns on sealed packs</span>
+    <span>Sugar-free &amp; vegan</span><span>Ships from Lithuania</span><span>Free EU shipping from €<b class="ph">49</b></span><span>2 hardness levels</span><span>14-day returns on sealed packs</span>
+    <span aria-hidden="true">Sugar-free &amp; vegan</span><span aria-hidden="true">Ships from Lithuania</span><span aria-hidden="true">Free EU shipping from €49</span><span aria-hidden="true">2 hardness levels</span><span aria-hidden="true">14-day returns on sealed packs</span>
   </div>
 </div>
 
@@ -316,7 +316,7 @@ footer .legal{grid-column:1/-1;border-top:1px solid color-mix(in srgb,var(--bg) 
     </a>
     <a class="tile" href="#shop" data-go="ultra">
       <div class="pouch"><div><small>Jaw training gum</small><br><b>Cutline</b></div><span class="lvl">Ultra Hard</span><small>≈ 2 months</small></div>
-      <div class="tile-txt"><p class="eyebrow">Advanced</p><h3>Ultra Hard</h3><p>Our densest piece. Stays hard for days.</p><p class="tile-price">from €19,95</p></div>
+      <div class="tile-txt"><p class="eyebrow">Advanced</p><h3>Ultra Hard</h3><p>Our densest piece. Hard through the whole session.</p><p class="tile-price">from €19,95</p></div>
     </a>
   </div>
 </div>
@@ -374,7 +374,6 @@ footer .legal{grid-column:1/-1;border-top:1px solid color-mix(in srgb,var(--bg) 
           <dt>Best for</dt><dd id="specFor"></dd>
           <dt>Flavour</dt><dd id="specFlav"></dd>
           <dt>Pack</dt><dd id="specPack"></dd>
-          <dt>Reuse</dt><dd id="specReuse"></dd>
           <dt>Session</dt><dd>10–15 min, every other day</dd>
           <dt>Age</dt><dd>14+ <span class="ph">legal: consider 16+</span></dd>
         </dl>
@@ -415,7 +414,7 @@ footer .legal{grid-column:1/-1;border-top:1px solid color-mix(in srgb,var(--bg) 
         <li><div><b>Slow, heavy chews<span class="t">3 min</span></b><p>Controlled tempo, pressure building on every bite. Keep it on the molars, never the front teeth.</p></div></li>
         <li><div><b>Faster chews<span class="t">2 min</span></b><p>Pick up the pace without losing control. Switch sides evenly.</p></div></li>
         <li><div><b>Rest<span class="t">3 min</span></b><p>Jaw relaxed, lips closed, breathe through your nose.</p></div></li>
-        <li><div><b>Repeat and stop<span class="t">2–3 rounds</span></b><p>Stay within 10–15 minutes of active chewing. Rinse the piece, let it dry in its case, reuse it next session.</p></div></li>
+        <li><div><b>Repeat and stop<span class="t">2–3 rounds</span></b><p>Stay within 10–15 minutes of active chewing.</p></div></li>
         <li><div><b>Take the next day off</b><p>Train every other day. If your jaw clicks, aches or feels tight the next morning, take extra rest days.</p></div></li>
       </ol>
 
@@ -512,7 +511,6 @@ footer .legal{grid-column:1/-1;border-top:1px solid color-mix(in srgb,var(--bg) 
       <details open><summary>Hard or Ultra Hard: where do I start?</summary><p>Start with Hard. It has more flavour and a range of motion that lets you learn the technique. Move up once a full session feels easy. Ultra Hard is the denser piece with very little flavour; some people chew one of each together.</p></details>
       <details><summary>When will I notice anything?</summary><p>The jaw "pump" and burn come in the first session. Strength builds over weeks. Any visible change depends mostly on your body fat, so pair training with diet and exercise and judge progress over months, not days.</p></details>
       <details><summary>Why does the flavour fade so quickly?</summary><p>Flavour oils and softeners make gum softer. To keep the piece hard, flavour sits mostly in the outer coating. Hard keeps flavour longer than Ultra Hard.</p></details>
-      <details><summary>Can I reuse a piece?</summary><p>Yes. Rinse it after the session, let it dry in the case, and warm it in your mouth for a minute before the next one. Replace it when it gets noticeably softer or after <span class="ph">X sessions</span>.</p></details>
       <details><summary>How long does one pack last?</summary><p>At one session every other day, one pack is about a two-month supply. <span class="ph">pieces per pack</span></p></details>
       <details><summary>Will my face get wider?</summary><p>A bigger masseter adds width at the back corner of the jaw. If you want a slimmer lower face, this isn't the product for you.</p></details>
       <details><summary>Shipping and returns</summary><p>Orders ship from Lithuania. You can cancel within 14 days and return sealed, unopened packs. Opened gum can't be returned for hygiene reasons. Return shipping is <span class="ph">paid by customer?</span></p></details>
@@ -538,13 +536,11 @@ const LEVELS={
     line:"Large pellets, high range of motion, flavour that lasts a session.",
     blurb:"Our starting level: dense enough to load the jaw, flavourful enough to finish the session.",
     for:"Beginners and anyone training a few times a week",
-    reuse:"Several sessions; flavour fades first",
     flavours:["Mint","Mango","Watermelon","Blueberry"]},
   ultra:{name:"Cutline Ultra Hard",eyebrow:"Level 3 · advanced",grams:100,
-    line:"Our densest piece. Flavour lasts seconds; resistance lasts for days.",
+    line:"Our densest piece. Flavour lasts seconds; resistance lasts the whole session.",
     blurb:"Maximum resistance for trained jaws. Almost no flavour. Not for dental work.",
     for:"People who find a full Hard session easy",
-    reuse:"Stays hard for several days of sessions",
     flavours:["Blueberry Ice","Cherry Ice","Mint","Ginger Lime"]}
 };
 const PACKS=[
@@ -576,7 +572,6 @@ function render(){
   $("specFor").textContent=L.for;
   $("specFlav").textContent=st.flavour;
   $("specPack").textContent=`${P.label} · ≈ ${P.id*L.grams} g (${L.grams} g per pack, confirm)`;
-  $("specReuse").textContent=L.reuse;
   $("heroLvl").textContent=(st.level==="hard"?"Hard":"Ultra")+" · "+st.flavour;
 }
 document.querySelector(".tabs").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;st.level=b.dataset.level;render();});
@@ -610,7 +605,7 @@ function fmt(s){return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60)
 function draw(){
   $("clock").textContent=fmt(ts.left);
   $("now").textContent=ts.done?"Session done":PH[ts.ph].n;
-  $("hint").textContent=ts.done?"Rinse the piece, dry it in its case. Next session the day after tomorrow.":(ts.run?PH[ts.ph].h:"Press start when the gum is warm and seated on your molars.");
+  $("hint").textContent=ts.done?"Next session the day after tomorrow.":(ts.run?PH[ts.ph].h:"Press start when the gum is warm and seated on your molars.");
   $("round").textContent=`Round ${ts.round} of ${ROUNDS}`;
   PH.forEach((p,i)=>{$("g"+i).style.width=(i<ts.ph||ts.done?100:i===ts.ph?100*(1-ts.left/p.s):0)+"%";});
   $("tStart").textContent=ts.run?"Pause":(ts.done?"Again":"Start");
