@@ -1,21 +1,21 @@
-/* Shared catalogue + cart drawer for the Cutline draft store. Checkout is not connected yet. */
+/* Shared catalogue + cart drawer for the JAWZR draft store. Checkout is not connected yet. */
 const CATALOG={
-  hard:{name:"Cutline Hard Gum",short:"Hard",grams:116,cls:"",
+  hard:{name:"JAWZR Hard Gum",short:"Hard",grams:116,cls:"",
     flavours:{"Mint":"#3FB8A0","Mango":"#F2A33A","Watermelon":"#E9546B","Blueberry":"#5B6BE0"}},
-  ultra:{name:"Cutline Ultra Hard Gum",short:"Ultra Hard",grams:100,cls:"ultra",
+  ultra:{name:"JAWZR Ultra Hard Gum",short:"Ultra Hard",grams:100,cls:"ultra",
     flavours:{"Blueberry Ice":"#6E8BF0","Cherry Ice":"#D13B55","Mint":"#3FB8A0","Ginger Lime":"#A6C93E"}}
 };
 const PACKS=[
-  {id:1,label:"2 Months Supply",sub:"1 pack",price:19.95},
-  {id:3,label:"6 Months Supply",sub:"3 packs, mix flavours",price:34.95,tag:"Bestseller"},
-  {id:6,label:"12 Months Supply",sub:"6 packs, mix flavours",price:59.95}
+  {id:1,label:"1 Pack · 40 pieces",sub:"Covers the full 30-day plan",price:19.95},
+  {id:3,label:"3 Packs · 120 pieces",sub:"4 months of daily training, mix flavours",price:34.95,tag:"Bestseller"},
+  {id:6,label:"6 Packs · 240 pieces",sub:"8 months of daily training, mix flavours",price:59.95}
 ];
 const FREE_SHIP=49;
 const eur=n=>"€"+n.toFixed(2).replace(".",",");
 const $=id=>document.getElementById(id);
 function pouchHTML(level,flavour,extra=""){
   const L=CATALOG[level];const c=L.flavours[flavour]||Object.values(L.flavours)[0];
-  return `<div class="pouch ${L.cls} ${extra}" style="--fl:${c}"><div class="p-top"><small>Jaw training gum</small><b>Cutline</b></div><span class="p-lvl">${L.short}</span><span class="p-fl">${flavour}</span></div>`;
+  return `<div class="pouch ${L.cls} ${extra}" style="--fl:${c}"><div class="p-top"><small>Hard chewing gum</small><b>JAWZR</b></div><span class="p-lvl">${L.short}</span><span class="p-fl">${flavour}</span></div>`;
 }
 
 /* cart (kept in this browser only) */
@@ -64,12 +64,12 @@ document.addEventListener("submit",e=>{
 /* Review cards. SAMPLE_REVIEWS are layout placeholders only: replace with real,
    order-linked reviews (e.g. from Judge.me / Loox) before launch. Never publish samples as real. */
 const SAMPLE_REVIEWS=[
-  {i:"A",name:"Customer name",lvl:"hard",fl:"Mint",pack:"6 Months Supply",text:"Sample review text. A real buyer's words about hardness, flavour and how the sessions feel will appear here."},
-  {i:"B",name:"Customer name",lvl:"ultra",fl:"Blueberry Ice",pack:"2 Months Supply",text:"Sample review text. Short, honest feedback from a verified order."},
-  {i:"C",name:"Customer name",lvl:"hard",fl:"Mango",pack:"12 Months Supply",text:"Sample review text. Longer reviews wrap naturally and the cards stack in columns, like on the reference store."},
-  {i:"D",name:"Customer name",lvl:"hard",fl:"Watermelon",pack:"6 Months Supply",text:"Sample review text."},
-  {i:"E",name:"Customer name",lvl:"ultra",fl:"Cherry Ice",pack:"6 Months Supply",text:"Sample review text. Customers can attach a photo of the pack or of themselves."},
-  {i:"F",name:"Customer name",lvl:"ultra",fl:"Ginger Lime",pack:"2 Months Supply",text:"Sample review text from a verified buyer."}
+  {i:"A",name:"Customer name",lvl:"hard",fl:"Mint",pack:"3 Packs",text:"Sample review text. A real buyer's words about hardness, flavour and how the sessions feel will appear here."},
+  {i:"B",name:"Customer name",lvl:"ultra",fl:"Blueberry Ice",pack:"1 Pack",text:"Sample review text. Short, honest feedback from a verified order."},
+  {i:"C",name:"Customer name",lvl:"hard",fl:"Mango",pack:"6 Packs",text:"Sample review text. Longer reviews wrap naturally and the cards stack in columns, like on the reference store."},
+  {i:"D",name:"Customer name",lvl:"hard",fl:"Watermelon",pack:"3 Packs",text:"Sample review text."},
+  {i:"E",name:"Customer name",lvl:"ultra",fl:"Cherry Ice",pack:"3 Packs",text:"Sample review text. Customers can attach a photo of the pack or of themselves."},
+  {i:"F",name:"Customer name",lvl:"ultra",fl:"Ginger Lime",pack:"1 Pack",text:"Sample review text from a verified buyer."}
 ];
 function renderReviews(el,list,n){
   el.innerHTML=list.slice(0,n).map((r,k)=>`<article class="rv"><span class="rv-sample">Sample</span>
@@ -108,7 +108,7 @@ addToCart=function(level,flavour,packId){track("add_to_cart",{level,flavour,pack
 function cookieBanner(){
   let b=document.getElementById("cookieBar");
   if(!b){b=document.createElement("div");b.id="cookieBar";b.className="cookie-bar";b.setAttribute("role","dialog");b.setAttribute("aria-label","Cookie choice");
-    b.innerHTML='<p>We use your browser\'s storage to keep your cart. With your OK, we also measure visits and shop steps to see how many people are interested in Cutline. No advertising cookies. <a href="privacy.html">Privacy &amp; Cookies</a></p><div class="cookie-btns"><button type="button" class="btn ghost" data-consent="denied">Decline</button><button type="button" class="btn" data-consent="granted">Accept analytics</button></div>';
+    b.innerHTML='<p>We use your browser\'s storage to keep your cart. With your OK, we also measure visits and shop steps to see how many people are interested in JAWZR. No advertising cookies. <a href="privacy.html">Privacy &amp; Cookies</a></p><div class="cookie-btns"><button type="button" class="btn ghost" data-consent="denied">Decline</button><button type="button" class="btn" data-consent="granted">Accept analytics</button></div>';
     document.body.appendChild(b);}
   b.hidden=false;
 }

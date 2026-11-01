@@ -6,7 +6,7 @@ UPDATED = "1 November 2026"
 # The brand is used everywhere. The legal operator appears only once, on the Legal Notice,
 # as OPERATOR (EU law requires the seller's legal name, address and registration number).
 COMPANY = {
-  "name": "Cutline",
+  "name": "JAWZR",
   "address": "[return address], Lithuania",
   "email": "[contact email]",
 }
@@ -19,7 +19,7 @@ def shell(title, eyebrow, body, extra_head="", extra_js=""):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>{html.escape(title)} · Cutline</title>
+<title>{html.escape(title)} · JAWZR</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="assets/site.css">{extra_head}
@@ -27,7 +27,7 @@ def shell(title, eyebrow, body, extra_head="", extra_js=""):
 <body>
 <div class="top-bar"><div class="wrap">Free EU shipping from €49 · Ships from Lithuania</div></div>
 <nav class="site"><div class="wrap">
-  <a class="logo" href="index-v2.html"><i></i>Cutline</a>
+  <a class="logo" href="index-v2.html"><i></i>JAWZR</a>
   <div class="links"><a href="product.html">Shop</a><a href="index-v2.html#how">How it works</a><a href="index-v2.html#faq">FAQ</a></div>
   <button class="cart-btn" type="button" data-open-cart>Cart (<span data-cart-count>0</span>)</button>
 </div></nav>
@@ -51,10 +51,10 @@ PAGES = [("terms.html","Terms of Service"),("returns.html","Returns & Refunds"),
          ("shipping.html","Shipping & Payment"),("privacy.html","Privacy & Cookies"),("safety.html","Safety Instructions"),("legal.html","Legal Notice")]
 TOC = "".join(f'<a href="{f}">{t}</a>' for f,t in PAGES)
 FOOTER = '''<footer><div class="wrap">
-  <div><a class="logo" href="index-v2.html" style="color:var(--bg)"><i></i>Cutline</a><p style="margin-top:12px;opacity:.75;max-width:40ch">Hard chewing gum for jaw training. Ships from Lithuania.</p></div>
-  <div><h4>Shop</h4><ul><li><a href="product.html#hard">Hard Gum</a></li><li><a href="product.html#ultra">Ultra Hard Gum</a></li><li><a href="product.html#hard-6">6-Month Bundle</a></li></ul></div>
+  <div><a class="logo" href="index-v2.html" style="color:var(--bg)"><i></i>JAWZR</a><p style="margin-top:12px;opacity:.75;max-width:40ch">Hard chewing gum. Train your jaw. Unleash the shark.</p></div>
+  <div><h4>Shop</h4><ul><li><a href="product.html#hard">Hard Gum</a></li><li><a href="product.html#ultra">Ultra Hard Gum</a></li><li><a href="product.html#hard-6">3-Pack Bundle</a></li></ul></div>
   <div><h4>Info</h4><ul><li><a href="terms.html">Terms of Service</a></li><li><a href="returns.html">Returns &amp; Refunds</a></li><li><a href="shipping.html">Shipping &amp; Payment</a></li><li><a href="privacy.html">Privacy &amp; Cookies</a></li><li><a href="safety.html">Safety Instructions</a></li><li><a href="legal.html">Legal Notice</a></li><li><a href="withdraw.html"><b>Withdraw from contract here</b></a></li><li><a href="#" data-cookie-settings>Cookie settings</a></li></ul></div>
-  <p class="legal">© 2026 Cutline</p>
+  <p class="legal">© 2026 JAWZR</p>
 </div></footer>'''
 DRAWER = '''<div class="drawer-bg" id="drawerBg" hidden data-close-cart></div>
 <aside class="drawer" id="drawer" hidden aria-label="Cart">
@@ -66,11 +66,11 @@ DRAWER = '''<div class="drawer-bg" id="drawerBg" hidden data-close-cart></div>
 </aside>
 <div class="toast" id="toast" hidden></div>'''
 
-PRELAUNCH = '''<div class="callout"><b>Pre-launch notice.</b> Cutline is not on sale yet. If you complete checkout now, we register a <b>pre-order request</b> only: no contract of sale is formed, no payment is taken and no payment details are collected. We'll email you when products are available, and you are free not to buy.</div>'''
+PRELAUNCH = '''<div class="callout"><b>Pre-launch notice.</b> JAWZR is not on sale yet. If you complete checkout now, we register a <b>pre-order request</b> only: no contract of sale is formed, no payment is taken and no payment details are collected. We'll email you when products are available, and you are free not to buy.</div>'''
 
 TERMS = f'''{PRELAUNCH}
 <h2>1. Who we are</h2>
-<p>Cutline is an online shop for hard chewing gum, based in Lithuania. The business that operates Cutline is identified in our <a href="legal.html">Legal Notice</a>. Email: {C["email"]}. These terms apply to all orders placed on this website.</p>
+<p>JAWZR is an online shop for hard chewing gum, based in Lithuania. The business that operates JAWZR is identified in our <a href="legal.html">Legal Notice</a>. Email: {C["email"]}. These terms apply to all orders placed on this website.</p>
 <h2>2. Pre-launch period</h2>
 <p>While the pre-launch notice above is shown, the shop is used to measure interest before we start selling. Completing checkout creates a pre-order request, not a purchase. We store the details you enter (see our <a href="privacy.html">Privacy Policy</a>) to contact you about availability. No money is charged at any point during this period. Sections 3 to 11 apply once sales open and the notice is removed.</p>
 <h2>3. Who can buy</h2>
@@ -191,7 +191,7 @@ SHIPPING = f'''{PRELAUNCH}
 <p>We plan to add the UK and the USA later. For the USA, all parcels are now subject to US import duties, so we will only ship there with duties and fees collected at checkout (DDP), so you don't get a bill on delivery.</p>'''
 
 PRIVACY = f'''<h2>1. Who is responsible for your data</h2>
-<p>The controller is the operator of Cutline identified in our <a href="legal.html">Legal Notice</a>. For any privacy question, email {C["email"]}. We have not appointed a data protection officer.</p>
+<p>The controller is the operator of JAWZR identified in our <a href="legal.html">Legal Notice</a>. For any privacy question, email {C["email"]}. We have not appointed a data protection officer.</p>
 <h2>2. What we collect and why</h2>
 <div class="table-scroll"><table class="compare">
 <thead><tr><th>Data</th><th>Purpose</th><th>Legal basis (GDPR)</th><th>Kept for</th></tr></thead>
@@ -219,7 +219,7 @@ PRIVACY = f'''<h2>1. Who is responsible for your data</h2>
 <h2>7. Changes</h2>
 <p>We'll update this page when our processing changes and show the date at the top.</p>'''
 
-SAFETY = f'''<p>Cutline gum is much harder than regular chewing gum. It is a training product: used correctly, it is safe for healthy adults. Please read these instructions before your first session.</p>
+SAFETY = f'''<p>JAWZR gum is much harder than regular chewing gum. It is a training product: used correctly, it is safe for healthy adults. Please read these instructions before your first session.</p>
 <h2>Who should not use it</h2>
 <ul>
 <li>Children under 14. Keep away from small children: risk of choking.</li>
@@ -250,14 +250,14 @@ SAFETY = f'''<p>Cutline gum is much harder than regular chewing gum. It is a tra
 <p>Hard gum trains your chewing muscles. How your jawline looks also depends on your body fat, genetics and bone structure. We don't promise any specific visual result, and the product is not intended to diagnose, treat or prevent any medical condition.</p>'''
 
 LEGAL = f'''<h2>Operator</h2>
-<p>Cutline is operated by:<br>{OPERATOR}<br>Email: {C["email"]}</p>
+<p>JAWZR is operated by:<br>{OPERATOR}<br>Email: {C["email"]}</p>
 <p>Food business operator registration with the State Food and Veterinary Service (VMVT): [registration number, before sales start].</p>
 <h2>Consumer disputes</h2>
 <p>The EU Online Dispute Resolution platform closed on 20 July 2025. For disputes, contact us first; you can then turn to the Lithuanian State Consumer Rights Protection Authority (Valstybinė vartotojų teisių apsaugos tarnyba), Vilniaus g. 25, 01402 Vilnius, <a href="https://www.vvtat.lt" rel="noopener">www.vvtat.lt</a>. Its out-of-court procedure is free for consumers, and we take part in it.</p>
 <h2>Website content</h2>
 <p>We prepare the information on this website carefully, including the training guidance, but it is general information and not medical or dental advice. We are not responsible for the content of external websites we link to; when we learn that a linked page breaks the law, we remove the link.</p>
 <h2>Copyright and trademarks</h2>
-<p>Texts, graphics and the Cutline name and logo belong to the operator of Cutline unless marked otherwise. Some photos are used under the Unsplash licence. Please don't copy our content for commercial use without written permission.</p>'''
+<p>Texts, graphics and the JAWZR name and logo belong to the operator of JAWZR unless marked otherwise. Some photos are used under the Unsplash licence. Please don't copy our content for commercial use without written permission.</p>'''
 
 CSS_EXTRA = '''
 <style>
