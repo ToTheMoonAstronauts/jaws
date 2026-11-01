@@ -169,14 +169,14 @@
             <li><b>3 min:</b> rest with your jaw relaxed.</li>
             <li><b>Repeat</b> the block two or three times, 10–15 minutes in total.</li>
             <li><b>Bin it.</b> Throw the piece away after the session. Start every session with a fresh one.</li>
-            <li><b>Take a day off.</b> Train every other day so the muscle can recover and grow.</li>
+            <li><b>Tomorrow: light day.</b> One round, about 8 minutes, ideally with Hard. Alternate full and light days, every day for 30 days.</li>
           </ol>
           <a href="#plan" style="font-weight:600">Open the session timer →</a>
         </div></details>
         <details><summary>Ingredients &amp; nutrition</summary><div class="in" id="ingredients"></div></details>
         <details><summary>Safety information</summary><div class="in">
           <p>Full details: <a href="safety.html">Safety Instructions</a>.</p>
-          <p>This is a training product, much harder than regular gum. Limit use to 10–15 minutes every other day.</p>
+          <p>This is a training product, much harder than regular gum. No more than 15 minutes a day; alternate full and light days.</p>
           <p><b>Not for under 14s.</b> Never swallow the piece. Keep away from small children.</p>
           <p><b>Stop if you feel pain.</b> A muscle burn that fades within a day is normal; sharp pain, clicking or locking is not.</p>
           <p><b>Ask a dentist first</b> if you have jaw-joint problems, loose fillings, crowns, veneers, implants or braces. Don't use Ultra Hard with dental work.</p>
@@ -235,7 +235,7 @@
         <li><div><b>Faster chews · 2 min</b><p>Pick up the pace, keep control.</p></div></li>
         <li><div><b>Rest · 3 min</b><p>Jaw relaxed, breathe through your nose.</p></div></li>
       </ol>
-      <p class="lede" style="margin-top:16px">Repeat two or three rounds, then rest a day.</p>
+      <p class="lede" style="margin-top:16px">Full day: three rounds. Light day (the next day): one round. Every day for 30 days.</p>
     </div>
     <div class="timer" aria-live="polite">
       <p class="phase">Session timer</p>
@@ -300,7 +300,7 @@ const INFO={
       <table class="nut"><tr><td>Energy per 100 g</td><td>588 kJ / 140 kcal</td></tr><tr><td>Carbohydrate</td><td>59 g</td></tr><tr><td>of which sugars</td><td>0 g</td></tr></table>
       <p class="warn">Contains sweeteners. Excessive consumption may produce laxative effects.</p>`},
   ultra:{eyebrow:"Ultra Hard · advanced",
-    bullets:["<b>Maximum resistance</b> through the whole session","<b>For trained jaws</b>: start with Hard","<b>No intense sweeteners</b>, sugar-free and vegan"],
+    bullets:["<b>Maximum resistance</b> through the whole session","<b>For full days</b> from week 2 of the 30-day plan","<b>No intense sweeteners</b>, sugar-free and vegan"],
     ingredients:`<p><b>Ingredients:</b> gum base, sweetener (maltitol), flavouring, gum arabic, glazing agent (carnauba wax), talc.</p>
       <table class="nut"><tr><td>Energy per 100 g</td><td>202 kJ / 48 kcal</td></tr><tr><td>Carbohydrate</td><td>20 g</td></tr><tr><td>of which sugars</td><td>0 g</td></tr></table>
       <p class="warn">Contains a sweetener. Excessive consumption may produce laxative effects.</p>`}
@@ -358,7 +358,7 @@ const fmt=s=>String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(
 function draw(){
   $("clock").textContent=fmt(ts.left);
   $("now").textContent=ts.done?"Session done":PH[ts.ph].n;
-  $("hint").textContent=ts.done?"Session done. Bin the piece. Next session the day after tomorrow, with a fresh one.":(ts.run?PH[ts.ph].h:"Press start when the gum is warm and seated on your molars.");
+  $("hint").textContent=ts.done?"Session done. Bin the piece. Tomorrow: light day, one round with a fresh piece.":(ts.run?PH[ts.ph].h:"Press start when the gum is warm and seated on your molars.");
   $("round").textContent=`Round ${ts.round} of ${ROUNDS}`;
   PH.forEach((p,i)=>{$("g"+i).style.width=(i<ts.ph||ts.done?100:i===ts.ph?100*(1-ts.left/p.s):0)+"%";});
   $("tStart").textContent=ts.run?"Pause":(ts.done?"Again":"Start");

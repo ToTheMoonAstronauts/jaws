@@ -230,7 +230,8 @@ SAFETY = f'''<p>Cutline gum is much harder than regular chewing gum. It is a tra
 <p>If you are unsure, ask your dentist or doctor before starting.</p>
 <h2>How to use it safely</h2>
 <ul>
-<li>Limit training to 10–15 minutes, every other day. More chewing doesn't mean faster progress.</li>
+<li>Follow the 30-day plan: a full session (up to 15 minutes) one day, one round (about 8 minutes) the next. Never chew more than 15 minutes a day. More chewing doesn't mean faster progress.</li>
+<li>If your jaw still aches the next morning beyond normal muscle soreness, take a day off.</li>
 <li>Warm the piece in your mouth first and bite down gradually. A cold, hard bite can crack the gum or strain your teeth.</li>
 <li>Chew on your back molars, not your front teeth. Switch sides evenly.</li>
 <li>Never swallow the gum.</li>

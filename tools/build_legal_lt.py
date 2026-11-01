@@ -184,7 +184,8 @@ SAFETY = '''<p>Cutline guma gerokai kietesnė už paprastą kramtomąją gumą. 
 <p>Jei abejojate, prieš pradėdami pasitarkite su odontologu ar gydytoju.</p>
 <h2>Kaip saugiai naudoti</h2>
 <ul>
-<li>Treniruokitės ne ilgiau kaip 10–15 minučių kas antrą dieną. Daugiau kramtymo nereiškia greitesnio progreso.</li>
+<li>Laikykitės 30 dienų plano: vieną dieną pilna treniruotė (iki 15 minučių), kitą – vienas ratas (apie 8 minutes). Niekada nekramtykite ilgiau kaip 15 minučių per dieną. Daugiau kramtymo nereiškia greitesnio progreso.</li>
+<li>Jei kitą rytą žandikaulį skauda labiau nei įprastas raumenų maudimas, padarykite dienos pertrauką.</li>
 <li>Pirmiausia sušildykite gabalėlį burnoje ir sukąskite palaipsniui. Staigiai sukandus šaltą, kietą gumą, ji gali suskilti arba pažeisti dantis.</li>
 <li>Kramtykite galiniais krūminiais, ne priekiniais dantimis. Tolygiai keiskite puses.</li>
 <li>Niekada neryk gumos.</li>

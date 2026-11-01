@@ -169,14 +169,14 @@
             <li><b>3 min.:</b> poilsis atpalaidavus žandikaulį.</li>
             <li><b>Pakartok</b> ciklą du ar tris kartus, iš viso 10–15 minučių.</li>
             <li><b>Išmesk.</b> Po treniruotės gabalėlį išmesk. Kiekvieną treniruotę pradėk su nauju.</li>
-            <li><b>Pailsėk dieną.</b> Treniruokis kas antrą dieną, kad raumuo atsigautų ir augtų.</li>
+            <li><b>Rytoj – lengva diena.</b> Vienas ratas, apie 8 minutes, geriausia su kieta guma. Kaitaliok pilnas ir lengvas dienas kasdien 30 dienų.</li>
           </ol>
           <a href="#plan" style="font-weight:600">Atidaryti treniruotės laikmatį →</a>
         </div></details>
         <details><summary>Sudėtis ir maistinė vertė</summary><div class="in" id="ingredients"></div></details>
         <details><summary>Saugos informacija</summary><div class="in">
           <p>Išsamiau: <a href="safety.html">Saugos instrukcija</a>.</p>
-          <p>Tai treniruočių produktas, gerokai kietesnis už paprastą gumą. Naudok ne ilgiau kaip 10–15 minučių kas antrą dieną.</p>
+          <p>Tai treniruočių produktas, gerokai kietesnis už paprastą gumą. Ne ilgiau kaip 15 minučių per dieną; kaitaliok pilnas ir lengvas dienas.</p>
           <p><b>Netinka jaunesniems nei 14 metų.</b> Neryk gumos. Laikyk mažiems vaikams nepasiekiamoje vietoje.</p>
           <p><b>Sustok pajutęs skausmą.</b> Raumenų maudimas, praeinantis per dieną, yra normalu; aštrus skausmas, spragsėjimas ar strigimas – ne.</p>
           <p><b>Pirmiausia pasitark su odontologu</b>, jei turi žandikaulio sąnario problemų, atsilaisvinusių plombų, vainikėlių, laminačių, implantų ar breketų. Ypač kietos gumos nenaudok, jei turi dantų protezų ar restauracijų.</p>
@@ -235,7 +235,7 @@
         <li><div><b>Greitesnis kramtymas · 2 min.</b><p>Padidink tempą, bet išlaikyk kontrolę.</p></div></li>
         <li><div><b>Poilsis · 3 min.</b><p>Atpalaiduok žandikaulį, kvėpuok per nosį.</p></div></li>
       </ol>
-      <p class="lede" style="margin-top:16px">Pakartok du ar tris ratus, tada dieną ilsėkis.</p>
+      <p class="lede" style="margin-top:16px">Pilna diena: trys ratai. Lengva diena (kitą dieną): vienas ratas. Kasdien 30 dienų.</p>
     </div>
     <div class="timer" aria-live="polite">
       <p class="phase">Treniruotės laikmatis</p>
@@ -300,7 +300,7 @@ const INFO={
       <table class="nut"><tr><td>Energinė vertė 100 g</td><td>588 kJ / 140 kcal</td></tr><tr><td>Angliavandeniai</td><td>59 g</td></tr><tr><td>iš kurių cukrūs</td><td>0 g</td></tr></table>
       <p class="warn">Su saldikliais. Vartojant per daug, gali sukelti laisvinamąjį poveikį.</p>`},
   ultra:{eyebrow:"Ypač kieta · pažengusiems",
-    bullets:["<b>Didžiausias pasipriešinimas</b> visą treniruotę","<b>Treniruotiems žandikauliams</b>: pradėk nuo Kietos","<b>Be intensyviųjų saldiklių</b>, be cukraus, veganiška"],
+    bullets:["<b>Didžiausias pasipriešinimas</b> visą treniruotę","<b>Pilnoms dienoms</b> nuo 2-os 30 dienų plano savaitės","<b>Be intensyviųjų saldiklių</b>, be cukraus, veganiška"],
     ingredients:`<p><b>Sudedamosios dalys:</b> gumos bazė, saldiklis (maltitolis), kvapioji medžiaga, gumiarabikas, glajinė medžiaga (karnaubo vaškas), talkas.</p>
       <table class="nut"><tr><td>Energinė vertė 100 g</td><td>202 kJ / 48 kcal</td></tr><tr><td>Angliavandeniai</td><td>20 g</td></tr><tr><td>iš kurių cukrūs</td><td>0 g</td></tr></table>
       <p class="warn">Su saldikliu. Vartojant per daug, gali sukelti laisvinamąjį poveikį.</p>`}
@@ -358,7 +358,7 @@ const fmt=s=>String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(
 function draw(){
   $("clock").textContent=fmt(ts.left);
   $("now").textContent=ts.done?"Treniruotė baigta":PH[ts.ph].n;
-  $("hint").textContent=ts.done?"Treniruotė baigta. Gabalėlį išmesk. Kita treniruotė – poryt, su nauju gabalėliu.":(ts.run?PH[ts.ph].h:"Spausk „Pradėti“, kai guma sušilusi ir padėta ant krūminių dantų.");
+  $("hint").textContent=ts.done?"Treniruotė baigta. Gabalėlį išmesk. Rytoj – lengva diena: vienas ratas su nauju gabalėliu.":(ts.run?PH[ts.ph].h:"Spausk „Pradėti“, kai guma sušilusi ir padėta ant krūminių dantų.");
   $("round").textContent=`${ts.round} ratas iš ${ROUNDS}`;
   PH.forEach((p,i)=>{$("g"+i).style.width=(i<ts.ph||ts.done?100:i===ts.ph?100*(1-ts.left/p.s):0)+"%";});
   $("tStart").textContent=ts.run?"Pauzė":(ts.done?"Dar kartą":"Pradėti");
