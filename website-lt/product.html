@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cutline kieta guma</title>
+<meta name="description" content="Kieta kramtomoji guma žandikaulio treniruotėms. Kieta arba ypač kieta, aštuoni skoniai, 2, 6 arba 12 mėnesių atsargos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+.crumbs{font-size:.85rem;color:var(--muted);padding-block:18px}
+.crumbs a{color:var(--muted);text-decoration:none}
+.pdp{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:start;padding-bottom:56px}
+.pdp > *{min-width:0}
+@media (max-width:900px){.pdp{grid-template-columns:1fr;gap:28px}}
+.gallery{position:sticky;top:90px;display:grid;gap:12px}
+@media (max-width:900px){.gallery{position:static}}
+.stage{background:var(--soft);border-radius:10px;aspect-ratio:1/1;display:grid;place-items:center;overflow:hidden;position:relative}
+.stage .pouch{width:46%;font-size:clamp(14px,2.2vw,22px)}
+.stage img{width:100%;height:100%;object-fit:cover}
+.stage .badge{top:16px;left:16px}
+.thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.thumbs button{border:2px solid transparent;border-radius:8px;padding:0;background:var(--soft);aspect-ratio:1/1;overflow:hidden;display:grid;place-items:center}
+.thumbs button[aria-pressed="true"]{border-color:var(--accent)}
+.thumbs img{width:100%;height:100%;object-fit:cover}
+.thumbs .pouch{width:52%;font-size:6px;box-shadow:none}
+
+.buy h1{font-size:clamp(2.6rem,4.6vw,3.8rem);margin-top:10px}
+.buy .sub{color:var(--muted);margin-top:8px;font-size:1.05rem}
+.buy .price-line{margin-top:18px}
+.buy .price-line b{font-size:1.6rem}
+.bullets{list-style:none;padding:0;margin:20px 0 0;display:grid;gap:8px}
+.bullets li{display:flex;gap:10px;align-items:center;font-size:.98rem}
+.bullets li::before{content:"";flex:none;width:8px;height:8px;background:var(--accent);transform:rotate(45deg)}
+.bullets b{font-weight:600}
+.opt-label{font:600 .74rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:26px 0 10px;display:flex;justify-content:space-between}
+.opt-label span{color:var(--ink);letter-spacing:.04em}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg button{border:1.5px solid var(--line);background:var(--surface);border-radius:8px;padding:12px;text-align:left;color:var(--ink)}
+.seg button b{display:block;font:800 1.2rem/1 var(--display);text-transform:uppercase}
+.seg button small{color:var(--muted);font-size:.8rem}
+.seg button[aria-pressed="true"],.packs button[aria-pressed="true"],.swatches button[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.swatches{display:flex;flex-wrap:wrap;gap:8px}
+.swatches button{display:flex;align-items:center;gap:8px;border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px 7px 8px;color:var(--ink);font-size:.9rem}
+.swatches i{width:20px;height:20px;border-radius:50%;background:var(--c);box-shadow:inset 0 0 0 2px rgba(255,255,255,.6)}
+.packs{display:grid;gap:10px}
+.packs button{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;text-align:left;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);padding:14px 16px;border-radius:8px;position:relative}
+.packs .radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--line)}
+.packs button[aria-pressed="true"] .radio{border:5px solid var(--accent)}
+.packs strong{display:block;font-size:1rem}
+.packs .s{font-size:.82rem;color:var(--muted)}
+.packs .pr{text-align:right;font:700 1.05rem/1.25 var(--mono);font-variant-numeric:tabular-nums}
+.packs .pr span{display:block;font:500 .72rem/1.4 var(--mono);color:var(--muted)}
+.packs .tag{position:absolute;top:-10px;right:14px;font:700 .64rem/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;background:var(--accent);color:#fff;padding:5px 7px;border-radius:3px}
+.packs .save{display:inline-block;margin-left:8px;font:700 .66rem/1 var(--mono);color:var(--ok);background:#E3F3EA;padding:4px 6px;border-radius:3px;vertical-align:2px}
+.stock{display:flex;align-items:center;gap:8px;margin-top:18px;font-size:.9rem;color:var(--ok);font-weight:500}
+.stock::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 4px #D9F0E3}
+.add{margin-top:14px}
+.fine{font-size:.8rem;color:var(--muted);margin-top:10px;text-align:center}
+.pay{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:12px}
+.pay span{font:600 .68rem/1 var(--mono);border:1px solid var(--line);background:var(--surface);padding:6px 8px;border-radius:4px;color:var(--muted)}
+.acc{margin-top:26px;border-top:1px solid var(--line)}
+.acc details{border-bottom:1px solid var(--line);padding:16px 0}
+.acc summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary::after{content:"+";font:800 1.4rem/1 var(--display);color:var(--accent)}
+.acc details[open] summary::after{content:"–"}
+.acc .in{margin-top:12px;color:var(--muted);font-size:.94rem;display:grid;gap:10px}
+.acc ol{margin:0;padding-left:20px;display:grid;gap:6px}
+.acc b{color:var(--ink)}
+.nut{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeric:tabular-nums}
+.nut td{padding:6px 0;border-bottom:1px solid var(--line)}
+.nut td:last-child{text-align:right;font-family:var(--mono)}
+.warn{border-left:3px solid var(--accent);padding-left:12px;color:var(--ink)}
+
+.icons{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;background:var(--surface);border-block:1px solid var(--line)}
+.icons div{display:grid;justify-items:center;gap:10px;text-align:center;padding:26px 8px;font-weight:600;font-size:.92rem}
+.icons svg{width:34px;height:34px;color:var(--accent)}
+@media (max-width:760px){.icons{grid-template-columns:repeat(2,1fr)}.icons div:last-child{grid-column:1/-1}}
+
+.levels{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.level{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:28px;display:grid;grid-template-columns:110px 1fr;gap:22px;align-items:center}
+.level > *{min-width:0}
+.level .pouch{font-size:9px}
+.level h3{font-size:1.8rem}
+.level p{color:var(--muted);font-size:.94rem;margin-top:6px}
+.meter{display:grid;grid-template-columns:70px 1fr;gap:6px 10px;margin-top:14px;font:600 .7rem/1 var(--mono);text-transform:uppercase;letter-spacing:.06em;align-items:center}
+.meter i{display:block;height:8px;border-radius:99px;background:var(--line);position:relative;overflow:hidden}
+.meter i::after{content:"";position:absolute;inset:0 auto 0 0;width:var(--v);background:var(--accent)}
+@media (max-width:860px){.levels{grid-template-columns:1fr}}
+
+.timer-wrap{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+@media (max-width:860px){.timer-wrap{grid-template-columns:1fr}}
+.timer{background:var(--ink);color:var(--bg);border-radius:10px;padding:30px}
+.timer .phase{font:600 .78rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;opacity:.75}
+.timer .clock{font:900 clamp(4rem,12vw,6.5rem)/1 var(--display);font-variant-numeric:tabular-nums;margin:12px 0 4px}
+.timer .now{font:800 1.6rem/1 var(--display);text-transform:uppercase;color:#8EA0FF}
+.timer .hint{font-size:.9rem;opacity:.8;margin-top:8px;min-height:3em}
+.timer .seg3{display:grid;grid-template-columns:3fr 2fr 3fr;gap:4px;margin-top:18px}
+.timer .seg3 div{height:8px;background:rgba(251,248,241,.2);border-radius:2px;position:relative;overflow:hidden}
+.timer .seg3 i{position:absolute;inset:0 auto 0 0;background:#8EA0FF;width:0}
+.timer .seg-l{display:grid;grid-template-columns:3fr 2fr 3fr;gap:4px;font:500 .68rem/1 var(--mono);opacity:.7;margin-top:6px;text-transform:uppercase}
+.timer .ctrl{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+.timer .ctrl button{border:1.5px solid var(--bg);background:none;color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:600}
+.timer .ctrl button.primary{background:var(--accent);border-color:var(--accent)}
+.timer .round{font:500 .8rem/1 var(--mono);opacity:.75;margin-top:14px}
+.plan{list-style:none;margin:20px 0 0;padding:0;counter-reset:s;display:grid}
+.plan li{display:grid;grid-template-columns:44px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.plan li::before{counter-increment:s;content:counter(s,decimal-leading-zero);font:800 1.5rem/1 var(--display);color:var(--accent)}
+.plan p{color:var(--muted);font-size:.92rem}
+
+.sticky-buy{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--surface);border-top:1px solid var(--line);padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:none;align-items:center;gap:12px}
+.sticky-buy div{flex:1;min-width:0;font-size:.85rem;line-height:1.3}
+.sticky-buy b{display:block;font:700 1rem/1.2 var(--mono)}
+.sticky-buy .btn{padding:12px 20px}
+@media (max-width:900px){.sticky-buy.on{display:flex}}
+</style>
+</head>
+<body>
+
+<div class="top-bar"><div class="wrap">Nemokamas pristatymas ES nuo 49 € · Siunčiame iš Lietuvos</div></div>
+<nav class="site"><div class="wrap">
+  <a class="logo" href="index.html"><i></i>Cutline</a>
+  <div class="links"><a href="product.html">Parduotuvė</a><a href="index.html#how">Kaip tai veikia</a><a href="index.html#why">Kodėl kieta guma</a><a href="#faq">DUK</a></div>
+  <button class="cart-btn" type="button" data-open-cart>Krepšelis (<span data-cart-count>0</span>)</button>
+</div></nav>
+
+<main>
+<div class="wrap">
+  <p class="crumbs"><a href="index.html">Pradžia</a> / <a href="product.html">Guma žandikaulio treniruotėms</a> / <span id="crumbName">Kieta guma</span></p>
+
+  <div class="pdp">
+    <div class="gallery">
+      <div class="stage" id="stage"></div>
+      <div class="thumbs" id="thumbs"></div>
+    </div>
+
+    <div class="buy">
+      <p class="eyebrow" id="lvlEyebrow">Kieta · pradžiai</p>
+      <h1 id="pName">Cutline kieta guma</h1>
+      <p class="sub">Kieta kramtomoji guma žandikaulio treniruotėms</p>
+      <div class="price-line" id="priceLine"></div>
+      <ul class="bullets" id="bullets"></ul>
+
+      <p class="opt-label">Kietumas</p>
+      <div class="seg" role="group" aria-label="Kietumas">
+        <button type="button" data-level="hard"><b>Kieta</b><small>Kietumas ir ilgas skonis</small></button>
+        <button type="button" data-level="ultra"><b>Ypač kieta</b><small>Didžiausias pasipriešinimas</small></button>
+      </div>
+
+      <p class="opt-label">Skonis <span id="flName">Mėtų</span></p>
+      <div class="swatches" id="swatches"></div>
+
+      <p class="opt-label">Pakuotė</p>
+      <div class="packs" id="packs"></div>
+
+      <p class="stock">Yra sandėlyje · išsiunčiame per 1–2 darbo dienas</p>
+      <button class="btn block big add" type="button" id="addBtn">Į krepšelį · <span id="addPrice"></span></button>
+      <p class="fine">Su PVM, be pristatymo · nemokamas pristatymas ES nuo 49 € · 14 dienų grąžinimas neatplėštoms pakuotėms</p>
+      <div class="pay"><span>VISA</span><span>Mastercard</span><span>PayPal</span><span>Apple Pay</span><span>Google Pay</span><span>Klarna</span></div>
+
+      <div class="acc">
+        <details open><summary>Kaip naudoti</summary><div class="in">
+          <ol>
+            <li><b>Sušildyk.</b> Padėk gumą ant galinių krūminių dantų ir sukąsk palaipsniui. Staigiai sukandus šaltą gumą, ji gali suskilti.</li>
+            <li><b>3 min.:</b> lėtas, stiprus kramtymas, su kiekvienu sukandimu didinant spaudimą.</li>
+            <li><b>2 min.:</b> greitesnis, bet kontroliuojamas kramtymas. Tolygiai keisk puses.</li>
+            <li><b>3 min.:</b> poilsis atpalaidavus žandikaulį.</li>
+            <li><b>Pakartok</b> ciklą du ar tris kartus, iš viso 10–15 minučių.</li>
+            <li><b>Pasilik.</b> Nuplauk gabalėlį, išdžiovink ir naudok per kitą treniruotę.</li>
+            <li><b>Pailsėk dieną.</b> Treniruokis kas antrą dieną, kad raumuo atsigautų ir augtų.</li>
+          </ol>
+          <a href="#plan" style="font-weight:600">Atidaryti treniruotės laikmatį →</a>
+        </div></details>
+        <details><summary>Sudėtis ir maistinė vertė</summary><div class="in" id="ingredients"></div></details>
+        <details><summary>Saugos informacija</summary><div class="in">
+          <p>Išsamiau: <a href="safety.html">Saugos instrukcija</a>.</p>
+          <p>Tai treniruočių produktas, gerokai kietesnis už paprastą gumą. Naudok ne ilgiau kaip 10–15 minučių kas antrą dieną.</p>
+          <p><b>Netinka jaunesniems nei 14 metų.</b> Neryk gumos. Laikyk mažiems vaikams nepasiekiamoje vietoje.</p>
+          <p><b>Sustok pajutęs skausmą.</b> Raumenų maudimas, praeinantis per dieną, yra normalu; aštrus skausmas, spragsėjimas ar strigimas – ne.</p>
+          <p><b>Pirmiausia pasitark su odontologu</b>, jei turi žandikaulio sąnario problemų, atsilaisvinusių plombų, vainikėlių, laminačių, implantų ar breketų. Ypač kietos gumos nenaudok, jei turi dantų protezų ar restauracijų.</p>
+        </div></details>
+        <details><summary>Pristatymas ir grąžinimas</summary><div class="in">
+          <p>Užsakymus išsiunčiame iš Lietuvos per 1–2 darbo dienas. Pristatymas ES paprastai trunka 2–6 darbo dienas. Užsakymams nuo 49 € pristatymas ES nemokamas.</p>
+          <p>Per 14 dienų nuo pristatymo gali atsisakyti sutarties ir grąžinti neatplėštas pakuotes. Dėl higienos priežasčių atplėštos gumos grąžinti negalima.</p>
+        </div></details>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="icons">
+  <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 19c8 0 14-6 14-14C11 5 5 9 5 19z"/><path d="M5 19c3-5 6-8 10-10"/></svg>100 % veganiška</div>
+  <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M4 20 20 4"/></svg>Be cukraus</div>
+  <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17h4V9H3zM10 17h4V5h-4zM17 17h4v-6h-4z"/></svg>2 kietumo lygiai</div>
+  <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v5h-5"/></svg>Daugkartiniai gabalėliai</div>
+  <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>Siunčiame iš ES</div>
+</div>
+
+<section>
+  <div class="wrap" style="max-width:900px">
+    <div class="sec-head center"><p class="eyebrow">Skirtumas</p><h2>Cutline ir paprasta guma</h2></div>
+    <div class="table-scroll"><table class="compare">
+      <thead><tr><th></th><th class="c us">Cutline</th><th class="c">Paprasta guma</th></tr></thead>
+      <tbody>
+        <tr><td>Pakankamai kieta, kad apkrautų žandikaulio raumenis</td><td class="c"><span class="y">✓</span></td><td class="c"><span class="n">✕</span></td></tr>
+        <tr><td>Išlaiko pasipriešinimą visą treniruotę</td><td class="c"><span class="y">✓</span></td><td class="c"><span class="n">✕</span></td></tr>
+        <tr><td>Tinka kelioms treniruotėms</td><td class="c"><span class="y">✓</span></td><td class="c"><span class="n">✕</span></td></tr>
+        <tr><td>Sukurta 15 minučių treniruotei</td><td class="c"><span class="y">✓</span></td><td class="c"><span class="n">✕</span></td></tr>
+        <tr><td>Be cukraus</td><td class="c"><span class="y">✓</span></td><td class="c">Kai kuri</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head center"><p class="eyebrow">Skonis ir jėga</p><h2>Rask savo lygį</h2><p class="lede">Kuo kietesnė guma, tuo trumpiau išlieka skonis. Pradėk nuo kietos, pereik prie ypač kietos arba kramtyk po vieną abiejų kartu – gausi ir kietumą, ir skonį.</p></div>
+    <div class="levels">
+      <div class="level"><div id="lvHard"></div><div><h3>Kieta</h3><p>Dideli gabalėliai su ilgai išliekančiu skoniu. Mūsų kasdienių treniruočių guma.</p>
+        <div class="meter"><span>Kietumas</span><i style="--v:65%"></i><span>Skonis</span><i style="--v:85%"></i></div></div></div>
+      <div class="level"><div id="lvUltra"></div><div><h3>Ypač kieta</h3><p>Tankiausias mūsų gabalėlis. Skonis išlieka kelias sekundes, pasipriešinimas – kelias dienas.</p>
+        <div class="meter"><span>Kietumas</span><i style="--v:100%"></i><span>Skonis</span><i style="--v:25%"></i></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="plan" style="background:var(--surface);border-block:1px solid var(--line)">
+  <div class="wrap timer-wrap">
+    <div>
+      <p class="eyebrow">Treniruotės planas</p>
+      <h2 style="margin-top:12px">Treniruokis kaip sporto salėje</h2>
+      <ol class="plan">
+        <li><div><b>Lėtas, stiprus kramtymas · 3 min.</b><p>Kontroliuojamas tempas, tik krūminiais dantimis.</p></div></li>
+        <li><div><b>Greitesnis kramtymas · 2 min.</b><p>Padidink tempą, bet išlaikyk kontrolę.</p></div></li>
+        <li><div><b>Poilsis · 3 min.</b><p>Atpalaiduok žandikaulį, kvėpuok per nosį.</p></div></li>
+      </ol>
+      <p class="lede" style="margin-top:16px">Pakartok du ar tris ratus, tada dieną ilsėkis.</p>
+    </div>
+    <div class="timer" aria-live="polite">
+      <p class="phase">Treniruotės laikmatis</p>
+      <div class="clock" id="clock">03:00</div>
+      <p class="now" id="now">Lėtas, stiprus kramtymas</p>
+      <p class="hint" id="hint">Spausk „Pradėti“, kai guma sušilusi ir padėta ant krūminių dantų.</p>
+      <div class="seg3"><div><i id="g0"></i></div><div><i id="g1"></i></div><div><i id="g2"></i></div></div>
+      <div class="seg-l"><span>Lėtai 3 min.</span><span>Greitai 2 min.</span><span>Poilsis 3 min.</span></div>
+      <p class="round" id="round">1 ratas iš 3</p>
+      <div class="ctrl"><button class="primary" type="button" id="tStart">Pradėti</button><button type="button" id="tReset">Iš naujo</button></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="rv-head"><div class="sec-head" style="margin:0"><p class="eyebrow">Atsiliepimai</p><h2>Ką sako kramtantys</h2></div><span class="rv-note">Maketo peržiūra · pavyzdinės kortelės paleidimo metu bus pakeistos patvirtintais atsiliepimais</span></div>
+    <div class="rv-grid" id="reviews"></div>
+  </div>
+</section>
+
+<section id="faq" style="padding-top:0">
+  <div class="wrap" style="max-width:860px">
+    <div class="sec-head center"><p class="eyebrow">DUK</p><h2>Klausimai apie kietą gumą</h2></div>
+    <div class="faq">
+      <details open><summary>Kodėl ji brangesnė už parduotuvės gumą?</summary><p>Tai treniruočių priemonė, ne saldainis. Tankiai gumos bazei reikia daug daugiau žaliavų, o dėl kietumo gamyba lėtesnė. Be to, vienas gabalėlis tinka kelioms treniruotėms, todėl vienos treniruotės kaina nedidelė.</p></details>
+      <details><summary>Kiek laiko išlieka skonis?</summary><p>Kieta guma skonį išlaiko didelę treniruotės dalį. Ypač kietos skonis trumpas, nes kvapiųjų medžiagų aliejai minkština gumą. Norėdamas abiejų, kramtyk po vieną kietos ir ypač kietos gabalėlį kartu.</p></details>
+      <details><summary>Kada pamatysiu rezultatą?</summary><p>Raumenų įtampą pajusi po pirmos treniruotės. Matomam pokyčiui reikia nuoseklių treniruočių kelias savaites ar mėnesius, ir jis labiausiai matosi, kai riebalų kiekis mažesnis.</p></details>
+      <details><summary>Kaip naudoti gabalėlį pakartotinai?</summary><p>Po treniruotės nuplauk, išdžiovink ant švaraus paviršiaus ir laikyk dėžutėje. Prieš kitą treniruotę minutę sušildyk burnoje.</p></details>
+      <details><summary>Per kieta kramtyti. Ką daryti?</summary><p>Sušildyk ilgiau ir pradėk nuo mažesnių sukandimų. Jei ypač kieta per sunki, pirmiausia treniruokis su kieta arba kramtyk abi kartu, kol žandikaulis prisitaikys.</p></details>
+      <details><summary>Ar galiu daugiau treniruoti vieną pusę?</summary><p>Kramtyk tolygiai abiem pusėmis. Jei viena pusė atrodo silpnesnė, odontologas ar kineziterapeutas patars, ar verta į ją sutelkti dėmesį.</p></details>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap">
+  <div><a class="logo" href="index.html" style="color:var(--bg)"><i></i>Cutline</a><p style="margin-top:12px;opacity:.75;max-width:40ch">Kieta kramtomoji guma žandikaulio treniruotėms. Siunčiame iš Lietuvos.</p></div>
+  <div><h4>Parduotuvė</h4><ul><li><a href="product.html#hard">Kieta guma</a></li><li><a href="product.html#ultra">Ypač kieta guma</a></li><li><a href="product.html#hard-6">6 mėnesių rinkinys</a></li></ul></div>
+  <div><h4>Informacija</h4><ul><li><a href="terms.html">Pirkimo taisyklės</a></li><li><a href="returns.html">Grąžinimas</a></li><li><a href="shipping.html">Pristatymas ir apmokėjimas</a></li><li><a href="privacy.html">Privatumas ir slapukai</a></li><li><a href="safety.html">Saugos instrukcija</a></li><li><a href="legal.html">Teisinė informacija</a></li><li><a href="withdraw.html"><b>Atsisakyti sutarties čia</b></a></li><li><a href="#" data-cookie-settings>Slapukų nustatymai</a></li></ul></div>
+  <p class="legal">© 2026 Cutline</p>
+</div></footer>
+
+<div class="sticky-buy" id="stickyBuy"><div><span id="stName">Kieta · Mėtų</span><b id="stPrice"></b></div><button class="btn" type="button" id="stAdd">Į krepšelį</button></div>
+
+<div class="drawer-bg" id="drawerBg" hidden data-close-cart></div>
+<aside class="drawer" id="drawer" hidden aria-label="Krepšelis">
+  <header><h3>Tavo krepšelis</h3><button class="x" type="button" data-close-cart aria-label="Uždaryti krepšelį">×</button></header>
+  <div class="ship-meter"><span id="shipMsg"></span><div class="bar"><i id="shipBar"></i></div></div>
+  <div class="lines" id="cartLines"></div>
+  <div class="tot"><span>Iš viso</span><span id="cartTotal">€0,00</span></div>
+  <button class="btn block big" type="button" id="checkoutBtn">Apmokėti</button>
+</aside>
+<div class="toast" id="toast" hidden></div>
+
+<script src="assets/site.js"></script>
+<script>
+renderReviews($("reviews"),SAMPLE_REVIEWS,6);
+const INFO={
+  hard:{eyebrow:"Kieta · pradžiai",
+    bullets:["<b>Kietumo ir skonio</b> pusiausvyra","<b>Didesni gabalėliai</b> didesnei judesio amplitudei","<b>Be cukraus ir veganiška</b>"],
+    ingredients:`<p><b>Sudedamosios dalys:</b> gumos bazė, saldikliai (sorbitolis, maltitolis), kvapiosios medžiagos, rūgštys (obuolių rūgštis, citrinų rūgštis), gumiarabikas, kalcio karbonatas, saldikliai (steviolio glikozidai, sukralozė), glajinė medžiaga (karnaubo vaškas).</p>
+      <table class="nut"><tr><td>Energinė vertė 100 g</td><td>588 kJ / 140 kcal</td></tr><tr><td>Angliavandeniai</td><td>59 g</td></tr><tr><td>iš kurių cukrūs</td><td>0 g</td></tr></table>
+      <p class="warn">Su saldikliais. Vartojant per daug, gali sukelti laisvinamąjį poveikį.</p>`},
+  ultra:{eyebrow:"Ypač kieta · pažengusiems",
+    bullets:["<b>Didžiausias pasipriešinimas</b>, išliekantis kelias dienas","<b>Daugkartinė</b> – tinka kelioms treniruotėms","<b>Be intensyviųjų saldiklių</b>, be cukraus, veganiška"],
+    ingredients:`<p><b>Sudedamosios dalys:</b> gumos bazė, saldiklis (maltitolis), kvapioji medžiaga, gumiarabikas, glajinė medžiaga (karnaubo vaškas), talkas.</p>
+      <table class="nut"><tr><td>Energinė vertė 100 g</td><td>202 kJ / 48 kcal</td></tr><tr><td>Angliavandeniai</td><td>20 g</td></tr><tr><td>iš kurių cukrūs</td><td>0 g</td></tr></table>
+      <p class="warn">Su saldikliu. Vartojant per daug, gali sukelti laisvinamąjį poveikį.</p>`}
+};
+const IMGS=[{src:"hero_01.png",alt:"Vyras deda kietos gumos gabalėlį į burną"},{src:"images/profile-jaw.jpg",alt:"Profilis su matomu žandikaulio kampu"},{src:"images/gym-pullup.jpg",alt:"Vyras treniruojasi sporto salėje"}];
+let st={level:"hard",flavour:"Mint",pack:3,view:0};
+function fromHash(){
+  const h=location.hash.slice(1);
+  if(h.startsWith("ultra"))st.level="ultra";else if(h.startsWith("hard"))st.level="hard";
+  const m=h.match(/-(1|3|6)$/);if(m)st.pack=+m[1];
+}
+function render(){
+  const L=CATALOG[st.level],I=INFO[st.level],P=PACKS.find(p=>p.id===st.pack);
+  if(!L.flavours[st.flavour])st.flavour=Object.keys(L.flavours)[0];
+  document.title=L.name;
+  $("pName").textContent=L.name;$("crumbName").textContent=L.short+" guma";$("lvlEyebrow").textContent=I.eyebrow;
+  const single=PACKS[0].price*P.id;
+  $("priceLine").innerHTML=`<b>${eur(P.price)}</b>${P.id>1?`<small>vietoj ${eur(single)} perkant po vieną</small>`:""}<small>${eur(P.price/(P.id*L.grams/1000))} / kg</small>`;
+  $("bullets").innerHTML=I.bullets.map(b=>`<li><span>${b}</span></li>`).join("");
+  document.querySelectorAll(".seg button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.level===st.level));
+  $("flName").textContent=st.flavour;
+  $("swatches").innerHTML=Object.entries(L.flavours).map(([f,c])=>`<button type="button" data-f="${f}" aria-pressed="${f===st.flavour}" style="--c:${c}"><i></i>${f}</button>`).join("");
+  $("packs").innerHTML=PACKS.map(p=>{
+    const save=p.id>1?Math.round((1-p.price/(PACKS[0].price*p.id))*100):0;
+    return `<button type="button" data-p="${p.id}" aria-pressed="${p.id===st.pack}">${p.tag?`<span class="tag">${p.tag}</span>`:""}<span class="radio"></span><span><strong>${p.label}${save?`<span class="save">Sutaupyk ${save} %</span>`:""}</strong><span class="s">${p.sub} · ${p.id*L.grams} g</span></span><span class="pr">${eur(p.price)}<span>${eur(p.price/p.id)} / pak.</span></span></button>`;}).join("");
+  $("addPrice").textContent=eur(P.price);
+  $("ingredients").innerHTML=I.ingredients;
+  // gallery
+  const thumbs=[{t:"pouch"},...IMGS.map(x=>({t:"img",...x}))];
+  if(st.view>=thumbs.length)st.view=0;
+  const v=thumbs[st.view];
+  $("stage").innerHTML=v.t==="pouch"?(P.id>1?`<span class="badge accent">${P.label}</span>`:"")+pouchHTML(st.level,st.flavour):`<img src="${v.src}" alt="${v.alt}">`;
+  $("thumbs").innerHTML=thumbs.map((x,i)=>`<button type="button" data-v="${i}" aria-pressed="${i===st.view}" aria-label="Rodyti ${i+1} nuotrauką">${x.t==="pouch"?pouchHTML(st.level,st.flavour):`<img src="${x.src}" alt="">`}</button>`).join("");
+  $("stName").textContent=`${L.short} · ${st.flavour} · ${P.label}`;$("stPrice").textContent=eur(P.price);
+}
+document.querySelector(".seg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;st.level=b.dataset.level;st.view=0;render();});
+$("swatches").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;st.flavour=b.dataset.f;st.view=0;render();});
+$("packs").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;st.pack=+b.dataset.p;render();});
+$("thumbs").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;st.view=+b.dataset.v;render();});
+const add=()=>addToCart(st.level,st.flavour,st.pack);
+$("addBtn").addEventListener("click",add);$("stAdd").addEventListener("click",add);
+window.addEventListener("hashchange",()=>{fromHash();render();});
+fromHash();render();
+track("product_view",{level:st.level});
+$("lvHard").innerHTML=pouchHTML("hard","Mango");$("lvUltra").innerHTML=pouchHTML("ultra","Cherry Ice");
+// sticky bar after the main button scrolls away
+new IntersectionObserver(([e])=>$("stickyBuy").classList.toggle("on",!e.isIntersecting&&e.boundingClientRect.top<0)).observe($("addBtn"));
+
+/* session timer */
+const PH=[{n:"Lėtas, stiprus kramtymas",s:180,h:"Kontroliuojamas tempas, su kiekvienu sukandimu didink spaudimą. Tik krūminiais dantimis."},
+          {n:"Greitesnis kramtymas",s:120,h:"Padidink tempą, išlaikyk kontrolę, tolygiai keisk puses."},
+          {n:"Poilsis",s:180,h:"Atpalaiduok žandikaulį, užčiaupk lūpas, kvėpuok per nosį."}];
+const ROUNDS=3;let ts={round:1,ph:0,left:PH[0].s,run:false,iv:null,done:false};
+const fmt=s=>String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+function draw(){
+  $("clock").textContent=fmt(ts.left);
+  $("now").textContent=ts.done?"Treniruotė baigta":PH[ts.ph].n;
+  $("hint").textContent=ts.done?"Nuplauk ir išdžiovink gabalėlį. Kita treniruotė – poryt.":(ts.run?PH[ts.ph].h:"Spausk „Pradėti“, kai guma sušilusi ir padėta ant krūminių dantų.");
+  $("round").textContent=`${ts.round} ratas iš ${ROUNDS}`;
+  PH.forEach((p,i)=>{$("g"+i).style.width=(i<ts.ph||ts.done?100:i===ts.ph?100*(1-ts.left/p.s):0)+"%";});
+  $("tStart").textContent=ts.run?"Pauzė":(ts.done?"Dar kartą":"Pradėti");
+}
+function stop(){ts.run=false;clearInterval(ts.iv);}
+function tick(){
+  if(--ts.left>0)return draw();
+  ts.ph++;if(ts.ph>=PH.length){ts.ph=0;ts.round++;}
+  if(ts.round>ROUNDS||(ts.round===ROUNDS&&ts.ph===2)){stop();ts.done=true;ts.left=0;ts.round=ROUNDS;return draw();}
+  ts.left=PH[ts.ph].s;draw();
+}
+function reset(){stop();ts={round:1,ph:0,left:PH[0].s,run:false,iv:null,done:false};draw();}
+$("tStart").addEventListener("click",()=>{if(ts.done)reset();if(ts.run)stop();else{ts.run=true;ts.iv=setInterval(tick,1000);}draw();});
+$("tReset").addEventListener("click",reset);draw();
+</script>
+</body>
+</html>

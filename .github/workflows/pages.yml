@@ -4,7 +4,7 @@ name: Deploy website to GitHub Pages
 on:
   push:
     branches: [main]
-    paths: ["website/**", ".github/workflows/pages.yml"]
+    paths: ["website/**", "website-lt/**", ".github/workflows/pages.yml"]
   workflow_dispatch:
 
 permissions:
@@ -24,12 +24,14 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - name: Build site folder (website only, v2 as homepage)
+      - name: Build site folder (EN at root with v2 as homepage, LT at /lt/)
         run: |
           mkdir _site
           cp -R website/. _site/
           mv _site/index.html _site/v1.html
           cp _site/index-v2.html _site/index.html
+          mkdir _site/lt
+          cp -R website-lt/. _site/lt/
           touch _site/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

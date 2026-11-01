@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cutline – kieta guma žandikauliui</title>
+<meta name="description" content="Kieta kramtomoji guma žandikaulio treniruotėms. Du kietumo lygiai, be cukraus, veganiška. Siunčiame iš Lietuvos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+.masseter-photo{position:relative}
+.masseter-photo img{object-position:center 100%}
+.masseter-photo .pin{position:absolute;left:55%;top:70%;transform:translate(-11px,-50%);display:flex;align-items:center;gap:10px;pointer-events:none}
+.masseter-photo .pin i{width:22px;height:22px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 8px rgba(36,64,230,.25),0 0 0 18px rgba(36,64,230,.12)}
+@media (max-width:860px){.masseter-photo .pin{top:55%}}
+.masseter-photo .pin span{background:var(--surface);color:var(--ink);font:700 .72rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:8px 10px;border-radius:4px;box-shadow:0 6px 16px rgba(0,0,0,.12)}
+</style>
+</head>
+<body>
+
+<div class="top-bar"><div class="wrap">Nemokamas pristatymas ES nuo 49 € · Siunčiame iš Lietuvos</div></div>
+<nav class="site"><div class="wrap">
+  <a class="logo" href="index.html"><i></i>Cutline</a>
+  <div class="links"><a href="product.html">Parduotuvė</a><a href="#how">Kaip tai veikia</a><a href="#why">Kodėl kieta guma</a><a href="#faq">DUK</a></div>
+  <button class="cart-btn" type="button" data-open-cart>Krepšelis (<span data-cart-count>0</span>)</button>
+</div></nav>
+
+<main>
+<section class="hero" aria-labelledby="heroTitle" style="padding:0">
+  <div class="hero-img"><img src="hero_01.png" alt="Vyras deda kietos gumos gabalėlį į burną" width="1440" height="720"></div>
+  <div class="wrap hero-inner">
+    <div class="hero-copy">
+      <p class="eyebrow">Guma žandikaulio treniruotėms</p>
+      <h1 id="heroTitle">Kieta guma <em>stipresniam žandikauliui</em></h1>
+      <p class="hero-sub">Kramtomoji guma, kuri priešinasi tavo sukandimui. Treniruok žandikaulio raumenis 10–15 minučių kas antrą dieną.</p>
+      <div class="cta-row"><a class="btn big" href="product.html">Pirkti kietą gumą</a><a class="btn ghost" href="#how">Kaip tai veikia</a></div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker" aria-label="Parduotuvės privalumai"><div class="ticker-track">
+  <span>Be cukraus ir veganiška</span><span>2 kietumo lygiai</span><span>Daugkartiniai gabalėliai</span><span>Nemokamas pristatymas ES nuo 49 €</span><span>Siunčiame iš Lietuvos</span><span>14 dienų grąžinimas neatplėštoms pakuotėms</span>
+  <span aria-hidden="true">Be cukraus ir veganiška</span><span aria-hidden="true">2 kietumo lygiai</span><span aria-hidden="true">Daugkartiniai gabalėliai</span><span aria-hidden="true">Nemokamas pristatymas ES nuo 49 €</span><span aria-hidden="true">Siunčiame iš Lietuvos</span><span aria-hidden="true">14 dienų grąžinimas neatplėštoms pakuotėms</span>
+</div></div>
+
+<section id="shop">
+  <div class="wrap">
+    <div class="sec-head"><p class="eyebrow">Parduotuvė</p><h2>Pasirink kietumą</h2></div>
+    <div class="cards">
+      <a class="card" href="product.html#hard">
+        <div class="card-visual"><span class="badge">Pradžiai</span><div id="cv-hard" style="display:contents"></div></div>
+        <h3>Kieta guma</h3>
+        <p class="desc">Dideli gabalėliai, kurių skonis išlieka visą treniruotę. Geriausias pasirinkimas pradžiai.</p>
+        <div class="price-line"><b>nuo 19,95 €</b><small>2 mėnesių atsargos</small></div>
+        <span class="go">Rinktis skonį <span aria-hidden="true">→</span></span>
+      </a>
+      <a class="card" href="product.html#ultra">
+        <div class="card-visual"><span class="badge">Pažengusiems</span><div id="cv-ultra" style="display:contents"></div></div>
+        <h3>Ypač kieta guma</h3>
+        <p class="desc">Tankiausias mūsų gabalėlis. Didžiausias pasipriešinimas, kuris išlieka kelias dienas.</p>
+        <div class="price-line"><b>nuo 19,95 €</b><small>2 mėnesių atsargos</small></div>
+        <span class="go">Rinktis skonį <span aria-hidden="true">→</span></span>
+      </a>
+      <a class="card" href="product.html#hard-6">
+        <div class="card-visual"><span class="badge accent">Perkamiausias · sutaupyk 42 %</span><div id="cv-bundle" style="display:contents"></div></div>
+        <h3>6 mėnesių rinkinys</h3>
+        <p class="desc">Trys pakuotės: derink bet kokius skonius ir abu kietumo lygius.</p>
+        <div class="price-line"><b>34,95 €</b><small>vietoj 59,85 € perkant po vieną</small></div>
+        <span class="go">Susidaryk rinkinį <span aria-hidden="true">→</span></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="why" style="background:var(--surface);border-block:1px solid var(--line)">
+  <div class="wrap split">
+    <div class="ph-img masseter-photo">
+      <img src="images/profile-jaw.jpg" alt="Vyro profilis su matoma žandikaulio linija">
+      <div class="pin"><i></i><span>Kramtomasis raumuo</span></div>
+    </div>
+    <div>
+      <p class="eyebrow">Tas pats žandikaulis, stipresnis raumuo</p>
+      <h2 style="margin-top:12px">Raumuo, kuris formuoja žandikaulio liniją</h2>
+      <p class="lede" style="margin-top:16px">Kramtomasis raumuo (masetras) yra ties žandikaulio kampu. Tai raumuo, kurį jauti išsipučiant, kai sukandi dantis. Minkštas maistas ir paprasta guma jo beveik neapkrauna. Kieta guma priverčia jį dirbti su tikru pasipriešinimu, taip pat kaip svoriai treniruoja bet kurį kitą raumenį.</p>
+      <ul class="ticks">
+        <li>Treniruoja kramtomąjį raumenį – pagrindinį kramtymo raumenį</li>
+        <li>Trumpos treniruotės su poilsio dienomis, kaip sporto salėje</li>
+        <li>Geriausiai matosi, kai riebalų kiekis organizme mažesnis</li>
+      </ul>
+      <div class="cta-row"><a class="btn" href="product.html">Pradėti treniruotis</a></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head center"><p class="eyebrow">Kodėl verta treniruoti žandikaulį</p><h2>Mažas įprotis, matomas skirtumas</h2></div>
+    <div class="benefits">
+      <div class="benefit"><span class="num">01</span><h3>Stipresnis sukandimas</h3><p>Reguliarios treniruotės su pasipriešinimu didina sukandimo jėgą, kaip ir bet kuris raumuo prisitaiko prie krūvio.</p></div>
+      <div class="benefit"><span class="num">02</span><h3>Ryškesnis žandikaulis</h3><p>Treniruotas kramtomasis raumuo suteikia formos žandikaulio kampui. Sumažink riebalų – ir tai matysis.</p></div>
+      <div class="benefit"><span class="num">03</span><h3>15 minučių, bet kur</h3><p>Jokių prietaisų ir sporto salės. Kramtyk prie stalo, automobilyje ar tarp serijų.</p></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap split rev">
+    <div class="ph-img"><img src="images/profile-silhouette.jpg" alt="Vyro profilis prieš šviesą"></div>
+    <div>
+      <p class="eyebrow">Guma</p>
+      <h2 style="margin-top:12px">Gerokai kietesnė už paprastą gumą</h2>
+      <p class="lede" style="margin-top:16px">Parduotuvės guma suminkštėja per kelias minutes. Cutline gaminama iš tankios gumos bazės su mažai minkštiklių, todėl išlaiko pasipriešinimą visą treniruotę – kiekvienas kramtymas yra pakartojimas.</p>
+      <ul class="ticks">
+        <li>Du lygiai: kieta ir ypač kieta</li>
+        <li>Be cukraus ir veganiška</li>
+        <li>Daugkartinė: nuplauk, išdžiovink ir kramtyk per kitą treniruotę</li>
+        <li>Aštuoni skoniai: nuo mėtų iki ledinių vyšnių</li>
+      </ul>
+      <div class="cta-row"><a class="btn" href="product.html">Pirkti kietą gumą</a></div>
+    </div>
+  </div>
+</section>
+
+<section id="how" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head center"><p class="eyebrow">Kaip tai veikia</p><h2>Viena treniruotė kas antrą dieną</h2></div>
+    <div class="steps3">
+      <div><span class="t">~1 min.</span><h3>Sušildyk</h3><p>Padėk gumą ant galinių krūminių dantų ir palaipsniui sukąsk, kol ji šiek tiek suminkštės.</p></div>
+      <div><span class="t">10–15 min.</span><h3>Kramtyk ratais</h3><p>3 min. lėtai ir stipriai, 2 min. greičiau, 3 min. poilsio. Pakartok du ar tris kartus.</p></div>
+      <div><span class="t">Kita diena</span><h3>Ilsėkis</h3><p>Raumenys auga poilsio dienomis. Nuplauk gabalėlį, išdžiovink ir naudok per kitą treniruotę.</p></div>
+    </div>
+    <p style="text-align:center;margin-top:24px"><a href="product.html#plan" style="font-weight:600">Visas treniruotės planas ir laikmatis →</a></p>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="rv-head"><div class="sec-head" style="margin:0"><p class="eyebrow">Atsiliepimai</p><h2>Ką sako kramtantys</h2></div><span class="rv-note">Maketo peržiūra · pavyzdinės kortelės paleidimo metu bus pakeistos patvirtintais atsiliepimais</span></div>
+    <div class="rv-grid" id="reviews"></div>
+  </div>
+</section>
+
+<section id="faq" style="padding-top:0">
+  <div class="wrap" style="max-width:860px">
+    <div class="sec-head center"><p class="eyebrow">DUK</p><h2>Klausimai</h2></div>
+    <div class="faq">
+      <details open><summary>Po kiek laiko pamatysiu rezultatą?</summary><p>Žandikaulio raumenų darbą pajusi jau po pirmos treniruotės. Matomam pokyčiui reikia nuoseklių treniruočių kelias savaites ar mėnesius, ir jis labiausiai matosi, kai riebalų kiekis mažesnis.</p></details>
+      <details><summary>Kaip dažnai treniruotis?</summary><p>10–15 minučių kas antrą dieną. Daugiau kramtymo nereiškia greitesnio progreso: kaip ir bet kuris raumuo, kramtomasis raumuo auga poilsio dienomis.</p></details>
+      <details><summary>Kieta ar ypač kieta: nuo kurios pradėti?</summary><p>Pradėk nuo kietos. Ji skanesnė ir leidžia išmokti techniką. Pereik prie ypač kietos, kai visa treniruotė taps lengva.</p></details>
+      <details><summary>Ar tai saugu dantims ir žandikauliui?</summary><p>Kramtyk galiniais krūminiais dantimis, sustok pajutęs aštrų skausmą ir nenaudok, jei turi žandikaulio sąnario problemų, atsilaisvinusių plombų, implantų ar breketų. Netinka jaunesniems nei 14 metų.</p></details>
+      <details><summary>Kur siunčiate?</summary><p>Siunčiame visoje ES iš Lietuvos. Užsakymams nuo 49 € pristatymas nemokamas.</p></details>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="news">
+      <div><p class="eyebrow" style="color:#9DADFF">Gauk 10 % nuolaidą</p><h2 style="margin-top:10px">Pirmam užsakymui</h2><p>Užsiregistruok ir gauk 10 % nuolaidą, treniruočių patarimus ir žinias apie naujus skonius.</p></div>
+      <div><form data-news><label for="newsEmail" class="eyebrow" style="position:absolute;left:-9999px">El. paštas</label><input id="newsEmail" type="email" required placeholder="Tavo el. paštas"><button class="btn" type="submit">Gauti 10 %</button></form><p class="ok-msg" hidden>Ačiū, tu sąraše. 10 % nuolaidos kodą atsiųsime paleidimo metu.</p></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap">
+  <div><a class="logo" href="index.html" style="color:var(--bg)"><i></i>Cutline</a><p style="margin-top:12px;opacity:.75;max-width:40ch">Kieta kramtomoji guma žandikaulio treniruotėms. Siunčiame iš Lietuvos.</p></div>
+  <div><h4>Parduotuvė</h4><ul><li><a href="product.html#hard">Kieta guma</a></li><li><a href="product.html#ultra">Ypač kieta guma</a></li><li><a href="product.html#hard-6">6 mėnesių rinkinys</a></li></ul></div>
+  <div><h4>Informacija</h4><ul><li><a href="terms.html">Pirkimo taisyklės</a></li><li><a href="returns.html">Grąžinimas</a></li><li><a href="shipping.html">Pristatymas ir apmokėjimas</a></li><li><a href="privacy.html">Privatumas ir slapukai</a></li><li><a href="safety.html">Saugos instrukcija</a></li><li><a href="legal.html">Teisinė informacija</a></li><li><a href="withdraw.html"><b>Atsisakyti sutarties čia</b></a></li><li><a href="#" data-cookie-settings>Slapukų nustatymai</a></li></ul></div>
+  <p class="legal">© 2026 Cutline</p>
+</div></footer>
+
+<div class="drawer-bg" id="drawerBg" hidden data-close-cart></div>
+<aside class="drawer" id="drawer" hidden aria-label="Krepšelis">
+  <header><h3>Tavo krepšelis</h3><button class="x" type="button" data-close-cart aria-label="Uždaryti krepšelį">×</button></header>
+  <div class="ship-meter"><span id="shipMsg"></span><div class="bar"><i id="shipBar"></i></div></div>
+  <div class="lines" id="cartLines"></div>
+  <div class="tot"><span>Iš viso</span><span id="cartTotal">€0,00</span></div>
+  <button class="btn block big" type="button" id="checkoutBtn">Apmokėti</button>
+</aside>
+<div class="toast" id="toast" hidden></div>
+
+<script src="assets/site.js"></script>
+<script>
+renderReviews($("reviews"),SAMPLE_REVIEWS,3);
+$("cv-hard").innerHTML=pouchHTML("hard","Mint");
+$("cv-ultra").innerHTML=pouchHTML("ultra","Blueberry Ice");
+$("cv-bundle").innerHTML=pouchHTML("hard","Mango","small")+pouchHTML("hard","Mint")+pouchHTML("ultra","Cherry Ice","small");
+</script>
+</body>
+</html>

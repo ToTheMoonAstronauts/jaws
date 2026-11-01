@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Apmokėjimas · Cutline</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+.co-nav .wrap{display:flex;align-items:center;justify-content:space-between;padding-block:16px}
+.co-nav .secure{font:600 .72rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;gap:8px;align-items:center}
+.co{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:start;padding-block:32px 72px}
+.co > *{min-width:0}
+@media (max-width:900px){.co{grid-template-columns:1fr;gap:24px}.summary{order:-1}}
+.co h1{font-size:clamp(2.4rem,4vw,3.2rem)}
+.steps-mini{display:flex;gap:8px;font:600 .72rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:12px;flex-wrap:wrap}
+.steps-mini b{color:var(--ink)}
+fieldset{border:0;padding:0;margin:28px 0 0}
+legend{font:800 1.4rem/1 var(--display);text-transform:uppercase;margin-bottom:14px;padding:0}
+.f-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.f-grid .full{grid-column:1/-1}
+@media (max-width:560px){.f-grid{grid-template-columns:1fr}}
+.field{display:grid;gap:6px}
+.field label{font-size:.85rem;font-weight:500}
+.field input,.field select{font:inherit;padding:14px 14px;border:1.5px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);width:100%}
+.field input:focus,.field select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(36,64,230,.15)}
+.field .err{color:var(--bad);font-size:.8rem;min-height:1em}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:.88rem;color:var(--muted);margin-top:12px}
+.check input{margin-top:3px;width:18px;height:18px;accent-color:var(--accent)}
+.pm{display:grid;gap:10px}
+.pm label{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;border:1.5px solid var(--line);background:var(--surface);border-radius:8px;padding:14px 16px;cursor:pointer}
+.pm input{width:18px;height:18px;accent-color:var(--accent);margin:0}
+.pm label:has(input:checked){border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.pm b{font-weight:600}
+.pm small{display:block;color:var(--muted);font-size:.8rem}
+.pm .logos{display:flex;gap:4px}
+.pm .logos span{font:700 .62rem/1 var(--mono);border:1px solid var(--line);padding:5px 6px;border-radius:3px;color:var(--muted)}
+.pay-btn{margin-top:22px}
+.fine2{font-size:.78rem;color:var(--muted);text-align:center;margin-top:10px}
+.summary{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:24px;position:sticky;top:20px}
+@media (max-width:900px){.summary{position:static}}
+.summary h2{font-size:1.6rem}
+.s-lines{display:grid;gap:12px;margin:18px 0;border-bottom:1px solid var(--line);padding-bottom:18px}
+.s-line{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;font-size:.9rem}
+.s-line .pouch{font-size:6px}
+.s-line small{display:block;color:var(--muted)}
+.s-row{display:flex;justify-content:space-between;font-size:.92rem;padding:4px 0;font-variant-numeric:tabular-nums}
+.s-row.total{font:700 1.15rem/1.4 var(--mono);border-top:1px solid var(--line);margin-top:10px;padding-top:12px}
+.empty-co{text-align:center;padding:60px 0;display:grid;gap:16px;justify-items:center}
+.reveal-bg{position:fixed;inset:0;background:rgba(18,22,20,.55);z-index:70;display:grid;place-items:center;padding:16px}
+.reveal{background:var(--bg);border-radius:12px;max-width:520px;width:100%;padding:36px 32px;display:grid;gap:14px;box-shadow:0 30px 60px rgba(0,0,0,.25)}
+.reveal h2{font-size:clamp(2rem,6vw,2.6rem)}
+.reveal p{color:var(--muted)}
+.reveal .nocharge{background:#E3F3EA;color:var(--ok);font-weight:600;padding:12px 14px;border-radius:8px;font-size:.92rem}
+.reveal .code{font:700 1.4rem/1 var(--mono);letter-spacing:.1em;border:2px dashed var(--accent);color:var(--accent-deep);padding:12px;text-align:center;border-radius:8px}
+.spinner{width:18px;height:18px;border:3px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<nav class="site co-nav"><div class="wrap">
+  <a class="logo" href="index.html"><i></i>Cutline</a>
+  <span class="secure"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Saugus apmokėjimas</span>
+</div></nav>
+
+<main class="wrap">
+  <div id="emptyCo" class="empty-co" hidden>
+    <h1>Tavo krepšelis tuščias</h1>
+    <a class="btn big" href="product.html">Pirkti kietą gumą</a>
+  </div>
+
+  <div class="co" id="co" hidden>
+    <form id="coForm" novalidate>
+      <h1>Apmokėjimas</h1>
+      <p class="steps-mini"><span>Krepšelis</span>›<b>Duomenys</b>›<span>Mokėjimas</span></p>
+
+      <fieldset>
+        <legend>Kontaktai</legend>
+        <div class="field"><label for="email">El. paštas</label><input id="email" name="email" type="email" autocomplete="email" required placeholder="vardas@pavyzdys.lt"><span class="err" id="emailErr"></span></div>
+        <label class="check"><input type="checkbox" id="consent"> Taip pat noriu gauti treniruočių patarimus ir pasiūlymus. Atsisakyti galėsiu bet kada.</label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Pristatymas</legend>
+        <div class="f-grid">
+          <div class="field"><label for="fname">Vardas</label><input id="fname" autocomplete="given-name" required><span class="err" id="fnameErr"></span></div>
+          <div class="field"><label for="lname">Pavardė</label><input id="lname" autocomplete="family-name"><span class="err"></span></div>
+          <div class="field full"><label for="country">Šalis</label>
+            <select id="country" autocomplete="country-name" required>
+              <option value="Lithuania">Lietuva</option><option value="Latvia">Latvija</option><option value="Estonia">Estija</option><option value="Poland">Lenkija</option><option value="Germany">Vokietija</option><option value="Finland">Suomija</option><option value="Sweden">Švedija</option><option value="Denmark">Danija</option><option value="Netherlands">Nyderlandai</option><option value="Belgium">Belgija</option><option value="France">Prancūzija</option><option value="Ireland">Airija</option><option value="Austria">Austrija</option><option value="Czechia">Čekija</option><option value="Slovakia">Slovakija</option><option value="Spain">Ispanija</option><option value="Italy">Italija</option><option value="Portugal">Portugalija</option><option value="Other EU country">Kita ES šalis</option>
+            </select></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Mokėjimas</legend>
+        <div class="pm" role="radiogroup" aria-label="Mokėjimo būdas">
+          <label><input type="radio" name="pm" value="card" checked><span><b>Mokėjimo kortelė</b><small>Visa, Mastercard, Amex</small></span><span class="logos"><span>VISA</span><span>MC</span></span></label>
+          <label><input type="radio" name="pm" value="paypal"><span><b>PayPal</b></span><span class="logos"><span>PayPal</span></span></label>
+          <label><input type="radio" name="pm" value="apple_pay"><span><b>Apple Pay</b></span><span class="logos"><span>Pay</span></span></label>
+          <label><input type="radio" name="pm" value="google_pay"><span><b>Google Pay</b></span><span class="logos"><span>G Pay</span></span></label>
+          <label><input type="radio" name="pm" value="klarna"><span><b>Klarna</b><small>Mokėk vėliau arba 3 dalimis</small></span><span class="logos"><span>Klarna</span></span></label>
+        </div>
+      </fieldset>
+
+      <button class="btn block big pay-btn" type="submit" id="payBtn">Mokėti <span id="payAmt"></span></button>
+      <p class="fine2">El. paštą naudojame informuoti apie šį užsakymą. Pateikdamas užsakymą sutinki su <a href="terms.html">pirkimo taisyklėmis</a> ir <a href="privacy.html">privatumo politika</a>. <a href="returns.html">Grąžinimas</a> · <a href="shipping.html">Pristatymas</a></p>
+    </form>
+
+    <aside class="summary" aria-label="Užsakymo suvestinė">
+      <h2>Užsakymo suvestinė</h2>
+      <div class="s-lines" id="sLines"></div>
+      <div class="s-row"><span>Tarpinė suma</span><span id="sSub"></span></div>
+      <div class="s-row"><span>Pristatymas</span><span id="sShip"></span></div>
+      <div class="s-row total"><span>Iš viso</span><span id="sTot"></span></div>
+      <p class="fine2" style="text-align:left">Su PVM. Nemokamas pristatymas ES nuo 49 €.</p>
+    </aside>
+  </div>
+</main>
+
+<div class="reveal-bg" id="reveal" hidden role="dialog" aria-modal="true" aria-labelledby="revealTitle">
+  <div class="reveal">
+    <p class="eyebrow">Ačiū už užsakymą</p>
+    <h2 id="revealTitle">Tu pirmas. Dar nesiunčiame.</h2>
+    <p class="nocharge">✓ Pinigai nenuskaityti. Jokio mokėjimo nebuvo.</p>
+    <p>Cutline netrukus startuoja, o tu – vienas pirmųjų užsisakiusių. Išsaugojome tavo duomenis ir, kai tik produktas bus prieinamas, parašysime adresu <b id="revealEmail"></b> su nuolaida pirmiesiems pirkėjams.</p>
+    <div class="code">EARLY20</div>
+    <p style="font-size:.85rem">20 % nuolaida pirmam užsakymui paleidimo metu. Kodą įdėsime ir į laišką.</p>
+    <a class="btn block big" href="index.html">Grįžti į parduotuvę</a>
+  </div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<!-- cart drawer markup is not used on checkout, but renderCart expects these ids -->
+<div hidden><div id="cartLines"></div><span id="cartTotal"></span><span id="shipMsg"></span><i id="shipBar"></i></div>
+
+<script src="assets/site.js"></script>
+<script>
+const SHIP=4.95;
+function totals(){const sub=cartTotal();const ship=sub>=FREE_SHIP||sub===0?0:SHIP;return {sub,ship,tot:sub+ship}}
+function renderSummary(){
+  if(!cart.length){$("emptyCo").hidden=false;$("co").hidden=true;return}
+  $("co").hidden=false;$("emptyCo").hidden=true;
+  $("sLines").innerHTML=cart.map(l=>`<div class="s-line">${pouchHTML(l.level,l.flavour)}<div><b>${CATALOG[l.level].short} · ${l.flavour}</b><small>${l.label} · ${l.qty} vnt.</small></div><b>${eur(l.price*l.qty)}</b></div>`).join("");
+  const t=totals();$("sSub").textContent=eur(t.sub);$("sShip").textContent=t.ship?eur(t.ship):"Nemokamai";$("sTot").textContent=eur(t.tot);$("payAmt").textContent=eur(t.tot);
+}
+renderSummary();
+if(cart.length)track("checkout_start",{items:cart.length,total:totals().tot});
+document.querySelectorAll('input[name=pm]').forEach(r=>r.addEventListener("change",()=>track("payment_method",{method:r.value})));
+
+$("coForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const email=$("email").value.trim(),fname=$("fname").value.trim();
+  let ok=true;
+  $("emailErr").textContent=/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)?"":(ok=false,"Įvesk teisingą el. pašto adresą.");
+  $("fnameErr").textContent=fname?"":(ok=false,"Įvesk vardą.");
+  if(!ok){(email&&/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)?$("fname"):$("email")).focus();return}
+  const pm=document.querySelector('input[name=pm]:checked').value,t=totals();
+  const btn=$("payBtn");btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Apdorojama';
+  const items=cart.map(l=>({level:l.level,flavour:l.flavour,pack:l.pack,qty:l.qty,price:l.price}));
+  await Promise.all([
+    sbInsert("leads",{session_id:getSID(),lang:"lt",source:"checkout",email:email.slice(0,254),first_name:fname.slice(0,100),country:$("country").value,payment_method:pm,items,total_eur:Math.round(t.tot*100)/100,marketing_consent:$("consent").checked,utm:UTM}),
+    track("pay_click",{method:pm,total:t.tot,items:items.length})
+  ]);
+  await new Promise(r=>setTimeout(r,900));
+  $("revealEmail").textContent=email;$("reveal").hidden=false;
+  cart=[];saveCart();renderCart();
+});
+</script>
+</body>
+</html>
