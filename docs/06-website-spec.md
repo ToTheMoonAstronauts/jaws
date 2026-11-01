@@ -16,7 +16,7 @@ File: `website/index.html` (static, single page, no build step).
 11. Safety: who shouldn't chew it
 12. Reviews: empty state (real, order-linked reviews only)
 13. FAQ (8 questions)
-14. Footer: MB Monokodas details (placeholders), legal links, photo note
+14. Footer: brand only, legal links, photo note
 
 ## Draft pricing
 | Pack | Price | Hard €/kg (116 g) | Ultra €/kg (100 g) |

@@ -1,6 +1,6 @@
 # Jaw training gum project (working brand: Cutline)
 
-Hard chewing gum for jaw/masseter training, sold by MB Monokodas (Lithuania).
+Hard chewing gum for jaw/masseter training, sold by a Lithuanian operator (see private notes).
 Same factory and formulation as Jawliner's hard gums. Reference competitor: https://jawliner.com/
 
 Last updated: 2026-10-31

@@ -14,7 +14,7 @@ Reviewed 2026-11-01. Not legal advice: have a Lithuanian lawyer check the final 
 | Legal notice | Impressum: MEG GmbH, HRB 12113 Kempten, VAT DE310927505, managing directors, content/link/copyright disclaimers | Still links the EU ODR platform (closed 20 July 2025) |
 | Revoke Order | Page exists but no form content found | Does not yet meet the 2026 withdrawal-button rules |
 
-## Rules that apply to us (MB Monokodas, Lithuania)
+## Rules that apply to us (Lithuanian seller)
 
 **EU / Lithuania, B2C online sales**
 - Consumer Rights Directive (2011/83/EU) as implemented in the Lithuanian Civil Code: pre-contract information, 14-day withdrawal, model form, refund within 14 days, delivery within 30 days unless agreed.

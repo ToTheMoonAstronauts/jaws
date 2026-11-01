@@ -3,7 +3,7 @@
 Not legal advice; confirm with a Lithuanian food/consumer lawyer before launch.
 
 ## Food law
-- [ ] Register MB Monokodas as a food business operator with VMVT, even for distribution only.
+- [ ] Register the operating company as a food business operator with VMVT, even for distribution only.
 - [ ] Label in Lithuanian (and each target-market language): name, ingredients with additive categories, allergens, net weight, best before, storage, operator name/address, nutrition per 100 g.
 - [ ] "With sweeteners" (Reg. 1169/2011 Annex III).
 - [ ] "Excessive consumption may produce laxative effects" — mandatory when added polyols > 10% (Reg. 1169/2011 Annex III; see Reg. 2021/1175). Both Hard and Ultra Hard almost certainly qualify.
