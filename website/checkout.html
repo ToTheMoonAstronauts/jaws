@@ -106,7 +106,7 @@ legend{font:800 1.4rem/1 var(--display);text-transform:uppercase;margin-bottom:1
       </fieldset>
 
       <button class="btn block big pay-btn" type="submit" id="payBtn">Pay <span id="payAmt"></span></button>
-      <p class="fine2">We use your email to update you about this order. MB Monokodas, Lithuania. By placing your order you agree to our terms of service and privacy policy.</p>
+      <p class="fine2">We use your email to update you about this order. MB Monokodas, Lithuania. By placing your order you agree to our <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a>. <a href="returns.html">Returns</a> · <a href="shipping.html">Shipping</a></p>
     </form>
 
     <aside class="summary" aria-label="Order summary">
@@ -161,7 +161,7 @@ $("coForm").addEventListener("submit",async e=>{
   const btn=$("payBtn");btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Processing';
   const items=cart.map(l=>({level:l.level,flavour:l.flavour,pack:l.pack,qty:l.qty,price:l.price}));
   await Promise.all([
-    sbInsert("leads",{session_id:SID,source:"checkout",email:email.slice(0,254),first_name:fname.slice(0,100),country:$("country").value,payment_method:pm,items,total_eur:Math.round(t.tot*100)/100,marketing_consent:$("consent").checked,utm:UTM}),
+    sbInsert("leads",{session_id:getSID(),source:"checkout",email:email.slice(0,254),first_name:fname.slice(0,100),country:$("country").value,payment_method:pm,items,total_eur:Math.round(t.tot*100)/100,marketing_consent:$("consent").checked,utm:UTM}),
     track("pay_click",{method:pm,total:t.tot,items:items.length})
   ]);
   await new Promise(r=>setTimeout(r,900));

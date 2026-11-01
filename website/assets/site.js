@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded",renderCart);
 document.addEventListener("submit",e=>{
   const f=e.target.closest("[data-news]");if(!f)return;e.preventDefault();
   const email=(f.querySelector("input[type=email]")||{}).value||"";
-  sbInsert("leads",{session_id:SID,source:"newsletter",email:email.trim().slice(0,254),marketing_consent:true,utm:UTM});track("newsletter_signup");
+  sbInsert("leads",{session_id:getSID(),source:"newsletter",email:email.trim().slice(0,254),marketing_consent:true,utm:UTM});track("newsletter_signup");
   f.hidden=true;const ok=f.nextElementSibling;if(ok)ok.hidden=false;
 });
 
@@ -81,17 +81,41 @@ function renderReviews(el,list,n){
 /* ---------- Fake door tracking (Supabase, insert-only) ---------- */
 const SB_URL="https://vzfwovxlzgrtghxlfkbj.supabase.co/rest/v1/";
 const SB_KEY="sb_publishable_JP7_gwTXfMBITq2e2gHe8A_snjOsWTT";
-const SID=(()=>{try{let s=localStorage.getItem("cutline-sid");if(!s){s=(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random()).slice(0,36);localStorage.setItem("cutline-sid",s)}return s}catch(e){return "nosid-"+Date.now()}})();
+/* Consent: analytics only after the visitor accepts (ePrivacy/GDPR). Cart storage is strictly necessary. */
+function getConsent(){try{return localStorage.getItem("cutline-consent")}catch(e){return null}}
+function setConsent(v){try{localStorage.setItem("cutline-consent",v)}catch(e){}}
+const TMP_SID="tmp-"+Math.random().toString(36).slice(2,12);
+function getSID(){
+  if(getConsent()!=="granted")return TMP_SID;
+  try{let s=localStorage.getItem("cutline-sid");if(!s){s=(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random()).slice(0,36);localStorage.setItem("cutline-sid",s)}return s}catch(e){return TMP_SID}
+}
 const UTM=(()=>{const q=new URLSearchParams(location.search),u={};["utm_source","utm_medium","utm_campaign","utm_content","utm_term","fbclid"].forEach(k=>{if(q.get(k))u[k]=q.get(k).slice(0,200)});
-  try{if(Object.keys(u).length)sessionStorage.setItem("cutline-utm",JSON.stringify(u));return Object.keys(u).length?u:JSON.parse(sessionStorage.getItem("cutline-utm")||"{}")}catch(e){return u}})();
+  try{if(Object.keys(u).length&&getConsent()==="granted")sessionStorage.setItem("cutline-utm",JSON.stringify(u));return Object.keys(u).length?u:JSON.parse(sessionStorage.getItem("cutline-utm")||"{}")}catch(e){return u}})();
 function sbInsert(table,row){
   return fetch(SB_URL+table,{method:"POST",keepalive:true,headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify(row)})
     .then(r=>r.ok).catch(()=>false);
 }
 function track(event,props={}){
-  return sbInsert("events",{session_id:SID,event,page:location.pathname.slice(-200),props,referrer:(document.referrer||"").slice(0,500),utm:UTM});
+  if(getConsent()!=="granted")return Promise.resolve(false);
+  return sbInsert("events",{session_id:getSID(),event,page:location.pathname.slice(-200),props,referrer:(document.referrer||"").slice(0,500),utm:UTM});
 }
 document.addEventListener("DOMContentLoaded",()=>track("page_view"));
 /* wrap addToCart so every add is tracked */
 const _addToCart=addToCart;
 addToCart=function(level,flavour,packId){track("add_to_cart",{level,flavour,pack:packId});return _addToCart(level,flavour,packId)};
+
+/* cookie banner */
+function cookieBanner(){
+  let b=document.getElementById("cookieBar");
+  if(!b){b=document.createElement("div");b.id="cookieBar";b.className="cookie-bar";b.setAttribute("role","dialog");b.setAttribute("aria-label","Cookie choice");
+    b.innerHTML='<p>We use your browser\'s storage to keep your cart. With your OK, we also measure visits and shop steps to see how many people are interested in Cutline. No advertising cookies. <a href="privacy.html">Privacy &amp; Cookies</a></p><div class="cookie-btns"><button type="button" class="btn ghost" data-consent="denied">Decline</button><button type="button" class="btn" data-consent="granted">Accept analytics</button></div>';
+    document.body.appendChild(b);}
+  b.hidden=false;
+}
+document.addEventListener("click",e=>{
+  const c=e.target.closest("[data-consent]");
+  if(c){const v=c.dataset.consent,was=getConsent();setConsent(v);document.getElementById("cookieBar").hidden=true;
+    if(v==="granted"&&was!=="granted"){track("consent",{value:v});track("page_view")}}
+  if(e.target.closest("[data-cookie-settings]")){e.preventDefault();cookieBanner()}
+});
+document.addEventListener("DOMContentLoaded",()=>{if(!getConsent())cookieBanner()});
