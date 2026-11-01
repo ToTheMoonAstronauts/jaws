@@ -48,7 +48,7 @@ document.addEventListener("click",e=>{
   if(e.target.closest("[data-open-cart]"))openCart();
   if(e.target.closest("[data-close-cart]"))closeCart();
   const rm=e.target.closest("[data-rm]");if(rm){cart.splice(+rm.dataset.rm,1);saveCart();renderCart();}
-  if(e.target.closest("#checkoutBtn"))toast("Checkout will be connected before launch.");
+  if(e.target.closest("#checkoutBtn")){if(!cart.length){toast("Your cart is empty.");return}location.href="checkout.html"}
 });
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeCart()});
 document.addEventListener("DOMContentLoaded",renderCart);
@@ -56,6 +56,8 @@ document.addEventListener("DOMContentLoaded",renderCart);
 /* newsletter (demo) */
 document.addEventListener("submit",e=>{
   const f=e.target.closest("[data-news]");if(!f)return;e.preventDefault();
+  const email=(f.querySelector("input[type=email]")||{}).value||"";
+  sbInsert("leads",{session_id:SID,source:"newsletter",email:email.trim().slice(0,254),marketing_consent:true,utm:UTM});track("newsletter_signup");
   f.hidden=true;const ok=f.nextElementSibling;if(ok)ok.hidden=false;
 });
 
@@ -75,3 +77,21 @@ function renderReviews(el,list,n){
     <div class="rv-body"><span class="rv-stars" aria-label="Rating">★★★★★</span><p>${r.text}</p>
     <div class="rv-meta"><span class="rv-av">${r.i}</span><span><b>${r.name}</b><small>${CATALOG[r.lvl].short} · ${r.fl} · ${r.pack}</small></span><span class="rv-ver">✓ Verified</span></div></div></article>`).join("");
 }
+
+/* ---------- Fake door tracking (Supabase, insert-only) ---------- */
+const SB_URL="https://vzfwovxlzgrtghxlfkbj.supabase.co/rest/v1/";
+const SB_KEY="sb_publishable_JP7_gwTXfMBITq2e2gHe8A_snjOsWTT";
+const SID=(()=>{try{let s=localStorage.getItem("cutline-sid");if(!s){s=(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random()).slice(0,36);localStorage.setItem("cutline-sid",s)}return s}catch(e){return "nosid-"+Date.now()}})();
+const UTM=(()=>{const q=new URLSearchParams(location.search),u={};["utm_source","utm_medium","utm_campaign","utm_content","utm_term","fbclid"].forEach(k=>{if(q.get(k))u[k]=q.get(k).slice(0,200)});
+  try{if(Object.keys(u).length)sessionStorage.setItem("cutline-utm",JSON.stringify(u));return Object.keys(u).length?u:JSON.parse(sessionStorage.getItem("cutline-utm")||"{}")}catch(e){return u}})();
+function sbInsert(table,row){
+  return fetch(SB_URL+table,{method:"POST",keepalive:true,headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify(row)})
+    .then(r=>r.ok).catch(()=>false);
+}
+function track(event,props={}){
+  return sbInsert("events",{session_id:SID,event,page:location.pathname.slice(-200),props,referrer:(document.referrer||"").slice(0,500),utm:UTM});
+}
+document.addEventListener("DOMContentLoaded",()=>track("page_view"));
+/* wrap addToCart so every add is tracked */
+const _addToCart=addToCart;
+addToCart=function(level,flavour,packId){track("add_to_cart",{level,flavour,pack:packId});return _addToCart(level,flavour,packId)};

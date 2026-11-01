@@ -345,6 +345,7 @@ const add=()=>addToCart(st.level,st.flavour,st.pack);
 $("addBtn").addEventListener("click",add);$("stAdd").addEventListener("click",add);
 window.addEventListener("hashchange",()=>{fromHash();render();});
 fromHash();render();
+track("product_view",{level:st.level});
 $("lvHard").innerHTML=pouchHTML("hard","Mango");$("lvUltra").innerHTML=pouchHTML("ultra","Cherry Ice");
 // sticky bar after the main button scrolls away
 new IntersectionObserver(([e])=>$("stickyBuy").classList.toggle("on",!e.isIntersecting&&e.boundingClientRect.top<0)).observe($("addBtn"));
