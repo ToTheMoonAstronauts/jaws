@@ -8,3 +8,5 @@ _to_delete/
 .DS_Store
 node_modules/
 __pycache__/
+tools/gallery/raw/
+tools/gallery/out/
