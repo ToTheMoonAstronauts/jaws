@@ -9,18 +9,17 @@ def b64(path, q=82):
     buf = io.BytesIO(); Image.open(path).convert("RGB").save(buf, "JPEG", quality=q, optimize=True)
     return base64.b64encode(buf.getvalue()).decode()
 
-GROUPS = [("Product & how-to", ["G01", "G03", "G08"]), ("Why it works", ["G02", "G04", "G05", "G06", "G07"]),
-          ("Trust & plan", ["G09", "G12"]), ("Challenge", ["G10", "G11"])]
+GROUPS = [("All slides · numbered like the raw images", [str(n) for n in range(2, 13)])]
 names = {c: n for c, n, _ in SLIDES}
 
 cards = []
 for title, codes in GROUPS:
     tiles = []
     for c in codes:
-        tag = f"{c} 1:1 | {names[c]}"
-        tiles.append(f'''<figure class="card"><figcaption><span class="chip">{c}</span><span class="nm">{html.escape(names[c])}</span><span class="ratio">1:1 · 1080×1080</span></figcaption>
+        tag = f"#{c} 1:1 | {names[c]}"
+        tiles.append(f'''<figure class="card"><figcaption><span class="chip">#{c}</span><span class="nm">{html.escape(names[c])}</span><span class="ratio">1:1 · 1080×1080</span></figcaption>
 <img src="data:image/jpeg;base64,{b64(os.path.join(OUT, c + ".png"))}" alt="{c} {html.escape(names[c])}" width="1080" height="1080">
-<textarea class="cell" data-ttl="{html.escape(tag)}" placeholder="Notes for {c}…"></textarea></figure>''')
+<textarea class="cell" data-ttl="{html.escape(tag)}" placeholder="Notes for #{c}…"></textarea></figure>''')
     cards.append(f'<section><h2>{html.escape(title)}</h2><div class="grid">{"".join(tiles)}</div></section>')
 
 page = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">

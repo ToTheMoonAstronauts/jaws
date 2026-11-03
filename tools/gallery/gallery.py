@@ -148,8 +148,10 @@ def rating(d, x, y, n, of=5, color=COBALT, r=11, gap=30, half=False):
             d.ellipse([cx - r, y - r, cx + r, y + r], outline=color, width=3); d.pieslice([cx - r, y - r, cx + r, y + r], 90, 270, fill=color)
         else: d.ellipse([cx - r, y - r, cx + r, y + r], outline=color, width=3)
 
+RAW_NO = {"G01": "2", "G02": "3", "G03": "4", "G04": "5", "G05": "6", "G06": "7", "G07": "8", "G08": "9", "G09": "10", "G10": "11", "G11": "12", "G12": "x-plan"}
+
 def save(img, code):
-    p = os.path.join(OUT, code + ".png"); img.convert("RGB").save(p, optimize=True); return p
+    p = os.path.join(OUT, RAW_NO[code] + ".png"); img.convert("RGB").save(p, optimize=True); return p
 
 # ---- slides (one layout function each)
 def g01_product():
@@ -201,12 +203,12 @@ def g03_howto():
     return save(im, "G03")
 
 def g04_science():
-    im = cover(os.path.join(RAW, "5.png")); scrim(im, "top", 360, alpha=170)
+    im = cover(os.path.join(RAW, "5b.png")); scrim(im, "top", 360, alpha=170)
     scrim(im, "bottom", 320, color=(244, 244, 241), alpha=240)   # light band so the studies can be black
     d = ImageDraw.Draw(im, "RGBA")
     headline(d, "THE SCIENCE: IT'S MUSCLE, NOT BONE.", M, 52, 600, size=100, max_lines=3)
-    callout(d, (360, 690), "MASSETER: TRAINED BY RESISTANCE", "left", 250, width=225, size=27, shadow=im); d = ImageDraw.Draw(im, "RGBA")
-    callout(d, (690, 790), "BONE STRUCTURE STAYS THE SAME", "right", 790, width=250, size=27, shadow=im); d = ImageDraw.Draw(im, "RGBA")
+    callout(d, (450, 640), "MASSETER: TRAINED BY RESISTANCE", "left", 330, width=225, size=27, shadow=im); d = ImageDraw.Draw(im, "RGBA")
+    callout(d, (640, 812), "BONE STRUCTURE STAYS THE SAME", "right", 760, width=270, size=27, shadow=im); d = ImageDraw.Draw(im, "RGBA")
     cite(d, M, 892, [("RAADSHEER M.C. ET AL. (1999)", "Contribution of jaw muscle size and craniofacial morphology to human bite force magnitude. Journal of Dental Research, 78(1), 31–42."),
                      ("JUNG H.-J. ET AL. (2024)", "Effects of gum chewing training on occlusal force, masseter muscle thickness and mandibular shape: a randomised controlled clinical trial. Journal of Oral Rehabilitation.")],
          950, color=INK, accent=COBALT, size=20)
@@ -354,10 +356,11 @@ def g12_plan():
     wordmark(im, S - M, S - 46, h=30)
     return save(im, "G12")
 
-SLIDES = [("G01", "Product close-up", g01_product), ("G02", "Soft diet vs JAWZR", g02_softdiet), ("G03", "How to chew", g03_howto),
-          ("G04", "Muscle, not bone", g04_science), ("G05", "Feel it working", g05_feel), ("G06", "Problem · truth · solution", g06_problem),
-          ("G07", "Skull table", g07_skulls), ("G08", "Hard vs Ultra Hard", g08_compare), ("G09", "Why JAWZR (replaces press logos)", g09_why),
-          ("G10", "30-day challenge invite", g10_challenge), ("G11", "Join the challenge", g11_share), ("G12", "30-day plan calendar", g12_plan)]
+SLIDES = [("2", "Product close-up", g01_product), ("3", "Soft diet vs JAWZR", g02_softdiet), ("4", "How to chew", g03_howto),
+          ("5", "Muscle, not bone", g04_science), ("6", "Feel it working", g05_feel), ("7", "Problem · truth · solution", g06_problem),
+          ("8", "Skull table", g07_skulls), ("9", "Hard vs Ultra Hard", g08_compare), ("10", "Why JAWZR (raw with press logos, covered)", g09_why),
+          ("11", "30-day challenge invite", g10_challenge), ("12", "Join the challenge", g11_share)]
+# g12_plan (calendar) kept as code but not in the set
 
 if __name__ == "__main__":
     for code, name, fn in SLIDES: print(code, fn())
