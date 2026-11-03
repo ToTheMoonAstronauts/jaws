@@ -67,11 +67,20 @@ def headline(d, text, x, y, max_w, color=WHITE, size=96, min_size=54, max_lines=
         d.text((tx, y + i * s * lh), l, font=f, fill=color)
     return y + len(lines) * s * lh
 
-def para(d, text, x, y, max_w, font, color=WHITE, lh=1.32, align="left"):
-    for i, l in enumerate(wrap(d, text, font, max_w)):
+def para(d, text, x, y, max_w, font, color=WHITE, lh=1.32, align="left", shadow=None):
+    rows = []
+    for l in wrap(d, text, font, max_w):
         tx = x if align == "left" else (x + max_w - d.textlength(l, font=font) if align == "right" else x + (max_w - d.textlength(l, font=font)) / 2)
-        d.text((tx, y), l, font=font, fill=color); y += font.size * lh
+        rows.append((tx, y, l)); y += font.size * lh
+    if shadow is not None: shadow_text(shadow, rows, font); d = ImageDraw.Draw(shadow, "RGBA")
+    for tx, ty, l in rows: d.text((tx, ty), l, font=font, fill=color)
     return y
+
+def chip(d, x, y, text, size=26, fill=COBALT, color=WHITE, pad=10):
+    """Label on a solid cobalt block (same colour as the callout dots). Returns bottom y."""
+    f = F("mono", size); w = d.textlength(text, font=f)
+    d.rectangle([x, y, x + w + pad * 2, y + size * 1.45], fill=fill); d.text((x + pad, y + size * 0.16), text, font=f, fill=color)
+    return y + size * 1.45
 
 def dot(d, x, y, color=COBALT, r=17):
     d.ellipse([x - r - 9, y - r - 9, x + r + 9, y + r + 9], fill=color + (70,))
@@ -147,12 +156,14 @@ def g01_product():
     im = cover(os.path.join(RAW, "2.png")); scrim(im, "top", 380, alpha=150); scrim(im, "bottom", 360, alpha=200)
     d = ImageDraw.Draw(im, "RGBA")
     headline(d, "HARDNESS YOU CAN TASTE.", M, 56, 820, size=112, max_lines=2)
-    callout(d, (430, 370), "BUILT TO RESIST YOUR BITE", "left", 330, width=260, size=24)
-    callout(d, (650, 470), "FLAVOUR THAT LASTS THE SESSION", "right", 750, width=270, size=24)
-    fb, fr = F("bold", 36), F("body", 30)
-    d.text((M, 905), "Sugar-free", font=fb, fill=WHITE); d.text((M, 950), "and vegan", font=fr, fill=WHITE)
-    d.line([(330, 905), (330, 990)], fill=COBALT_LT, width=3)
-    d.text((362, 905), "JAWZR HARD", font=fb, fill=WHITE); d.text((362, 950), "Dense, low-softener gum base", font=fr, fill=WHITE)
+    callout(d, (430, 370), "BUILT TO RESIST YOUR BITE", "left", 330, width=290, size=29, shadow=im); d = ImageDraw.Draw(im, "RGBA")
+    callout(d, (650, 470), "FLAVOUR THAT LASTS THE SESSION", "right", 750, width=290, size=29, shadow=im); d = ImageDraw.Draw(im, "RGBA")
+    fb, fr = F("bold", 38), F("body", 31)
+    shadow_text(im, [(M, 900, "Sugar-free"), (362, 900, "JAWZR HARD")], fb); shadow_text(im, [(M, 947, "and vegan"), (362, 947, "Dense, low-softener gum base")], fr)
+    d = ImageDraw.Draw(im, "RGBA")
+    d.text((M, 900), "Sugar-free", font=fb, fill=WHITE); d.text((M, 947), "and vegan", font=fr, fill=WHITE)
+    d.line([(330, 902), (330, 990)], fill=COBALT_LT, width=3)
+    d.text((362, 900), "JAWZR HARD", font=fb, fill=WHITE); d.text((362, 947), "Dense, low-softener gum base", font=fr, fill=WHITE)
     return save(im, "G01")
 
 def g02_softdiet():
@@ -179,69 +190,70 @@ def g03_howto():
         px, py = (i % 2) * 540, (i // 2) * 540
         scrim(im, "bottom", 300, color=NAVY_DK, alpha=225, box=(px, py, px + 540, py + 540))
         d = ImageDraw.Draw(im, "RGBA")
-        d.text((px + 36, py + 330), f"0{i+1}.", font=F("head", 104), fill=WHITE)
-        para(d, t, px + 38, py + 440, 460, F("semi", 27))
+        d.text((px + 36, py + 318), f"0{i+1}.", font=F("head", 104), fill=WHITE)
+        para(d, t, px + 38, py + 428, 470, F("semi", 30), shadow=im); d = ImageDraw.Draw(im, "RGBA")
     # pro tip on panel 4 (top of the panel, over a soft scrim)
-    scrim(im, "top", 170, color=NAVY_DK, alpha=190, box=(540, 540, 1080, 1080)); d = ImageDraw.Draw(im, "RGBA")
-    fm, fm2 = F("mono", 17), F("mono2", 17)
-    d.text((576, 566), "PRO TIP:", font=fm, fill=COBALT_LT)
-    para(d, "WANT MORE FLAVOUR? CHEW ONE HARD AND ONE ULTRA HARD PIECE TOGETHER. WHEN IT GOES SOFT, ADD A FRESH PIECE.", 576, 592, 470, fm2, lh=1.4)
+    scrim(im, "top", 230, color=NAVY_DK, alpha=205, box=(540, 540, 1080, 1080)); d = ImageDraw.Draw(im, "RGBA")
+    y = chip(d, 576, 560, "PRO TIP", size=22)
+    para(d, "WANT MORE FLAVOUR? CHEW ONE HARD AND ONE ULTRA HARD PIECE TOGETHER. WHEN IT GOES SOFT, ADD A FRESH PIECE.", 576, y + 10, 470, F("mono2", 22), lh=1.35, shadow=im)
+    d = ImageDraw.Draw(im, "RGBA")
     d.line([(540, 0), (540, 1080)], fill=WHITE, width=4); d.line([(0, 540), (1080, 540)], fill=WHITE, width=4)
     return save(im, "G03")
 
 def g04_science():
-    im = cover(os.path.join(RAW, "5.png")); scrim(im, "top", 360, alpha=170); scrim(im, "bottom", 420, alpha=225)
+    im = cover(os.path.join(RAW, "5.png")); scrim(im, "top", 360, alpha=170)
+    scrim(im, "bottom", 320, color=(244, 244, 241), alpha=240)   # light band so the studies can be black
     d = ImageDraw.Draw(im, "RGBA")
     headline(d, "THE SCIENCE: IT'S MUSCLE, NOT BONE.", M, 52, 600, size=100, max_lines=3)
-    callout(d, (360, 690), "MASSETER: TRAINED BY RESISTANCE", "left", 250, width=200, size=21)
-    callout(d, (690, 812), "BONE STRUCTURE STAYS THE SAME", "right", 790, width=230, size=21)
-    cite(d, M, 875, [("RAADSHEER M.C. ET AL. (1999)", "Contribution of jaw muscle size and craniofacial morphology to human bite force magnitude. Journal of Dental Research, 78(1), 31–42."),
-                     ("JUNG H.-J. ET AL. (2024)", "Effects of gum chewing training on occlusal force, masseter muscle thickness and mandibular shape: a randomised controlled clinical trial. Journal of Oral Rehabilitation.")], 700)
+    callout(d, (360, 690), "MASSETER: TRAINED BY RESISTANCE", "left", 250, width=225, size=27, shadow=im); d = ImageDraw.Draw(im, "RGBA")
+    callout(d, (690, 790), "BONE STRUCTURE STAYS THE SAME", "right", 790, width=250, size=27, shadow=im); d = ImageDraw.Draw(im, "RGBA")
+    cite(d, M, 892, [("RAADSHEER M.C. ET AL. (1999)", "Contribution of jaw muscle size and craniofacial morphology to human bite force magnitude. Journal of Dental Research, 78(1), 31–42."),
+                     ("JUNG H.-J. ET AL. (2024)", "Effects of gum chewing training on occlusal force, masseter muscle thickness and mandibular shape: a randomised controlled clinical trial. Journal of Oral Rehabilitation.")],
+         950, color=INK, accent=COBALT, size=20)
     return save(im, "G04")
 
 def g05_feel():
     im = cover(os.path.join(RAW, "6.png"))
-    scrim(im, "left", 460, alpha=215, box=(0, 0, S, 540)); scrim(im, "right", 420, alpha=235, box=(0, 540, S, 1080))
+    scrim(im, "left", 480, alpha=220, box=(0, 0, S, 540)); scrim(im, "right", 460, alpha=240, box=(0, 540, S, 1080))
     d = ImageDraw.Draw(im, "RGBA")
     headline(d, "FEEL IT WORKING.", M, 48, 380, size=96, max_lines=2)
-    # top: relaxed, dot on the left masseter
-    d.text((M, 400), "RELAX", font=F("mono", 22), fill=COBALT_LT)
-    para(d, "Put two fingers on the dot.", M, 432, 230, F("semi", 26))
-    d.line([(M + 170, 412), (250, 330)], fill=COBALT_LT, width=3); dot(d, 268, 312)
+    # top: relaxed, dot on the left masseter. Labels sit on cobalt chips (same colour as the dot)
+    y = chip(d, M, 382, "RELAX", size=28)
+    para(d, "Put two fingers on the dot.", M, y + 10, 260, F("semi", 32), shadow=im); d = ImageDraw.Draw(im, "RGBA")
+    d.line([(M + 132, 396), (250, 330)], fill=COBALT_LT, width=3); dot(d, 268, 312)
     # bottom: clenched, dot on the right masseter
-    x = 868
-    d.text((x, 600), "CLENCH", font=F("mono", 22), fill=COBALT_LT)
-    para(d, "That's your masseter: the muscle JAWZR trains.", x, 632, 175, F("semi", 24))
-    d.line([(x - 10, 760), (826, 830)], fill=COBALT_LT, width=3); dot(d, 810, 846)
+    x = 846
+    y = chip(d, x, 588, "CLENCH", size=28)
+    para(d, "That's your masseter: the muscle JAWZR trains.", x, y + 10, 210, F("semi", 29), shadow=im); d = ImageDraw.Draw(im, "RGBA")
+    d.line([(x - 10, 790), (826, 828)], fill=COBALT_LT, width=3); dot(d, 810, 846)
     d.line([(0, 540), (1080, 540)], fill=WHITE, width=4)
     return save(im, "G05")
 
 def g06_problem():
-    im = cover(os.path.join(RAW, "7.png")); scrim(im, "bottom", 520, color=NAVY_DK, alpha=235)
+    im = cover(os.path.join(RAW, "7.png")); scrim(im, "bottom", 540, color=NAVY_DK, alpha=240)
     d = ImageDraw.Draw(im, "RGBA")
-    d.text((M, 60), "The 30-day JAWZR plan.", font=F("semi", 26), fill=INK)
-    headline(d, "WHY YOUR JAW NEEDS WORK.", M, 100, 380, color=INK, size=96, max_lines=4)
-    y = 630
+    d.text((M, 56), "The 30-day JAWZR plan.", font=F("semi", 32), fill=INK)
+    headline(d, "WHY YOUR JAW NEEDS WORK.", M, 104, 380, color=INK, size=96, max_lines=4)
+    y = 600
     for lab, txt in [("THE PROBLEM", "Modern soft food gives your jaw almost no work."),
                      ("THE TRUTH", "For most of history, people chewed tough, raw food every day."),
                      ("THE SOLUTION", "Bring the resistance back: 8–15 minutes a day with JAWZR.")]:
-        fm = F("mono", 22); w = d.textlength(lab, font=fm)
-        d.rectangle([M, y, M + w + 20, y + 32], fill=COBALT); d.text((M + 10, y + 3), lab, font=fm, fill=WHITE); y += 42
-        y = para(d, txt, M, y, 640, F("semi", 28)) + 16
-    # origin badge + facts row
-    for i, c in enumerate(LT_FLAG): d.rectangle([M, 990 + i * 14, M + 22, 1003 + i * 14], fill=c)
-    d.text((M + 36, 1000), "Ships from Lithuania", font=F("semi", 24), fill=WHITE)
-    f = F("mono", 20); t = "SUGAR-FREE · VEGAN · 40 PIECES"
-    d.text((S - M - d.textlength(t, font=f), 1008), t, font=f, fill=WHITE)
+        y = chip(d, M, y, lab, size=26) + 8
+        y = para(d, txt, M, y, 700, F("semi", 31), shadow=im) + 18; d = ImageDraw.Draw(im, "RGBA")
+    f = F("mono", 26)
+    shadow_text(im, [(M, 1010, "FAST SHIPPING")], f); t = "SUGAR-FREE · VEGAN · 40 PIECES"
+    shadow_text(im, [(S - M - d.textlength(t, font=f), 1010, t)], f); d = ImageDraw.Draw(im, "RGBA")
+    d.text((M, 1010), "FAST SHIPPING", font=f, fill=WHITE)
+    d.text((S - M - d.textlength(t, font=f), 1010), t, font=f, fill=WHITE)
     return save(im, "G06")
 
 def g07_skulls():
     im = cover(os.path.join(RAW, "8.png")); d = ImageDraw.Draw(im, "RGBA")
     headline(d, "WHY MODERN JAWS DO LESS WORK.", M, 52, 900, color=INK, size=104, max_lines=2)
     c1, c2, lx = 430, 770, M
-    fh = F("mono", 22)
+    fh = F("mono", 28)
     for cx, t in [(c1, "PRE-INDUSTRIAL"), (c2, "MODERN")]:
-        d.text((cx - d.textlength(t, font=fh) / 2, 590), t, font=fh, fill=INK)
+        d.text((cx - d.textlength(t, font=fh) / 2, 584), t, font=fh, fill=INK)
     rows = [("Lower jaw", "Broad, robust", "Shorter, narrower"), ("Dental arch", "Broad", "Narrower, more crowding"), ("Diet", "Tough, raw food", "Soft, processed food")]
     y = 635; fl, fv = F("bold", 28), F("body", 26)
     d.line([(lx, y), (S - M, y)], fill=COBALT, width=2)
@@ -251,19 +263,19 @@ def g07_skulls():
         for cx, t in [(c1, a), (c2, b)]:
             d.text((cx - d.textlength(t, font=fv) / 2, y + 26), t, font=fv, fill=COBALT if last else INK)
         y += 84; d.line([(lx, y), (S - M, y)], fill=COBALT, width=2)
-    para(d, "Differences built up over generations. Gum trains the muscle; it doesn't reshape adult bone.", lx, y + 20, 940, F("body", 22), color=INK)
-    cite(d, lx, y + 82, [("VON CRAMON-TAUBADEL N. (2011)", "Global human mandibular variation reflects differences in agricultural and hunter-gatherer subsistence strategies. PNAS, 108(49), 19546–19551.")],
-         950, label="STUDY:", color=INK, accent=COBALT)
+    yy = para(d, "Differences built up over generations. Gum trains the muscle; it doesn't reshape adult bone.", lx, y + 16, 950, F("body", 26), color=INK)
+    cite(d, lx, yy + 10, [("VON CRAMON-TAUBADEL N. (2011)", "Global human mandibular variation reflects differences in agricultural and hunter-gatherer subsistence strategies. PNAS, 108(49), 19546–19551.")],
+         950, label="STUDY:", color=INK, accent=COBALT, size=20)
     return save(im, "G07")
 
 def g08_compare():
     im = cover(os.path.join(RAW, "9.png")); d = ImageDraw.Draw(im, "RGBA")
     headline(d, "HARD VS. ULTRA HARD.", M, 52, 620, color=INK, size=112, max_lines=2)
     c1, c2, lx = 520, 865, M
-    fh = F("mono", 23)
+    fh = F("mono", 29)
     for cx, t in [(c1, "HARD"), (c2, "ULTRA HARD")]:
         d.text((cx - d.textlength(t, font=fh) / 2, 605), t, font=fh, fill=INK)
-    y = 650; fl, fv = F("bold", 28), F("body", 24)
+    y = 650; fl, fv = F("bold", 30), F("body", 27)
     d.line([(lx, y), (S - M, y)], fill=COBALT, width=2)
     rows = [("Hardness", ("r", 4, False), ("r", 5, False)), ("Flavour", ("r", 5, False), ("r", 1, False)),
             ("Use in the plan", ("t", "Week 1 + light days"), ("t", "Full days from week 2")),
@@ -275,7 +287,7 @@ def g08_compare():
             else: d.text((cx - d.textlength(v[1], font=fv) / 2, y + 26), v[1], font=fv, fill=INK)
         y += 82; d.line([(lx, y), (S - M, y)], fill=COBALT, width=2)
     t = "Best together: the 30-day plan uses both."
-    d.text((lx, y + 24), t, font=F("semi", 26), fill=INK)
+    d.text((lx, y + 22), t, font=F("semi", 31), fill=INK)
     return save(im, "G08")
 
 def g09_why():
@@ -287,7 +299,7 @@ def g09_why():
         pd.line([(0, y), (S, y)], fill=c + (255,))
     im.alpha_composite(panel); d = ImageDraw.Draw(im, "RGBA")
     headline(d, "WHY JAWZR.", M, 60, 700, size=120, max_lines=1)
-    items = ["SUGAR-FREE", "100% VEGAN", "2 HARDNESS LEVELS", "40 PIECES PER PACK", "30-DAY PLAN INCLUDED", "SHIPS FROM LITHUANIA", "FREE EU SHIPPING FROM €49", "14-DAY RETURNS ON SEALED PACKS"]
+    items = ["SUGAR-FREE", "100% VEGAN", "2 HARDNESS LEVELS", "40 PIECES PER PACK", "30-DAY PLAN INCLUDED", "FAST SHIPPING", "FREE EU SHIPPING FROM €49", "14-DAY RETURNS ON SEALED PACKS"]
     f = F("head2", 46)
     for i, t in enumerate(items):
         x = M + (i % 2) * 490; y = 300 + (i // 2) * 165
@@ -299,21 +311,19 @@ def g09_why():
     return save(im, "G09")
 
 def g10_challenge():
-    im = cover(os.path.join(RAW, "11.png")); scrim(im, "bottom", 480, color=NAVY_DK, alpha=240)
+    im = cover(os.path.join(RAW, "11.png")); scrim(im, "bottom", 460, color=NAVY_DK, alpha=240)
     d = ImageDraw.Draw(im, "RGBA")
-    d.line([(540, 0), (540, 690)], fill=WHITE, width=4)
-    y = headline(d, "TAKE THE 30-DAY JAWZR CHALLENGE.", M, 742, 950, size=84, max_lines=2)
-    para(d, "Snap a side profile on day 1 and day 30. Share it with #JAWZRchallenge.", M, y + 14, 900, F("semi", 26))
-    pill(d, 270, 1020, "YOUR DAY 1"); pill(d, 810, 1020, "YOUR DAY 30")
+    d.line([(540, 0), (540, 730)], fill=WHITE, width=4)
+    headline(d, "TAKE THE 30-DAY JAWZR CHALLENGE.", M, 790, 950, size=84, max_lines=2)
+    pill(d, 270, 1012, "YOUR DAY 1", size=31, h=74, padx=40); pill(d, 810, 1012, "YOUR DAY 30", size=31, h=74, padx=40)
     return save(im, "G10")
 
 def g11_share():
-    im = cover(os.path.join(RAW, "12.png")); scrim(im, "bottom", 480, color=NAVY_DK, alpha=240)
+    im = cover(os.path.join(RAW, "12.png")); scrim(im, "bottom", 440, color=NAVY_DK, alpha=240)
     d = ImageDraw.Draw(im, "RGBA")
-    d.line([(540, 0), (540, 700)], fill=WHITE, width=4)
-    y = headline(d, "JOIN THE #JAWZRCHALLENGE.", M, 790, 950, size=80, max_lines=2)
-    para(d, "Post your day 1 and day 30 selfies with #JAWZRchallenge.", M, y + 14, 900, F("semi", 26))
-    pill(d, 270, 1020, "YOUR DAY 1"); pill(d, 810, 1020, "YOUR DAY 30")
+    d.line([(540, 0), (540, 760)], fill=WHITE, width=4)
+    headline(d, "JOIN THE #JAWZRCHALLENGE.", M, 830, 950, size=84, max_lines=2)
+    pill(d, 270, 1012, "YOUR DAY 1", size=31, h=74, padx=40); pill(d, 810, 1012, "YOUR DAY 30", size=31, h=74, padx=40)
     return save(im, "G11")
 
 def g12_plan():
@@ -323,9 +333,9 @@ def g12_plan():
         t = y / S; d.line([(0, y), (S, y)], fill=tuple(int(NAVY_DK[i] * (1 - t) + OCEAN[i] * t * 0.7) for i in range(3)) + (255,))
     d = ImageDraw.Draw(im, "RGBA")
     headline(d, "YOUR 30-DAY PLAN.", M, 56, 900, size=116, max_lines=1)
-    fm, fs = F("mono", 22), F("semi", 24)
-    d.rectangle([M, 210, M + 30, 240], fill=COBALT); d.text((M + 44, 208), "FULL DAY: 3 rounds, 10–15 min", font=fs, fill=WHITE)
-    d.rectangle([M + 500, 210, M + 530, 240], outline=COBALT_LT, width=3); d.text((M + 544, 208), "LIGHT DAY: 1 round, ~8 min", font=fs, fill=WHITE)
+    fm, fs = F("mono", 22), F("semi", 30)
+    d.rectangle([M, 210, M + 30, 240], fill=COBALT); d.text((M + 44, 203), "FULL DAY: 3 rounds, 10–15 min", font=fs, fill=WHITE)
+    d.rectangle([M + 530, 210, M + 560, 240], outline=COBALT_LT, width=3); d.text((M + 574, 203), "LIGHT DAY: 1 round, ~8 min", font=fs, fill=WHITE)
     cell, gap, x0, y0 = 118, 14, M, 300
     for i in range(30):
         r, c = divmod(i, 7) if False else divmod(i, 6)
@@ -337,9 +347,10 @@ def g12_plan():
         else: d.rounded_rectangle(box, 10, outline=COBALT_LT, width=3)
         d.text((x + 14, y + 10), f"{i+1}", font=F("head", 40), fill=WHITE)
         lvl = "HARD" if i < 7 or not full else "ULTRA"
-        d.text((x + 14, y + 66), lvl, font=F("mono", 17), fill=WHITE if full else COBALT_LT)
-    d.text((M, 952), "WEEK 1: HARD EVERY DAY  ·  WEEKS 2–4: ULTRA HARD ON FULL DAYS, HARD ON LIGHT DAYS", font=F("mono", 19), fill=WHITE)
-    d.text((M, 1000), "Never more than 15 minutes a day. Stop if it hurts.", font=F("semi", 24), fill=WHITE)
+        d.text((x + 14, y + 62), lvl, font=F("mono", 22), fill=WHITE if full else COBALT_LT)
+    d.text((M, 928), "WEEK 1: HARD EVERY DAY", font=F("mono", 24), fill=WHITE)
+    d.text((M, 962), "WEEKS 2–4: ULTRA HARD ON FULL DAYS, HARD ON LIGHT DAYS", font=F("mono", 24), fill=WHITE)
+    d.text((M, 1010), "Never more than 15 minutes a day. Stop if it hurts.", font=F("semi", 30), fill=WHITE)
     wordmark(im, S - M, S - 46, h=30)
     return save(im, "G12")
 
