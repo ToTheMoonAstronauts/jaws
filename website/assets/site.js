@@ -1,9 +1,9 @@
 /* Shared catalogue + cart drawer for the JAWZR draft store. Checkout is not connected yet. */
 const CATALOG={
   hard:{name:"JAWZR Hard Gum",short:"Hard",grams:116,cls:"",
-    flavours:{"Mint":"#3FB8A0","Mango":"#F2A33A","Watermelon":"#E9546B","Blueberry":"#5B6BE0"}},
+    flavours:{"Mint":"#7CC9EA","Mango":"#F4B23E","Watermelon":"#EE6A7A","Blueberry":"#7D5CD9"}},
   ultra:{name:"JAWZR Ultra Hard Gum",short:"Ultra Hard",grams:100,cls:"ultra",
-    flavours:{"Blueberry Ice":"#6E8BF0","Cherry Ice":"#D13B55","Mint":"#3FB8A0","Ginger Lime":"#A6C93E"}}
+    flavours:{"Mint":"#7CC9EA","Mango":"#F4B23E","Watermelon":"#EE6A7A","Blueberry":"#7D5CD9"}}
 };
 const PACKS=[
   {id:1,label:"1 Pack · 40 pieces",sub:"Covers the full 30-day plan",price:19.95},
@@ -14,9 +14,12 @@ const FREE_SHIP=49;
 const eur=n=>"€"+n.toFixed(2).replace(".",",");
 const $=id=>document.getElementById(id);
 function inkOn(h){const n=parseInt(h.slice(1),16),r=n>>16,g=n>>8&255,b=n&255;return (0.299*r+0.587*g+0.114*b)>150?"#121614":"#fff"}
+const slug=f=>f.toLowerCase().replace(/[^a-z]+/g,"-");
+function packSrc(level,flavour){return `images/products/${level}-${slug(flavour)}.webp`}
+function trioSrc(level,flavour){return `images/products/trio-${level}-${slug(flavour)}.webp`}
 function pouchHTML(level,flavour,extra=""){
   const L=CATALOG[level];const c=L.flavours[flavour]||Object.values(L.flavours)[0];
-  return `<div class="pouch ${L.cls} ${extra}" style="--fl:${c};--flt:${inkOn(c)}"><img src="images/jawzr-pack.webp" alt="JAWZR ${L.short} gum bag, ${flavour}" loading="lazy"><span class="p-lvl">${L.short}</span><span class="p-fl">${flavour}</span></div>`;
+  return `<div class="pouch ${L.cls} ${extra}"><img src="${packSrc(level,flavour)}" alt="JAWZR ${L.short} gum, ${flavour} flavour" loading="lazy"></div>`;
 }
 
 /* cart (kept in this browser only) */
@@ -66,11 +69,11 @@ document.addEventListener("submit",e=>{
    order-linked reviews (e.g. from Judge.me / Loox) before launch. Never publish samples as real. */
 const SAMPLE_REVIEWS=[
   {i:"A",name:"Customer name",lvl:"hard",fl:"Mint",pack:"3 Packs",text:"Sample review text. A real buyer's words about hardness, flavour and how the sessions feel will appear here."},
-  {i:"B",name:"Customer name",lvl:"ultra",fl:"Blueberry Ice",pack:"1 Pack",text:"Sample review text. Short, honest feedback from a verified order."},
+  {i:"B",name:"Customer name",lvl:"ultra",fl:"Blueberry",pack:"1 Pack",text:"Sample review text. Short, honest feedback from a verified order."},
   {i:"C",name:"Customer name",lvl:"hard",fl:"Mango",pack:"6 Packs",text:"Sample review text. Longer reviews wrap naturally and the cards stack in columns, like on the reference store."},
   {i:"D",name:"Customer name",lvl:"hard",fl:"Watermelon",pack:"3 Packs",text:"Sample review text."},
-  {i:"E",name:"Customer name",lvl:"ultra",fl:"Cherry Ice",pack:"3 Packs",text:"Sample review text. Customers can attach a photo of the pack or of themselves."},
-  {i:"F",name:"Customer name",lvl:"ultra",fl:"Ginger Lime",pack:"1 Pack",text:"Sample review text from a verified buyer."}
+  {i:"E",name:"Customer name",lvl:"ultra",fl:"Watermelon",pack:"3 Packs",text:"Sample review text. Customers can attach a photo of the pack or of themselves."},
+  {i:"F",name:"Customer name",lvl:"ultra",fl:"Mango",pack:"1 Pack",text:"Sample review text from a verified buyer."}
 ];
 function renderReviews(el,list,n){
   el.innerHTML=list.slice(0,n).map((r,k)=>`<article class="rv"><span class="rv-sample">Sample</span>

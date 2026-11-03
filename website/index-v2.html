@@ -21,10 +21,10 @@
 @media (max-width:860px){.advice{grid-template-columns:1fr;gap:28px}}
 .vid{position:relative;border-radius:12px;overflow:hidden;background:#0c0f0e;aspect-ratio:16/9;box-shadow:0 30px 50px -30px rgba(18,22,20,.55)}
 .vid video{display:block;width:100%;height:100%;object-fit:cover}
-.vid .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:12px;border:0;background:linear-gradient(0deg,rgba(12,15,14,.45),rgba(12,15,14,.05) 60%);color:#fff;cursor:pointer;font:600 1rem/1 var(--body);padding-top:24%}
-.vid .play i{width:76px;height:76px;border-radius:50%;background:var(--accent);display:grid;place-items:center;box-shadow:0 0 0 10px rgba(36,64,230,.25);transition:transform .15s ease}
+.vid .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:12px;border:0;background:linear-gradient(0deg,rgba(12,15,14,.45),rgba(12,15,14,.05) 60%);color:#fff;cursor:pointer;font:600 1rem/1 var(--body);padding:0}
+.vid .play i{width:61px;height:61px;border-radius:50%;background:var(--accent);display:grid;place-items:center;box-shadow:0 0 0 8px rgba(36,64,230,.25);transition:transform .15s ease}
 .vid .play:hover i{transform:scale(1.06)}
-.vid .play i::after{content:"";border-left:22px solid #fff;border-top:13px solid transparent;border-bottom:13px solid transparent;margin-left:6px}
+.vid .play i::after{content:"";border-left:18px solid #fff;border-top:10.5px solid transparent;border-bottom:10.5px solid transparent;margin-left:5px}
 .vid .play span{position:absolute;left:18px;bottom:16px;font:700 .72rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;background:rgba(12,15,14,.6);padding:8px 10px;border-radius:4px}
 .ai-note{margin-top:12px;color:var(--muted);font-size:.8rem;line-height:1.5}
 </style>
@@ -85,6 +85,16 @@
   </div>
 </section>
 
+<section id="range" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head"><p class="eyebrow">All flavours</p><h2>Pick your level and flavour</h2></div>
+    <div class="range">
+      <a href="product.html#hard-mint"><div class="pv" data-pack="hard|Mint"></div><b>Hard · Mint</b><small>40 pieces · from €19,95</small></a><a href="product.html#hard-mango"><div class="pv" data-pack="hard|Mango"></div><b>Hard · Mango</b><small>40 pieces · from €19,95</small></a><a href="product.html#hard-watermelon"><div class="pv" data-pack="hard|Watermelon"></div><b>Hard · Watermelon</b><small>40 pieces · from €19,95</small></a><a href="product.html#hard-blueberry"><div class="pv" data-pack="hard|Blueberry"></div><b>Hard · Blueberry</b><small>40 pieces · from €19,95</small></a><a href="product.html#ultra-mint"><div class="pv" data-pack="ultra|Mint"></div><b>Ultra Hard · Mint</b><small>40 pieces · from €19,95</small></a><a href="product.html#ultra-mango"><div class="pv" data-pack="ultra|Mango"></div><b>Ultra Hard · Mango</b><small>40 pieces · from €19,95</small></a><a href="product.html#ultra-watermelon"><div class="pv" data-pack="ultra|Watermelon"></div><b>Ultra Hard · Watermelon</b><small>40 pieces · from €19,95</small></a><a href="product.html#ultra-blueberry"><div class="pv" data-pack="ultra|Blueberry"></div><b>Ultra Hard · Blueberry</b><small>40 pieces · from €19,95</small></a>
+    </div>
+  </div>
+</section>
+
+
 <section id="why" style="background:var(--surface);border-block:1px solid var(--line)">
   <div class="wrap split">
     <div class="ph-img masseter-photo">
@@ -111,7 +121,7 @@
       <div class="vid">
         <video id="adviceVid" preload="metadata" playsinline poster="media/advice-poster.jpg">
           <source src="media/advice.mp4" type="video/mp4">
-          <track kind="captions" src="media/advice.en.vtt" srclang="en" label="English" default>
+          <track kind="captions" src="media/advice.en.vtt" srclang="en" label="English">
         </video>
         <button class="play" type="button" id="advicePlay" aria-label="Play video: how to chew hard gum the right way"><i></i><span>Watch · 45 sec</span></button>
       </div>
@@ -145,7 +155,7 @@
 
 <section style="padding-top:0">
   <div class="wrap split rev">
-    <div class="ph-img"><img src="images/jawzr-bags.jpg" alt="Three JAWZR hard chewing gum bags with a shark on the front"></div>
+    <div class="ph-img"><img src="images/products/bundle-ultra.webp" alt="Three JAWZR Ultra Hard gum bags: mint, mango and watermelon"></div>
     <div>
       <p class="eyebrow">The gum</p>
       <h2 style="margin-top:12px">Built far harder than regular gum</h2>
@@ -154,7 +164,7 @@
         <li>Two levels: Hard and Ultra Hard</li>
         <li>Sugar-free and vegan</li>
         <li>A fresh piece for every session</li>
-        <li>Eight flavours, from mint to cherry ice</li>
+        <li>Four flavours in both levels: mint, mango, watermelon, blueberry</li>
       </ul>
       <div class="cta-row"><a class="btn" href="product.html">Shop hard gum</a></div>
     </div>
@@ -225,8 +235,9 @@
 <script>
 renderReviews($("reviews"),SAMPLE_REVIEWS,3);
 $("cv-hard").innerHTML=pouchHTML("hard","Mint");
-$("cv-ultra").innerHTML=pouchHTML("ultra","Blueberry Ice");
-$("cv-bundle").innerHTML=pouchHTML("hard","Mango","small")+pouchHTML("hard","Mint")+pouchHTML("ultra","Cherry Ice","small");
+$("cv-ultra").innerHTML=pouchHTML("ultra","Blueberry");
+document.querySelectorAll("[data-pack]").forEach(el=>{const [l,f]=el.dataset.pack.split("|");el.innerHTML=pouchHTML(l,f)});
+$("cv-bundle").innerHTML='<img class="scene" src="images/products/bundle-hard.webp" alt="Three JAWZR Hard gum bags: mint, mango and watermelon">';$("cv-bundle").parentElement.classList.add("has-scene");
 
 (()=>{const v=$("adviceVid"),b=$("advicePlay");if(!v||!b)return;
 b.addEventListener("click",()=>{v.controls=true;b.hidden=true;v.play();track("video_play",{video:"advice"})});

@@ -80,12 +80,9 @@ nav.site .links a:hover{color:var(--accent)}
 .ticker-track span::before{content:"■";color:var(--accent);margin-right:12px}
 @keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-/* pack: JAWZR bag render with live hardness + flavour overlays */
-.pouch{--fl:#F5B82E;position:relative;width:100%;aspect-ratio:610/877;filter:drop-shadow(0 16px 16px rgba(18,22,20,.28))}
+/* pack: real JAWZR bag per level + flavour */
+.pouch{position:relative;width:100%;aspect-ratio:585/857;filter:drop-shadow(0 16px 16px rgba(18,22,20,.25))}
 .pouch img{display:block;width:100%;height:100%}
-.pouch .p-lvl{position:absolute;left:15%;top:14.5%;background:#121614;color:#fff;font:800 .72em/1 var(--display);padding:.4em .6em;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
-.pouch.ultra .p-lvl{background:var(--accent)}
-.pouch .p-fl{position:absolute;left:14.4%;top:70.9%;width:21.8%;height:8.2%;border-radius:999px;background:var(--fl);color:var(--flt,#121614);display:flex;align-items:center;justify-content:center;text-align:center;font:800 .58em/.95 var(--display);text-transform:uppercase;letter-spacing:.02em;padding:0 .4em;overflow:hidden}
 
 /* product cards */
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
@@ -225,3 +222,16 @@ footer .legal{grid-column:1/-1;border-top:1px solid rgba(251,248,241,.2);padding
 .cookie-btns .btn{padding:11px 20px}
 
 .plan-note{max-width:760px;margin:28px auto 0;padding:18px 20px;border:1px solid var(--line);border-left:4px solid var(--accent);background:var(--surface);border-radius:8px;line-height:1.6}
+
+/* full-flavour product grid */
+.range{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media (max-width:860px){.range{grid-template-columns:repeat(2,1fr);gap:12px}}
+.range a{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px 14px 14px;text-decoration:none;color:var(--ink);display:grid;gap:10px;transition:border-color .15s ease,transform .15s ease;min-width:0}
+.range a:hover{border-color:var(--accent);transform:translateY(-2px)}
+.range .pv{background:var(--soft);border-radius:6px;padding:18px 0;display:flex;justify-content:center}
+.range .pv .pouch{width:58%}
+.range b{font:800 1.15rem/1.1 var(--display);text-transform:uppercase}
+.range small{color:var(--muted);font-size:.85rem}
+.range .lvl-row{grid-column:1/-1;margin-top:8px}
+.card-visual.has-scene{padding:0;overflow:hidden}
+.card-visual img.scene{display:block;width:100%;aspect-ratio:327/268;object-fit:cover}
