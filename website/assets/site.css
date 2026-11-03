@@ -235,3 +235,5 @@ footer .legal{grid-column:1/-1;border-top:1px solid rgba(251,248,241,.2);padding
 .range .lvl-row{grid-column:1/-1;margin-top:8px}
 .card-visual.has-scene{padding:0;overflow:hidden}
 .card-visual img.scene{display:block;width:100%;aspect-ratio:327/268;object-fit:cover}
+.pouch.mixed{aspect-ratio:1/1}
+.pouch.mixed img{object-fit:cover;border-radius:6px}

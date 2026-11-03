@@ -15,11 +15,12 @@ const eur=n=>"€"+n.toFixed(2).replace(".",",");
 const $=id=>document.getElementById(id);
 function inkOn(h){const n=parseInt(h.slice(1),16),r=n>>16,g=n>>8&255,b=n&255;return (0.299*r+0.587*g+0.114*b)>150?"#121614":"#fff"}
 const slug=f=>f.toLowerCase().replace(/[^a-z]+/g,"-");
-function packSrc(level,flavour){return `images/products/${level}-${slug(flavour)}.webp`}
-function trioSrc(level,flavour){return `images/products/trio-${level}-${slug(flavour)}.webp`}
+const MIXED="Mixed",MIXED_C="conic-gradient(#7CC9EA 0 33%,#F4B23E 0 66%,#EE6A7A 0)";
+function packSrc(level,flavour){return flavour===MIXED?`images/products/bundle-${level}.webp`:`images/products/${level}-${slug(flavour)}.webp`}
+function trioSrc(level,flavour){return flavour===MIXED?`images/products/bundle-${level}.webp`:`images/products/trio-${level}-${slug(flavour)}.webp`}
 function pouchHTML(level,flavour,extra=""){
   const L=CATALOG[level];const c=L.flavours[flavour]||Object.values(L.flavours)[0];
-  return `<div class="pouch ${L.cls} ${extra}"><img src="${packSrc(level,flavour)}" alt="JAWZR ${L.short} gum, ${flavour} flavour" loading="lazy"></div>`;
+  return `<div class="pouch ${L.cls} ${extra} ${flavour===MIXED?"mixed":""}"><img src="${packSrc(level,flavour)}" alt="JAWZR ${L.short} gum, ${flavour===MIXED?"mixed flavours (mint, mango, watermelon)":flavour+" flavour"}" loading="lazy"></div>`;
 }
 
 /* cart (kept in this browser only) */
