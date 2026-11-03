@@ -19,7 +19,7 @@
 | | **Hard** (start here) | **Ultra Hard** (advanced) |
 |---|---|---|
 | Role | Hardness and flavour in balance; bigger pellets | Maximum resistance; flavour lasts seconds |
-| Flavours | Mint, Mango, Watermelon, Blueberry | Blueberry Ice, Cherry Ice, Mint, Ginger Lime |
+| Flavours | Mint, Mango, Watermelon, Blueberry | Mint, Mango, Watermelon, Blueberry |
 | Pack | 40 pieces, ~116 g* | 40 pieces, ~100 g* |
 | Sweeteners | Sorbitol, maltitol, steviol glycosides, sucralose | Maltitol only ("no intense sweeteners") |
 | Per 100 g | 140 kcal, 0 g sugar | 48 kcal, 0 g sugar |
@@ -57,7 +57,7 @@ Jawliner says every other day. We chose daily with alternating light days to get
 | Tagline | Train your jaw. Unleash the shark. |
 | Site colours | Ivory background (#FAF7F0), ink (#121614), cobalt accent (#2440E6), shark navy (#1A3163) |
 | Site fonts | Big Shoulders Display (headlines), IBM Plex Sans (body), JetBrains Mono (labels) |
-| Packaging | White pouch, ocean-splash artwork, open-jaw shark, flavour pill (yellow "Mango Mint" in the mock-up), "40 PIECES" |
+| Packaging | White pouch, ocean-splash artwork, open-jaw shark, coloured flavour pill, "40 PIECES"; Ultra Hard has a coloured "HARD" bar. Final packshots for all 8 products are on the site (`website/images/products/`) |
 | Logo files | Repo `brand/`: `jawzr-logo.svg/.png`, `jawzr-logo-white`, `jawzr-shark`, `jawzr-wordmark` |
 
 **Tone:** confident gym energy, but honest. Talk about training, a routine and bite strength. Don't promise a new face.
