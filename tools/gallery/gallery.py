@@ -148,32 +148,33 @@ def rating(d, x, y, n, of=5, color=COBALT, r=11, gap=30, half=False):
             d.ellipse([cx - r, y - r, cx + r, y + r], outline=color, width=3); d.pieslice([cx - r, y - r, cx + r, y + r], 90, 270, fill=color)
         else: d.ellipse([cx - r, y - r, cx + r, y + r], outline=color, width=3)
 
-RAW_NO = {"G01": "2", "G02": "3", "G03": "4", "G04": "5", "G05": "6", "G06": "7", "G07": "8", "G08": "9", "G09": "10", "G10": "11", "G11": "12", "G12": "x-plan"}
+RAW_NO = {"G01U": "2-ultra", "G02U": "3-ultra", "G01": "2", "G02": "3", "G03": "4", "G04": "5", "G05": "6", "G06": "7", "G07": "8", "G08": "9", "G09": "10", "G10": "11", "G11": "12", "G12": "x-plan"}
 
 def save(img, code):
     p = os.path.join(OUT, RAW_NO[code] + ".png"); img.convert("RGB").save(p, optimize=True); return p
 
 # ---- slides (one layout function each)
-def g01_product():
+def g01_product(level="hard"):
+    ultra = level == "ultra"
     im = cover(os.path.join(RAW, "2.png")); scrim(im, "top", 380, alpha=150); scrim(im, "bottom", 360, alpha=200)
     d = ImageDraw.Draw(im, "RGBA")
-    headline(d, "HARDNESS YOU CAN TASTE.", M, 56, 820, size=112, max_lines=2)
-    callout(d, (430, 370), "BUILT TO RESIST YOUR BITE", "left", 330, width=290, size=29, shadow=im); d = ImageDraw.Draw(im, "RGBA")
-    callout(d, (650, 470), "FLAVOUR THAT LASTS THE SESSION", "right", 750, width=290, size=29, shadow=im); d = ImageDraw.Draw(im, "RGBA")
+    headline(d, "MAXIMUM RESISTANCE." if ultra else "HARDNESS YOU CAN TASTE.", M, 56, 820, size=112, max_lines=2)
+    callout(d, (430, 370), "OUR DENSEST PIECE" if ultra else "BUILT TO RESIST YOUR BITE", "left", 330, width=290, size=29, shadow=im); d = ImageDraw.Draw(im, "RGBA")
+    callout(d, (650, 470), "FLAVOUR LASTS SECONDS" if ultra else "FLAVOUR THAT LASTS THE SESSION", "right", 750, width=290, size=29, shadow=im); d = ImageDraw.Draw(im, "RGBA")
     fb, fr = F("bold", 38), F("body", 31)
-    shadow_text(im, [(M, 900, "Sugar-free"), (362, 900, "JAWZR HARD")], fb); shadow_text(im, [(M, 947, "and vegan"), (362, 947, "Dense, low-softener gum base")], fr)
+    t1, t2 = ("JAWZR ULTRA HARD", "No intense sweeteners") if ultra else ("JAWZR HARD", "Dense, low-softener gum base")
+    shadow_text(im, [(M, 900, "Sugar-free"), (362, 900, t1)], fb); shadow_text(im, [(M, 947, "and vegan"), (362, 947, t2)], fr)
     d = ImageDraw.Draw(im, "RGBA")
     d.text((M, 900), "Sugar-free", font=fb, fill=WHITE); d.text((M, 947), "and vegan", font=fr, fill=WHITE)
     d.line([(330, 902), (330, 990)], fill=COBALT_LT, width=3)
-    d.text((362, 900), "JAWZR HARD", font=fb, fill=WHITE); d.text((362, 947), "Dense, low-softener gum base", font=fr, fill=WHITE)
-    return save(im, "G01")
-
-def g02_softdiet():
+    d.text((362, 900), t1, font=fb, fill=WHITE); d.text((362, 947), t2, font=fr, fill=WHITE)
+    return save(im, "G01U" if ultra else "G01")
+def g02_softdiet(level="hard"):
     im = cover(os.path.join(RAW, "3.png")); scrim(im, "top", 330, alpha=170)
     scrim(im, "left", 360, alpha=200); scrim(im, "right", 360, alpha=200)
     d = ImageDraw.Draw(im, "RGBA")
     headline(d, "MODERN SOFT DIET", M, 50, 360, size=92, max_lines=3)
-    headline(d, "JAWZR HARD GUM", S - M - 360, 50, 360, size=92, max_lines=3, align="right", color=WHITE)
+    headline(d, "JAWZR ULTRA HARD" if level == "ultra" else "JAWZR HARD GUM", S - M - 360, 50, 360, size=92, max_lines=3, align="right", color=WHITE)
     d.line([(540, 360), (540, 1080)], fill=WHITE + (90,), width=2)
     L = [((415, 560), "SOFT, PROCESSED FOOD"), ((395, 690), "ALMOST NO RESISTANCE"), ((440, 820), "YOUR JAW MUSCLES BARELY WORK")]
     R = [((665, 560), "REAL RESISTANCE, LIKE TOUGH FOOD"), ((690, 690), "TRAINS YOUR MAIN CHEWING MUSCLE"), ((640, 820), "8–15 MIN A DAY, 30-DAY PLAN")]
@@ -182,7 +183,7 @@ def g02_softdiet():
         callout(d, at, t, "left", 300, width=250, size=26, shadow=im); d = ImageDraw.Draw(im, "RGBA")
     for at, t in R:
         callout(d, at, t, "right", 780, width=250, size=26, shadow=im); d = ImageDraw.Draw(im, "RGBA")
-    return save(im, "G02")
+    return save(im, "G02U" if level == "ultra" else "G02")
 
 def g03_howto():
     im = cover(os.path.join(RAW, "4.png")); d = ImageDraw.Draw(im, "RGBA")
@@ -359,7 +360,9 @@ def g12_plan():
 SLIDES = [("2", "Product close-up", g01_product), ("3", "Soft diet vs JAWZR", g02_softdiet), ("4", "How to chew", g03_howto),
           ("5", "Muscle, not bone", g04_science), ("6", "Feel it working", g05_feel), ("7", "Problem · truth · solution", g06_problem),
           ("8", "Skull table", g07_skulls), ("9", "Hard vs Ultra Hard", g08_compare), ("10", "Why JAWZR (raw with press logos, covered)", g09_why),
-          ("11", "30-day challenge invite", g10_challenge), ("12", "Join the challenge", g11_share)]
+          ("11", "30-day challenge invite", g10_challenge), ("12", "Join the challenge", g11_share),
+          ("2-ultra", "Product close-up · Ultra Hard version", lambda: g01_product("ultra")),
+          ("3-ultra", "Soft diet vs JAWZR · Ultra Hard version", lambda: g02_softdiet("ultra"))]
 # g12_plan (calendar) kept as code but not in the set
 
 if __name__ == "__main__":

@@ -9,7 +9,7 @@ def b64(path, q=82):
     buf = io.BytesIO(); Image.open(path).convert("RGB").save(buf, "JPEG", quality=q, optimize=True)
     return base64.b64encode(buf.getvalue()).decode()
 
-GROUPS = [("All slides · numbered like the raw images", [str(n) for n in range(2, 13)])]
+GROUPS = [("All slides · numbered like the raw images", [str(n) for n in range(2, 13)] + ["2-ultra", "3-ultra"])]
 names = {c: n for c, n, _ in SLIDES}
 
 cards = []
