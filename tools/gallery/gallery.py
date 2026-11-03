@@ -78,11 +78,22 @@ def dot(d, x, y, color=COBALT, r=17):
     d.ellipse([x - r, y - r, x + r, y + r], fill=color, outline=WHITE, width=3)
     d.line([(x - 8, y), (x + 8, y)], fill=WHITE, width=3); d.line([(x, y - 8), (x, y + 8)], fill=WHITE, width=3)
 
-def callout(d, at, label, side, text_x, width=300, color=WHITE, line=COBALT_LT, dotc=COBALT, size=22):
+def shadow_text(img, items, font, blur=4, alpha=230, offset=(0, 2)):
+    """Soft dark shadow under text items [(x, y, text)] drawn onto img before the text itself."""
+    lay = Image.new("RGBA", img.size, (0, 0, 0, 0)); ld = ImageDraw.Draw(lay)
+    for x, y, t in items:
+        ld.text((x + offset[0], y + offset[1]), t, font=font, fill=(0, 0, 0, alpha))
+        ld.text((x, y), t, font=font, fill=(0, 0, 0, alpha), stroke_width=2, stroke_fill=(0, 0, 0, alpha))
+    img.alpha_composite(lay.filter(ImageFilter.GaussianBlur(blur)))
+
+def callout(d, at, label, side, text_x, width=300, color=WHITE, line=COBALT_LT, dotc=COBALT, size=22, shadow=None):
     """Dot on the subject at `at`; label block on `side` ('left'|'right') starting/ending at text_x; line joins them."""
     f = F("mono", size); x, y = at
     lines = wrap(d, label, f, width); h = len(lines) * size * 1.25
     ty = y - h / 2
+    if shadow is not None:
+        pos = [((text_x - d.textlength(l, font=f)) if side == "left" else text_x, ty + i * size * 1.25, l) for i, l in enumerate(lines)]
+        shadow_text(shadow, pos, f)
     if side == "left":
         for i, l in enumerate(lines):
             d.text((text_x - d.textlength(l, font=f), ty + i * size * 1.25), l, font=f, fill=color)
@@ -146,15 +157,18 @@ def g01_product():
 
 def g02_softdiet():
     im = cover(os.path.join(RAW, "3.png")); scrim(im, "top", 330, alpha=170)
-    scrim(im, "left", 330, alpha=190); scrim(im, "right", 330, alpha=190)
+    scrim(im, "left", 360, alpha=200); scrim(im, "right", 360, alpha=200)
     d = ImageDraw.Draw(im, "RGBA")
     headline(d, "MODERN SOFT DIET", M, 50, 360, size=92, max_lines=3)
     headline(d, "JAWZR HARD GUM", S - M - 360, 50, 360, size=92, max_lines=3, align="right", color=WHITE)
     d.line([(540, 360), (540, 1080)], fill=WHITE + (90,), width=2)
     L = [((415, 560), "SOFT, PROCESSED FOOD"), ((395, 690), "ALMOST NO RESISTANCE"), ((440, 820), "YOUR JAW MUSCLES BARELY WORK")]
     R = [((665, 560), "REAL RESISTANCE, LIKE TOUGH FOOD"), ((690, 690), "TRAINS YOUR MAIN CHEWING MUSCLE"), ((640, 820), "8–15 MIN A DAY, 30-DAY PLAN")]
-    for at, t in L: callout(d, at, t, "left", 250, width=215, size=20)
-    for at, t in R: callout(d, at, t, "right", 830, width=215, size=20)
+    # labels 30% larger than v1 (20 -> 26 px) with a soft dark shadow; one draw per callout so shadows sit under their own text
+    for at, t in L:
+        callout(d, at, t, "left", 300, width=250, size=26, shadow=im); d = ImageDraw.Draw(im, "RGBA")
+    for at, t in R:
+        callout(d, at, t, "right", 780, width=250, size=26, shadow=im); d = ImageDraw.Draw(im, "RGBA")
     return save(im, "G02")
 
 def g03_howto():
