@@ -11,7 +11,7 @@ CSS = """<style>
 .jr{max-width:760px;padding-block:36px 40px}
 .jr h1{font-size:clamp(2.4rem,6vw,3.8rem);margin-top:10px;line-height:.98}
 .jr .meta{color:var(--muted);font-size:.85rem;margin-top:12px;font-family:var(--mono)}
-.jr .jhero{margin:24px 0 8px;border-radius:10px;overflow:hidden;aspect-ratio:16/9;background:var(--soft)}
+.jr .jhero{margin:24px 0 8px;border-radius:10px;overflow:hidden;aspect-ratio:16/9;background:var(--soft);min-height:0}
 .jr .jhero img{width:100%;height:100%;object-fit:cover;display:block}
 .jr .lead{font-size:1.15rem;line-height:1.6;color:#2A302D;margin-top:18px}
 .jr .body{display:grid;gap:14px;margin-top:18px}
@@ -29,7 +29,7 @@ CSS = """<style>
 .jgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:26px}
 .jcard{display:grid;gap:10px;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;transition:border-color .15s,transform .15s}
 .jcard:hover{border-color:var(--accent);transform:translateY(-2px)}
-.jcard .im{aspect-ratio:16/10;background:var(--soft)}.jcard .im img{width:100%;height:100%;object-fit:cover;display:block}
+.jcard{min-width:0}.jcard .im{aspect-ratio:16/10;background:var(--soft);overflow:hidden;min-height:0}.jcard .im img{width:100%;height:100%;object-fit:cover;display:block}
 .jcard .tx{padding:4px 16px 18px;display:grid;gap:8px}
 .jcard h3{font-size:1.35rem;line-height:1.05}
 .jcard p{font-size:.9rem;color:var(--muted);margin:0}
@@ -55,7 +55,7 @@ def head(title, desc, extra=""):
 from articles_content import ARTICLES
 
 def card(a):
-    return f'''<a class="jcard" href="article-{a["slug"]}.html"><div class="im"><img src="{a["img"]}" alt="" loading="lazy"></div><div class="tx"><span class="t">{a["tag"]} · {a["mins"]} min read</span><h3>{html.escape(a["title"])}</h3><p>{html.escape(a["desc"])}</p></div></a>'''
+    return f'''<a class="jcard" href="article-{a["slug"]}.html"><div class="im"><img src="{a["img"]}"{' style="object-fit:contain;background:#fff"' if a.get("fit") else ""} alt="" loading="lazy"></div><div class="tx"><span class="t">{a["tag"]} · {a["mins"]} min read</span><h3>{html.escape(a["title"])}</h3><p>{html.escape(a["desc"])}</p></div></a>'''
 
 for a in ARTICLES:
     ld = {"@context": "https://schema.org", "@type": "Article", "headline": a["title"], "description": a["desc"], "datePublished": "2026-11-04", "author": {"@type": "Organization", "name": "JAWZR"}, "publisher": {"@type": "Organization", "name": "JAWZR"}}
@@ -65,7 +65,7 @@ for a in ARTICLES:
   <p class="eyebrow"><a href="articles.html" style="color:inherit;text-decoration:none">Articles</a> · {a["tag"]}</p>
   <h1>{html.escape(a["title"])}</h1>
   <p class="meta">JAWZR team · 4 November 2026 · {a["mins"]} min read</p>
-  <div class="jhero"><img src="{a["img"]}" alt="{html.escape(a["alt"])}"></div>
+  <div class="jhero"><img src="{a["img"]}"{' style="object-fit:contain;background:#fff"' if a.get("fit") else ""} alt="{html.escape(a["alt"])}"></div>
   <p class="lead">{a["lead"]}</p>
   <div class="key"><b>In short</b>{a["short"]}</div>
   <div class="body">{a["body"]}</div>
