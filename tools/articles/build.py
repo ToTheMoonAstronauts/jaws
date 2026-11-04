@@ -43,7 +43,7 @@ CSS = """<style>
 <div class="top-bar"><div class="wrap">Free EU shipping from €49 · Ships from Lithuania</div></div>
 <nav class="site"><div class="wrap">
   <a class="logo" href="index-v2.html"><i></i><span class="wm" aria-hidden="true"></span><span class="sr">JAWZR</span></a>
-  <div class="links"><a href="product.html">Shop</a><a href="index-v2.html#how">How it works</a><a href="articles.html">Articles</a><a href="index-v2.html#faq">FAQ</a></div>
+  <div class="links"><a href="product-sub.html">Shop</a><a href="index-v2.html#how">How it works</a><a href="articles.html">Articles</a><a href="index-v2.html#faq">FAQ</a></div>
   <button class="cart-btn" type="button" data-open-cart>Cart (<span data-cart-count>0</span>)</button>
 </div></nav>
 """
@@ -69,7 +69,7 @@ for a in ARTICLES:
   <p class="lead">{a["lead"]}</p>
   <div class="key"><b>In short</b>{a["short"]}</div>
   <div class="body">{a["body"]}</div>
-  <div class="cta"><p><b>Want to train your jaw?</b> JAWZR hard gum comes with a 30-day plan: 8–15 minutes a day, alternating full and light days.</p><a class="btn" href="product.html">Shop hard gum</a></div>
+  <div class="cta"><p><b>Want to train your jaw?</b> JAWZR hard gum comes with a 30-day plan: 8–15 minutes a day, alternating full and light days.</p><a class="btn" href="product-sub.html">Shop hard gum</a></div>
   <div class="src"><h3>Sources</h3><ol>{srcs}</ol></div>
   <p class="note">This article is general information, not medical or dental advice. If you have jaw, joint or dental problems, ask a dentist before training your jaw.</p>
 </main>
