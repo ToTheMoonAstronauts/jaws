@@ -28,13 +28,20 @@
 .vid .play span{position:absolute;left:18px;bottom:16px;font:700 .72rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;background:rgba(12,15,14,.6);padding:8px 10px;border-radius:4px}
 .ai-note{margin-top:12px;color:var(--muted);font-size:.8rem;line-height:1.5}
 </style>
+<style>.jgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.jcard{display:grid;gap:10px;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;transition:border-color .15s,transform .15s}
+.jcard:hover{border-color:var(--accent);transform:translateY(-2px)}
+.jcard .im{aspect-ratio:16/10;background:var(--soft)}.jcard .im img{width:100%;height:100%;object-fit:cover;display:block}
+.jcard .tx{padding:4px 16px 18px;display:grid;gap:8px}.jcard h3{font-size:1.35rem;line-height:1.05}.jcard p{font-size:.9rem;color:var(--muted);margin:0}
+.jcard .t{font:600 .7rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-deep)}
+@media(max-width:900px){.jgrid{grid-template-columns:1fr 1fr}}@media(max-width:600px){.jgrid{grid-template-columns:1fr}}</style>
 </head>
-<body>
+<body data-popup>
 
 <div class="top-bar"><div class="wrap">Free EU shipping from €49 · Ships from Lithuania</div></div>
 <nav class="site"><div class="wrap">
   <a class="logo" href="index-v2.html"><i></i><span class="wm" aria-hidden="true"></span><span class="sr">JAWZR</span></a>
-  <div class="links"><a href="product.html">Shop</a><a href="#how">How it works</a><a href="#why">Why hard gum</a><a href="#faq">FAQ</a></div>
+  <div class="links"><a href="product.html">Shop</a><a href="#how">How it works</a><a href="#why">Why hard gum</a><a href="articles.html">Articles</a><a href="#faq">FAQ</a></div>
   <button class="cart-btn" type="button" data-open-cart>Cart (<span data-cart-count>0</span>)</button>
 </div></nav>
 
@@ -191,13 +198,21 @@
   </div>
 </section>
 
+<section id="articles" style="padding-top:0">
+  <div class="wrap">
+    <div class="rv-head"><div class="sec-head" style="margin:0"><p class="eyebrow">Articles</p><h2>Jaw training, explained</h2></div><a href="articles.html" style="font-weight:600">All articles →</a></div>
+    <div class="jgrid"><a class="jcard" href="article-does-hard-gum-build-jaw-muscle.html"><div class="im"><img src="images/gym-dumbbell.jpg" alt="" loading="lazy"></div><div class="tx"><span class="t">Research · 5 min read</span><h3>Does hard gum build jaw muscle? What the research says</h3><p>Jaw muscles adapt to load like any other muscle. Here is what training studies found, and what they didn&#x27;t.</p></div></a><a class="jcard" href="article-muscles-of-chewing.html"><div class="im"><img src="images/profile-jaw.jpg" alt="" loading="lazy"></div><div class="tx"><span class="t">Anatomy · 4 min read</span><h3>The muscles you chew with: a simple guide</h3><p>Masseter, temporalis and the two pterygoids: what each one does, and which ones hard gum trains.</p></div></a><a class="jcard" href="article-chewing-gum-and-focus.html"><div class="im"><img src="images/lifestyle-denim.jpg" alt="" loading="lazy"></div><div class="tx"><span class="t">Research · 4 min read</span><h3>Can chewing gum sharpen your focus?</h3><p>A short burst of chewing before a task seems to help, at least for a while. Here is what one well-known study found.</p></div></a></div>
+  </div>
+</section>
+
 <section id="faq" style="padding-top:0">
   <div class="wrap" style="max-width:860px">
     <div class="sec-head center"><p class="eyebrow">FAQ</p><h2>Questions</h2></div>
     <div class="faq">
       <details open><summary>How long until I see results?</summary><p>You'll feel your jaw muscles working from the first session. Visible change takes consistent training over weeks to months, and it shows most when your body fat is lower.</p></details>
       <details><summary>How often should I chew it?</summary><p>Every day for 30 days, alternating full and light days: a full session (3 rounds, 10–15 minutes) one day, one round (about 8 minutes) the next. Never more than 15 minutes a day. The light days let the muscle recover without breaking the habit.</p></details>
-      <details><summary>Hard or Ultra Hard: which should I start with?</summary><p>Start with Hard in week 1: it has more flavour and lets you learn the technique. From week 2, the plan uses Ultra Hard on full days and Hard on light days, so you'll want both.</p></details>
+      <details><summary>Hard or Ultra Hard: which should I start with?</summary><p>Start with Hard in week 1: it has more flavour and lets you learn the technique. From week 2, the plan uses Ultra Hard on full days and Hard on light days, so you'll want both. The <a href="product.html#duo">Starter Duo</a> gives you one pack of each.</p></details>
+      <details><summary>Why does it cost more than shop gum?</summary><p>It's a training tool, not candy. The dense gum base takes far more raw material, and the hardness needs slower production. Each piece is one full session, so a workout costs €0,22–0,60 depending on the hardness and bundle size.</p></details>
       <details><summary>Is it safe for my teeth and jaw?</summary><p>Chew on your back molars, stop if you feel sharp pain, and don't use it with jaw-joint problems, loose fillings, implants or braces. Not for under-14s.</p></details>
       <details><summary>Where do you ship?</summary><p>We ship across the EU from Lithuania. Shipping is free on orders from €49.</p></details>
     </div>
@@ -216,7 +231,7 @@
 
 <footer><div class="wrap">
   <div><a class="logo" href="index-v2.html" style="color:var(--bg)"><i></i><span class="wm" aria-hidden="true"></span><span class="sr">JAWZR</span></a><p style="margin-top:12px;opacity:.75;max-width:40ch">Hard chewing gum. Train your jaw. Unleash the shark.</p></div>
-  <div><h4>Shop</h4><ul><li><a href="product.html#hard">Hard Gum</a></li><li><a href="product.html#ultra">Ultra Hard Gum</a></li><li><a href="product.html#hard-mixed-3">3-Pack Bundle</a></li></ul></div>
+  <div><h4>Shop</h4><ul><li><a href="product.html#hard">Hard Gum</a></li><li><a href="product.html#ultra">Ultra Hard Gum</a></li><li><a href="product.html#hard-mixed-3">3-Pack Bundle</a></li><li><a href="product.html#duo">Starter Duo</a></li><li><a href="articles.html">Articles</a></li></ul></div>
   <div><h4>Info</h4><ul><li><a href="terms.html">Terms of Service</a></li><li><a href="returns.html">Returns &amp; Refunds</a></li><li><a href="shipping.html">Shipping &amp; Payment</a></li><li><a href="privacy.html">Privacy &amp; Cookies</a></li><li><a href="safety.html">Safety Instructions</a></li><li><a href="legal.html">Legal Notice</a></li><li><a href="withdraw.html"><b>Withdraw from contract here</b></a></li><li><a href="#" data-cookie-settings>Cookie settings</a></li></ul></div>
   <p class="legal">© 2026 JAWZR</p>
 </div></footer>

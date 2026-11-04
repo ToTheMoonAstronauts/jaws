@@ -7,10 +7,15 @@ const CATALOG={
 };
 const PACKS=[
   {id:1,label:"1 Pack · 40 pieces",sub:"Covers the full 30-day plan",price:{hard:17.95,ultra:23.95}},
+  {id:2,label:"Starter Duo · 80 pieces",sub:"1 Hard + 1 Ultra Hard, made for the 30-day plan",price:{hard:37.95,ultra:37.95},tag:"New",duo:true},
   {id:3,label:"3 Packs · 120 pieces",sub:"4 months of daily training, mix flavours",price:{hard:31.95,ultra:41.95},tag:"Bestseller"},
   {id:6,label:"6 Packs · 240 pieces",sub:"8 months of daily training, free shipping",price:{hard:53.95,ultra:71.95}}
 ];
 const packPrice=(level,id)=>PACKS.find(p=>p.id===id).price[level];
+/* what the same pieces cost as single packs (for "Save x%") */
+const singlesPrice=(level,id)=>id===2?PACKS[0].price.hard+PACKS[0].price.ultra:PACKS[0].price[level]*id;
+const SUB_OFF=0.15;
+const subPrice=p=>Math.round(p*(1-SUB_OFF)*100)/100;
 const FREE_SHIP=49;
 const eur=n=>"€"+n.toFixed(2).replace(".",",");
 const $=id=>document.getElementById(id);
@@ -32,20 +37,24 @@ function cartTotal(){return cart.reduce((s,l)=>s+l.price*l.qty,0)}
 function cartCount(){return cart.reduce((s,l)=>s+l.qty,0)}
 /* mix (optional): array of flavours, one per pack, e.g. ["Mint","Mint","Mango"] */
 function mixLabel(mix){const o=Object.keys(CATALOG.hard.flavours),c={};mix.forEach(f=>c[f]=(c[f]||0)+1);return Object.entries(c).sort((x,y)=>o.indexOf(x[0])-o.indexOf(y[0])).map(([f,n])=>n>1?`${f} ×${n}`:f).join(", ")}
-function addToCart(level,flavour,packId,mix){
+/* opts.duo: [hardFlavour, ultraFlavour] for the Starter Duo · opts.sub: {every:"4 months"} for a subscription */
+function addToCart(level,flavour,packId,mix,opts={}){
   const P=PACKS.find(p=>p.id===packId);
-  let name=flavour;
-  if(mix&&mix.length){const u=[...new Set(mix)];flavour=u.length===1?u[0]:MIXED;name=u.length===1?u[0]:mixLabel(mix);}
-  const key=level+"|"+name+"|"+packId;
+  let name=flavour,duo=opts.duo||null,sub=opts.sub||null;
+  if(duo){level="hard";flavour=duo[0];name=`Hard ${duo[0]} + Ultra Hard ${duo[1]}`;}
+  else if(mix&&mix.length){const u=[...new Set(mix)];flavour=u.length===1?u[0]:MIXED;name=u.length===1?u[0]:mixLabel(mix);}
+  const key=level+"|"+name+"|"+packId+"|"+(sub?sub.every:"once");
+  const price=sub?subPrice(P.price[level]):P.price[level];
   const ex=cart.find(l=>l.key===key);
-  if(ex)ex.qty++;else cart.push({key,level,flavour,name,mix:mix||null,pack:packId,label:P.label,price:P.price[level],qty:1});
+  if(ex)ex.qty++;else cart.push({key,level,flavour,name,mix:mix||null,duo,sub,pack:packId,label:P.label+(sub?` · Subscription, every ${sub.every} (−${SUB_OFF*100}%)`:""),price,qty:1});
   saveCart();renderCart();openCart();
 }
+function lineTitle(l){return l.duo?`Starter Duo · Hard ${l.duo[0]} + Ultra Hard ${l.duo[1]}`:`${CATALOG[l.level].short} · ${l.flavour===MIXED?"Mixed flavours":(l.name||l.flavour)}`}
 function renderCart(){
   document.querySelectorAll("[data-cart-count]").forEach(e=>e.textContent=cartCount());
   const lines=$("cartLines");if(!lines)return;
   if(!cart.length){lines.innerHTML='<p class="empty">Your cart is empty.</p>'}
-  else lines.innerHTML=cart.map((l,i)=>`<div class="line">${pouchHTML(l.level,l.flavour)}<div><b>${CATALOG[l.level].short} · ${l.flavour===MIXED?"Mixed flavours":(l.name||l.flavour)}</b><small>${l.label} · qty ${l.qty}</small><br><button class="rm" data-rm="${i}" type="button">Remove</button></div><b>${eur(l.price*l.qty)}</b></div>`).join("");
+  else lines.innerHTML=cart.map((l,i)=>`<div class="line">${pouchHTML(l.level,l.flavour)}<div><b>${lineTitle(l)}</b><small>${l.label} · qty ${l.qty}</small><br><button class="rm" data-rm="${i}" type="button">Remove</button></div><b>${eur(l.price*l.qty)}</b></div>`).join("");
   const t=cartTotal();$("cartTotal").textContent=eur(t);
   const left=FREE_SHIP-t;
   $("shipMsg").textContent=t===0?`Free EU shipping from ${eur(FREE_SHIP)}`:left>0?`${eur(left)} away from free EU shipping`:"You get free EU shipping";
@@ -112,7 +121,7 @@ function track(event,props={}){
 document.addEventListener("DOMContentLoaded",()=>track("page_view"));
 /* wrap addToCart so every add is tracked */
 const _addToCart=addToCart;
-addToCart=function(level,flavour,packId,mix){track("add_to_cart",{level,flavour,pack:packId,mix:mix?mix.join("|"):undefined});return _addToCart(level,flavour,packId,mix)};
+addToCart=function(level,flavour,packId,mix,opts={}){track("add_to_cart",{level,flavour,pack:packId,mix:mix?mix.join("|"):undefined,duo:opts.duo?opts.duo.join("|"):undefined,sub:opts.sub?opts.sub.every:undefined});return _addToCart(level,flavour,packId,mix,opts)};
 
 /* cookie banner */
 function cookieBanner(){
@@ -129,3 +138,40 @@ document.addEventListener("click",e=>{
   if(e.target.closest("[data-cookie-settings]")){e.preventDefault();cookieBanner()}
 });
 document.addEventListener("DOMContentLoaded",()=>{if(!getConsent())cookieBanner()});
+
+/* ---------- 10% welcome popup (exit intent on desktop, timed/scroll on mobile; once per 14 days) ---------- */
+(function(){
+  const KEY="jawzr-pop",DAYS=14,CODE="WELCOME10";
+  function seen(){try{const t=+localStorage.getItem(KEY)||0;return Date.now()-t<DAYS*864e5}catch(e){return true}}
+  function mark(){try{localStorage.setItem(KEY,String(Date.now()))}catch(e){}}
+  function blocked(){const c=document.getElementById("cookieBar");const d=document.getElementById("drawer");return (c&&!c.hidden)||(d&&!d.hidden)}
+  let shown=false;
+  function show(trigger){
+    if(shown||seen()||blocked())return;shown=true;mark();
+    const bg=document.createElement("div");bg.className="pop-bg";bg.setAttribute("role","dialog");bg.setAttribute("aria-modal","true");bg.setAttribute("aria-labelledby","popT");
+    bg.innerHTML=`<div class="pop"><button class="x" type="button" aria-label="Close" data-pop-x>×</button>
+      <div data-step="1"><p class="eyebrow">Before you go</p><h2 id="popT">Get 10% off</h2><p>Your first order of JAWZR hard gum. Enter your email and we'll show your code.</p>
+      <form novalidate><input type="email" required placeholder="Your email" autocomplete="email" aria-label="Email"><button class="btn block big" type="submit">Get my 10%</button></form>
+      <p class="fine">By signing up you agree to receive emails from JAWZR. Unsubscribe anytime. <a href="privacy.html">Privacy</a></p>
+      <button class="no" type="button" data-pop-x>No thanks</button></div>
+      <div data-step="2" hidden><p class="eyebrow">You're in</p><h2>Your code</h2><div class="code">${CODE}</div><p>Use it for 10% off your first order. We'll remind you by email too.</p><button class="btn block big" type="button" data-pop-x>Keep shopping</button></div></div>`;
+    document.body.appendChild(bg);
+    const close=()=>{bg.remove();document.removeEventListener("keydown",esc)};
+    const esc=e=>{if(e.key==="Escape")close()};document.addEventListener("keydown",esc);
+    bg.addEventListener("click",e=>{if(e.target===bg||e.target.closest("[data-pop-x]")){track("popup_close",{trigger});close()}});
+    const f=bg.querySelector("form"),inp=f.querySelector("input");
+    f.addEventListener("submit",e=>{e.preventDefault();const v=inp.value.trim();
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){inp.setCustomValidity("Enter a valid email address.");inp.reportValidity();return}
+      sbInsert("leads",{session_id:getSID(),source:"popup_10",email:v.slice(0,254),marketing_consent:true,utm:UTM});track("popup_signup",{trigger});
+      bg.querySelector('[data-step="1"]').hidden=true;bg.querySelector('[data-step="2"]').hidden=false;});
+    inp.addEventListener("input",()=>inp.setCustomValidity(""));
+    setTimeout(()=>inp.focus(),50);track("popup_show",{trigger});
+  }
+  document.addEventListener("DOMContentLoaded",()=>{
+    if(!document.body.hasAttribute("data-popup")||seen())return;
+    const start=Date.now(),fine=matchMedia("(pointer:fine)").matches;
+    if(fine)document.addEventListener("mouseout",e=>{if(!e.relatedTarget&&e.clientY<=0&&Date.now()-start>8000)show("exit")});
+    else{setTimeout(()=>show("timer"),35000);
+      addEventListener("scroll",()=>{const h=document.documentElement;if(Date.now()-start>12000&&h.scrollTop/(h.scrollHeight-h.clientHeight)>0.6)show("scroll")},{passive:true});}
+  });
+})();

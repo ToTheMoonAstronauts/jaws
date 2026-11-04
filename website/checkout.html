@@ -155,7 +155,7 @@ function totals(){const sub=cartTotal();const ship=sub===0?0:shipMethod()==="exp
 function renderSummary(){
   if(!cart.length){$("emptyCo").hidden=false;$("co").hidden=true;return}
   $("co").hidden=false;$("emptyCo").hidden=true;
-  $("sLines").innerHTML=cart.map(l=>`<div class="s-line">${pouchHTML(l.level,l.flavour)}<div><b>${CATALOG[l.level].short} · ${l.flavour===MIXED?"Mixed flavours":(l.name||l.flavour)}</b><small>${l.label} · qty ${l.qty}</small></div><b>${eur(l.price*l.qty)}</b></div>`).join("");
+  $("sLines").innerHTML=cart.map(l=>`<div class="s-line">${pouchHTML(l.level,l.flavour)}<div><b>${lineTitle(l)}</b><small>${l.label} · qty ${l.qty}</small></div><b>${eur(l.price*l.qty)}</b></div>`).join("");
   const t=totals();$("sSub").textContent=eur(t.sub);$("sShip").textContent=t.ship?eur(t.ship):"Free";$("sTot").textContent=eur(t.tot);$("payAmt").textContent=eur(t.tot);
   const std=$("smStd");if(std)std.innerHTML=`<span>${cartTotal()>=FREE_SHIP?"Free":eur(SHIP)}</span>`;
 }
@@ -173,7 +173,7 @@ $("coForm").addEventListener("submit",async e=>{
   if(!ok){(email&&/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)?$("fname"):$("email")).focus();return}
   const pm=document.querySelector('input[name=pm]:checked').value,t=totals();
   const btn=$("payBtn");btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Processing';
-  const items=cart.map(l=>({level:l.level,flavour:l.name||l.flavour,mix:l.mix||undefined,pack:l.pack,qty:l.qty,price:l.price}));
+  const items=cart.map(l=>({level:l.duo?"duo":l.level,flavour:l.name||l.flavour,mix:l.mix||undefined,duo:l.duo||undefined,sub:l.sub||undefined,pack:l.pack,qty:l.qty,price:l.price}));
   await Promise.all([
     sbInsert("leads",{session_id:getSID(),source:"checkout",email:email.slice(0,254),first_name:fname.slice(0,100),country:$("country").value,payment_method:pm,items,total_eur:Math.round(t.tot*100)/100,marketing_consent:$("consent").checked,utm:UTM}),
     track("pay_click",{method:pm,shipping:shipMethod(),ship_eur:t.ship,total:t.tot,items:items.length})
