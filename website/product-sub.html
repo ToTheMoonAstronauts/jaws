@@ -215,7 +215,6 @@
             <li><b>Bin it.</b> Throw the piece away after the session. Start every session with a fresh one.</li>
             <li><b>Tomorrow: light day.</b> One round, about 8 minutes, ideally with Hard. Alternate full and light days, every day for 30 days.</li>
           </ol>
-          <a href="#plan" style="font-weight:600">Open the session timer →</a>
         </div></details>
         <details><summary>Ingredients &amp; nutrition</summary><div class="in" id="ingredients"></div></details>
         <details><summary>Safety information</summary><div class="in">
@@ -270,32 +269,6 @@
     </div>
   </div>
 </section>
-
-<section id="plan" style="background:var(--surface);border-block:1px solid var(--line)">
-  <div class="wrap timer-wrap">
-    <div>
-      <p class="eyebrow">Session plan</p>
-      <h2 style="margin-top:12px">Train it like a set at the gym</h2>
-      <ol class="plan">
-        <li><div><b>Slow, heavy chews · 3 min</b><p>Controlled tempo, molars only.</p></div></li>
-        <li><div><b>Faster chews · 2 min</b><p>Pick up the pace, keep control.</p></div></li>
-        <li><div><b>Rest · 3 min</b><p>Jaw relaxed, breathe through your nose.</p></div></li>
-      </ol>
-      <p class="lede" style="margin-top:16px">Full day: three rounds. Light day (the next day): one round. Every day for 30 days.</p>
-    </div>
-    <div class="timer" aria-live="polite">
-      <p class="phase">Session timer</p>
-      <div class="clock" id="clock">03:00</div>
-      <p class="now" id="now">Slow, heavy chews</p>
-      <p class="hint" id="hint">Press start when the gum is warm and seated on your molars.</p>
-      <div class="seg3"><div><i id="g0"></i></div><div><i id="g1"></i></div><div><i id="g2"></i></div></div>
-      <div class="seg-l"><span>Slow 3m</span><span>Fast 2m</span><span>Rest 3m</span></div>
-      <p class="round" id="round">Round 1 of 3</p>
-      <div class="ctrl"><button class="primary" type="button" id="tStart">Start</button><button type="button" id="tReset">Reset</button></div>
-    </div>
-  </div>
-</section>
-
 <section hidden>
   <div class="wrap">
     <div class="rv-head"><div class="sec-head" style="margin:0"><p class="eyebrow">Reviews</p><h2>From people who chew it</h2></div><span class="rv-note">Layout preview · sample cards are replaced by verified reviews at launch</span></div>
@@ -431,30 +404,6 @@ $("lvHard").innerHTML=pouchHTML("hard","Mango");$("lvUltra").innerHTML=pouchHTML
 // sticky bar after the main button scrolls away
 new IntersectionObserver(([e])=>$("stickyBuy").classList.toggle("on",!e.isIntersecting&&e.boundingClientRect.top<0)).observe($("addBtn"));
 
-/* session timer */
-const PH=[{n:"Slow, heavy chews",s:180,h:"Controlled tempo, pressure building on every bite. Molars only."},
-          {n:"Faster chews",s:120,h:"Pick up the pace, keep control, switch sides evenly."},
-          {n:"Rest",s:180,h:"Jaw relaxed, lips closed, breathe through your nose."}];
-const ROUNDS=3;let ts={round:1,ph:0,left:PH[0].s,run:false,iv:null,done:false};
-const fmt=s=>String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
-function draw(){
-  $("clock").textContent=fmt(ts.left);
-  $("now").textContent=ts.done?"Session done":PH[ts.ph].n;
-  $("hint").textContent=ts.done?"Session done. Bin the piece. Tomorrow: light day, one round with a fresh piece.":(ts.run?PH[ts.ph].h:"Press start when the gum is warm and seated on your molars.");
-  $("round").textContent=`Round ${ts.round} of ${ROUNDS}`;
-  PH.forEach((p,i)=>{$("g"+i).style.width=(i<ts.ph||ts.done?100:i===ts.ph?100*(1-ts.left/p.s):0)+"%";});
-  $("tStart").textContent=ts.run?"Pause":(ts.done?"Again":"Start");
-}
-function stop(){ts.run=false;clearInterval(ts.iv);}
-function tick(){
-  if(--ts.left>0)return draw();
-  ts.ph++;if(ts.ph>=PH.length){ts.ph=0;ts.round++;}
-  if(ts.round>ROUNDS||(ts.round===ROUNDS&&ts.ph===2)){stop();ts.done=true;ts.left=0;ts.round=ROUNDS;return draw();}
-  ts.left=PH[ts.ph].s;draw();
-}
-function reset(){stop();ts={round:1,ph:0,left:PH[0].s,run:false,iv:null,done:false};draw();}
-$("tStart").addEventListener("click",()=>{if(ts.done)reset();if(ts.run)stop();else{ts.run=true;ts.iv=setInterval(tick,1000);}draw();});
-$("tReset").addEventListener("click",reset);draw();
 </script>
 </body>
 </html>
