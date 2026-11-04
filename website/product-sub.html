@@ -43,13 +43,13 @@
 .opt-label{font:600 .74rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:26px 0 10px;display:flex;justify-content:space-between}
 .opt-label span{color:var(--ink);letter-spacing:.04em}
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.seg button{border:1.5px solid var(--line);background:var(--surface);border-radius:8px;padding:12px;text-align:left;color:var(--ink)}
+.seg button{border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:12px;text-align:left;color:var(--ink)}
 .seg button b{display:block;font:800 1.2rem/1 var(--display);text-transform:uppercase}
 .seg button small{color:var(--muted);font-size:.8rem}
 .seg button[aria-pressed="true"],.packs button[aria-pressed="true"],.swatches button[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
 .swatches{display:flex;flex-wrap:wrap;gap:8px}
 .packs button.has-mix{border-bottom-left-radius:0;border-bottom-right-radius:0}
-.pk-mix{margin-top:-9px;border:1.5px solid var(--accent);border-top:0;box-shadow:inset 1px 0 0 var(--accent),inset -1px 0 0 var(--accent),inset 0 -1px 0 var(--accent);border-radius:0 0 8px 8px;background:var(--surface);padding:4px 14px 14px}
+.pk-mix{margin-top:-9px;border:1.5px solid var(--accent);border-top:0;box-shadow:inset 1px 0 0 var(--accent),inset -1px 0 0 var(--accent),inset 0 -1px 0 var(--accent);border-radius:0 0 10px 10px;background:var(--surface);padding:4px 14px 14px}
 .pk-mix .hd{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:6px 0 8px;font:600 .68rem/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .pk-mix .hd button{border:0;background:none;padding:0;font:inherit;color:var(--accent);cursor:pointer;letter-spacing:.06em}
 .slots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
@@ -62,7 +62,7 @@
 .slot .sel::after{content:"▾";position:absolute;right:9px;color:var(--muted);pointer-events:none;font-size:.75rem}
 .slots.n2{grid-template-columns:repeat(2,1fr)}
 .po{display:grid;gap:8px}
-.po label{display:grid;grid-template-columns:auto 1fr auto;gap:4px 12px;align-items:center;border:1.5px solid var(--line);background:var(--surface);border-radius:8px;padding:14px 16px;cursor:pointer}
+.po label{display:grid;grid-template-columns:auto 1fr auto;gap:4px 12px;align-items:center;border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:14px 16px;cursor:pointer}
 .po label:has(input:checked){border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
 .po input{accent-color:var(--accent);width:18px;height:18px;margin:0}
 .po b{font-weight:600}
@@ -75,11 +75,11 @@
 .po ul{margin:8px 0 0;padding:0;list-style:none}.po li::before{content:"✓ ";color:#1d6b3a;font-weight:700}
 .compare td:first-child{min-width:230px}
 @media(max-width:560px){.slots.n6{grid-template-columns:repeat(2,1fr)}}
-.swatches button{display:flex;align-items:center;gap:8px;border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px 7px 8px;color:var(--ink);font-size:.9rem}
+.swatches button{display:flex;align-items:center;gap:8px;border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:7px 14px 7px 8px;color:var(--ink);font-size:.9rem}
 .swatches button:disabled{opacity:.4;cursor:not-allowed}
 .swatches i{width:20px;height:20px;border-radius:50%;background:var(--c);box-shadow:inset 0 0 0 2px rgba(255,255,255,.6)}
 .packs{display:grid;gap:10px}
-.packs button{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;text-align:left;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);padding:14px 16px;border-radius:8px;position:relative}
+.packs button{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;text-align:left;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);padding:14px 16px;border-radius:10px;position:relative}
 .packs .radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--line)}
 .packs button[aria-pressed="true"] .radio{border:5px solid var(--accent)}
 .packs strong{display:block;font-size:1rem}
@@ -337,9 +337,9 @@ const FL=["Mint","Mango","Watermelon","Blueberry"];
 const DEF={3:["Mint","Mango","Watermelon"],6:["Mint","Mango","Watermelon","Blueberry","Mint","Mango"]};
 function ensureMix(){if(st.pack<3)return;const d=DEF[st.pack];st.mix=(st.mix||d).slice(0,st.pack);while(st.mix.length<st.pack)st.mix.push(d[st.mix.length]);}
 function mixPanel(level){const n=st.pack,c=CATALOG[level].flavours;
-  return `<div class="pk-mix"><div class="hd"><span>Choose a flavour for each pack</span><button type="button" data-reset>Reset</button></div><div class="slots n${n}">${st.mix.map((f,i)=>`<label class="slot"><small>Pack ${i+1}</small><span class="sel"><i style="--c:${c[f]}"></i><select data-i="${i}" aria-label="Pack ${i+1} flavour">${FL.map(o=>`<option${o===f?" selected":""}>${o}</option>`).join("")}</select></span></label>`).join("")}</div></div>`;}
+  return `<div class="pk-mix"><div class="hd"><span>Choose a flavour for each pack</span><button type="button" data-reset>Reset</button></div><div class="slots n${n}">${st.mix.map((f,i)=>`<div class="slot"><small>Pack ${i+1}</small>${fselHTML("mix",i,f,`Pack ${i+1} flavour`)}</div>`).join("")}</div></div>`;}
 function duoPanel(){const lv=["hard","ultra"],nm=["Hard","Ultra Hard"];
-  return `<div class="pk-mix"><div class="hd"><span>Choose a flavour for each pack</span></div><div class="slots n2">${st.duo.map((f,i)=>`<label class="slot"><small>${nm[i]}</small><span class="sel"><i style="--c:${CATALOG[lv[i]].flavours[f]}"></i><select data-d="${i}" aria-label="${nm[i]} flavour">${FL.map(o=>`<option${o===f?" selected":""}>${o}</option>`).join("")}</select></span></label>`).join("")}</div></div>`;}
+  return `<div class="pk-mix"><div class="hd"><span>Choose a flavour for each pack</span></div><div class="slots n2">${st.duo.map((f,i)=>`<div class="slot"><small>${nm[i]}</small>${fselHTML("duo",i,f,`${nm[i]} flavour`)}</div>`).join("")}</div></div>`;}
 function fromHash(){
   const h=location.hash.slice(1);
   if(h.startsWith("ultra"))st.level="ultra";else if(h.startsWith("hard"))st.level="hard";
@@ -389,6 +389,8 @@ function render(){
 }
 document.querySelector(".seg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;st.level=b.dataset.level;st.view=0;render();});
 $("swatches").addEventListener("click",e=>{const b=e.target.closest("button");if(!b||b.disabled)return;st.flavour=b.dataset.f;st.view=st.flavour===MIXED?0:(st.pack>1?1:0);render();});
+$("packs").addEventListener("fsel-change",e=>{const d=e.detail;if(d.kind==="duo")st.duo[d.i]=d.value;else st.mix[d.i]=d.value;track("flavour_pick",{pack:st.pack,mix:(d.kind==="duo"?st.duo:st.mix).join("|")});render();
+  const f=$("packs").querySelector(`.fsel[data-kind="${d.kind}"][data-i="${d.i}"] .fsel-btn`);if(f)f.focus();});
 $("packs").addEventListener("change",e=>{const d=e.target.closest("select[data-d]");if(d){st.duo[+d.dataset.d]=d.value;track("flavour_pick",{pack:2,duo:st.duo.join("|")});render();return}const s=e.target.closest("select[data-i]");if(!s)return;st.mix[+s.dataset.i]=s.value;track("flavour_pick",{pack:st.pack,mix:st.mix.join("|")});render();});
 $("packs").addEventListener("click",e=>{if(e.target.closest("[data-reset]")){st.mix=DEF[st.pack].slice();render();return}const b=e.target.closest("button[data-p]");if(!b)return;st.pack=+b.dataset.p;if(st.pack===2)st.view=0;else if(st.flavour!==MIXED&&st.view<2)st.view=st.pack>1?1:0;render();});
 $("thumbs").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;st.view=+b.dataset.v;render();});

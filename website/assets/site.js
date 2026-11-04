@@ -175,3 +175,67 @@ document.addEventListener("DOMContentLoaded",()=>{if(!getConsent())cookieBanner(
       addEventListener("scroll",()=>{const h=document.documentElement;if(Date.now()-start>12000&&h.scrollTop/(h.scrollHeight-h.clientHeight)>0.6)show("scroll")},{passive:true});}
   });
 })();
+
+/* ---------- flavour icons + custom flavour picker (replaces native <select>) ---------- */
+const FL_ICON={
+  Mint:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21c0-6 1-11 7-17-1 7-3 12-7 17z" fill="#3FB984"/><path d="M12 21C11 15 8 10 4 7c0 6 3 11 8 14z" fill="#7CC9EA"/><path d="M12 21c0-5 1.5-9 5-13M12 21c-.6-4-2.4-8-6-11" stroke="#fff" stroke-width="1" fill="none" opacity=".7"/></svg>',
+  Mango:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7c4-4 12-2 13 5s-5 10-10 9S3 11 7 7z" fill="#F4B23E"/><path d="M8 9c2-2 6-2 8 0" stroke="#fff" stroke-width="1.3" fill="none" opacity=".55" stroke-linecap="round"/><path d="M12 5c1-2 3-3 5-3-1 2-3 3-5 3z" fill="#3FB984"/></svg>',
+  Watermelon:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 9h20a10 10 0 0 1-20 0z" fill="#3FB984"/><path d="M4 9h16a8 8 0 0 1-16 0z" fill="#EE6A7A"/><circle cx="9" cy="12" r=".9" fill="#2b1d1d"/><circle cx="12" cy="14" r=".9" fill="#2b1d1d"/><circle cx="15" cy="12" r=".9" fill="#2b1d1d"/></svg>',
+  Blueberry:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="14" r="6" fill="#5B43B8"/><circle cx="16" cy="11" r="5.5" fill="#7D5CD9"/><path d="M14.5 8.5l1.5 1 1.5-1-.5 1.8" stroke="#2f2366" stroke-width="1.1" fill="none" stroke-linecap="round"/><circle cx="7.5" cy="12.5" r="1.3" fill="#fff" opacity=".35"/></svg>'
+};
+const flIcon=f=>`<span class="fl-ic">${FL_ICON[f]||""}</span>`;
+/* kind: "mix" | "duo" · i: slot index · val: current flavour · label: aria label */
+function fselHTML(kind,i,val,label){
+  const opts=Object.keys(FL_ICON).map(f=>`<li role="option" tabindex="-1" data-v="${f}" aria-selected="${f===val}">${flIcon(f)}<span>${f}</span>${f===val?'<span class="ck" aria-hidden="true">✓</span>':""}</li>`).join("");
+  return `<div class="fsel" data-kind="${kind}" data-i="${i}"><button type="button" class="fsel-btn" aria-haspopup="listbox" aria-expanded="false" aria-label="${label}: ${val}">${flIcon(val)}<span class="nm">${val}</span><span class="cv" aria-hidden="true">▾</span></button><ul class="fsel-list" role="listbox" aria-label="${label}" hidden>${opts}</ul></div>`;
+}
+function fselClose(except){document.querySelectorAll(".fsel-list:not([hidden])").forEach(l=>{if(l.parentNode!==except){l.hidden=true;l.previousElementSibling.setAttribute("aria-expanded","false")}})}
+function fselOpen(f,focusSel){fselClose(f);const l=f.querySelector(".fsel-list");l.hidden=false;f.querySelector(".fsel-btn").setAttribute("aria-expanded","true");
+  const r=f.getBoundingClientRect();l.classList.toggle("up",innerHeight-r.bottom<220&&r.top>220);
+  if(focusSel)(l.querySelector('[aria-selected="true"]')||l.firstElementChild).focus();}
+function fselPick(f,v){fselClose();f.dispatchEvent(new CustomEvent("fsel-change",{bubbles:true,detail:{kind:f.dataset.kind,i:+f.dataset.i,value:v}}))}
+document.addEventListener("click",e=>{
+  const b=e.target.closest(".fsel-btn"),o=e.target.closest(".fsel-list [data-v]");
+  if(o){fselPick(o.closest(".fsel"),o.dataset.v);return}
+  if(b){const f=b.parentNode;f.querySelector(".fsel-list").hidden?fselOpen(f,false):fselClose();return}
+  fselClose();
+});
+document.addEventListener("keydown",e=>{
+  const f=e.target.closest&&e.target.closest(".fsel");if(!f)return;
+  const l=f.querySelector(".fsel-list"),items=[...l.children],k=items.indexOf(document.activeElement);
+  if(e.target.classList.contains("fsel-btn")&&["ArrowDown","ArrowUp"].includes(e.key)){e.preventDefault();fselOpen(f,true);return}
+  if(l.hidden)return;
+  if(e.key==="ArrowDown"){e.preventDefault();items[Math.min(items.length-1,k+1)].focus()}
+  else if(e.key==="ArrowUp"){e.preventDefault();items[Math.max(0,k-1)].focus()}
+  else if((e.key==="Enter"||e.key===" ")&&k>-1){e.preventDefault();fselPick(f,items[k].dataset.v)}
+  else if(e.key==="Escape"||e.key==="Tab"){fselClose();f.querySelector(".fsel-btn").focus()}
+});
+
+/* ---------- desktop: random lifestyle photo on product-card hover ---------- */
+(function(){
+  if(!matchMedia("(hover:hover) and (pointer:fine)").matches)return;
+  const IMGS=[1,2,3,4,5,6,7,8].map(n=>`images/mouseover/mo-${n}.webp`);let last=-1,warm=false;
+  function pick(){let k;do{k=Math.floor(Math.random()*IMGS.length)}while(k===last&&IMGS.length>1);last=k;return IMGS[k]}
+  document.addEventListener("mouseover",e=>{
+    const host=e.target.closest(".card-visual, .range .pv");if(!host||host.contains(e.relatedTarget))return;
+    if(!warm){warm=true;IMGS.forEach(s=>{const i=new Image();i.src=s})}
+    let im=host.querySelector(":scope > .mo");
+    if(!im){im=document.createElement("img");im.className="mo";im.alt="";im.setAttribute("aria-hidden","true");host.appendChild(im)}
+    im.src=pick();requestAnimationFrame(()=>host.classList.add("mo-on"));
+  });
+  document.addEventListener("mouseout",e=>{const host=e.target.closest(".card-visual, .range .pv");if(host&&!host.contains(e.relatedTarget))host.classList.remove("mo-on")});
+})();
+
+/* ---------- mobile: size the hero photo so the CTA stays in the first screen ---------- */
+(function(){
+  function fit(){
+    const hero=document.querySelector(".hero"),img=hero&&hero.querySelector(".hero-img"),cta=hero&&hero.querySelector(".cta-row");
+    if(!img||!cta)return;
+    if(innerWidth>760){img.style.height="";img.style.aspectRatio="";return}
+    img.style.height="";const vh=(window.visualViewport?visualViewport.height:innerHeight);
+    img.style.aspectRatio="auto";const full=img.offsetWidth;img.style.height=full+"px";
+    const over=cta.getBoundingClientRect().bottom+window.scrollY+16-vh;
+    if(over>0)img.style.height=Math.max(200,full-over)+"px";
+  }
+  addEventListener("load",fit);addEventListener("resize",fit);document.addEventListener("DOMContentLoaded",fit);
+})();
