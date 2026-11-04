@@ -6,10 +6,11 @@ const CATALOG={
     flavours:{"Mint":"#7CC9EA","Mango":"#F4B23E","Watermelon":"#EE6A7A","Blueberry":"#7D5CD9"}}
 };
 const PACKS=[
-  {id:1,label:"1 Pack · 40 pieces",sub:"Covers the full 30-day plan",price:19.95},
-  {id:3,label:"3 Packs · 120 pieces",sub:"4 months of daily training, mix flavours",price:34.95,tag:"Bestseller"},
-  {id:6,label:"6 Packs · 240 pieces",sub:"8 months of daily training, mix flavours",price:59.95}
+  {id:1,label:"1 Pack · 40 pieces",sub:"Covers the full 30-day plan",price:{hard:17.95,ultra:23.95}},
+  {id:3,label:"3 Packs · 120 pieces",sub:"4 months of daily training, mix flavours",price:{hard:31.95,ultra:41.95},tag:"Bestseller"},
+  {id:6,label:"6 Packs · 240 pieces",sub:"8 months of daily training, free shipping",price:{hard:53.95,ultra:71.95}}
 ];
+const packPrice=(level,id)=>PACKS.find(p=>p.id===id).price[level];
 const FREE_SHIP=49;
 const eur=n=>"€"+n.toFixed(2).replace(".",",");
 const $=id=>document.getElementById(id);
@@ -25,22 +26,26 @@ function pouchHTML(level,flavour,extra=""){
 
 /* cart (kept in this browser only) */
 let cart=[];
-try{cart=JSON.parse(localStorage.getItem("cutline-cart")||"[]")}catch(e){cart=[]}
-function saveCart(){try{localStorage.setItem("cutline-cart",JSON.stringify(cart))}catch(e){}}
+try{cart=JSON.parse(localStorage.getItem("jawzr-cart-v2")||"[]")}catch(e){cart=[]}
+function saveCart(){try{localStorage.setItem("jawzr-cart-v2",JSON.stringify(cart))}catch(e){}}
 function cartTotal(){return cart.reduce((s,l)=>s+l.price*l.qty,0)}
 function cartCount(){return cart.reduce((s,l)=>s+l.qty,0)}
-function addToCart(level,flavour,packId){
+/* mix (optional): array of flavours, one per pack, e.g. ["Mint","Mint","Mango"] */
+function mixLabel(mix){const o=Object.keys(CATALOG.hard.flavours),c={};mix.forEach(f=>c[f]=(c[f]||0)+1);return Object.entries(c).sort((x,y)=>o.indexOf(x[0])-o.indexOf(y[0])).map(([f,n])=>n>1?`${f} ×${n}`:f).join(", ")}
+function addToCart(level,flavour,packId,mix){
   const P=PACKS.find(p=>p.id===packId);
-  const key=level+"|"+flavour+"|"+packId;
+  let name=flavour;
+  if(mix&&mix.length){const u=[...new Set(mix)];flavour=u.length===1?u[0]:MIXED;name=u.length===1?u[0]:mixLabel(mix);}
+  const key=level+"|"+name+"|"+packId;
   const ex=cart.find(l=>l.key===key);
-  if(ex)ex.qty++;else cart.push({key,level,flavour,pack:packId,label:P.label,price:P.price,qty:1});
+  if(ex)ex.qty++;else cart.push({key,level,flavour,name,mix:mix||null,pack:packId,label:P.label,price:P.price[level],qty:1});
   saveCart();renderCart();openCart();
 }
 function renderCart(){
   document.querySelectorAll("[data-cart-count]").forEach(e=>e.textContent=cartCount());
   const lines=$("cartLines");if(!lines)return;
   if(!cart.length){lines.innerHTML='<p class="empty">Your cart is empty.</p>'}
-  else lines.innerHTML=cart.map((l,i)=>`<div class="line">${pouchHTML(l.level,l.flavour)}<div><b>${CATALOG[l.level].short} · ${l.flavour}</b><small>${l.label} · qty ${l.qty}</small><br><button class="rm" data-rm="${i}" type="button">Remove</button></div><b>${eur(l.price*l.qty)}</b></div>`).join("");
+  else lines.innerHTML=cart.map((l,i)=>`<div class="line">${pouchHTML(l.level,l.flavour)}<div><b>${CATALOG[l.level].short} · ${l.name||l.flavour}</b><small>${l.label} · qty ${l.qty}</small><br><button class="rm" data-rm="${i}" type="button">Remove</button></div><b>${eur(l.price*l.qty)}</b></div>`).join("");
   const t=cartTotal();$("cartTotal").textContent=eur(t);
   const left=FREE_SHIP-t;
   $("shipMsg").textContent=t===0?`Free EU shipping from ${eur(FREE_SHIP)}`:left>0?`${eur(left)} away from free EU shipping`:"You get free EU shipping";
@@ -107,7 +112,7 @@ function track(event,props={}){
 document.addEventListener("DOMContentLoaded",()=>track("page_view"));
 /* wrap addToCart so every add is tracked */
 const _addToCart=addToCart;
-addToCart=function(level,flavour,packId){track("add_to_cart",{level,flavour,pack:packId});return _addToCart(level,flavour,packId)};
+addToCart=function(level,flavour,packId,mix){track("add_to_cart",{level,flavour,pack:packId,mix:mix?mix.join("|"):undefined});return _addToCart(level,flavour,packId,mix)};
 
 /* cookie banner */
 function cookieBanner(){
