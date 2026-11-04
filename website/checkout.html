@@ -155,7 +155,7 @@ function totals(){const sub=cartTotal();const ship=sub===0?0:shipMethod()==="exp
 function renderSummary(){
   if(!cart.length){$("emptyCo").hidden=false;$("co").hidden=true;return}
   $("co").hidden=false;$("emptyCo").hidden=true;
-  $("sLines").innerHTML=cart.map(l=>`<div class="s-line">${pouchHTML(l.level,l.flavour)}<div><b>${CATALOG[l.level].short} · ${l.name||l.flavour}</b><small>${l.label} · qty ${l.qty}</small></div><b>${eur(l.price*l.qty)}</b></div>`).join("");
+  $("sLines").innerHTML=cart.map(l=>`<div class="s-line">${pouchHTML(l.level,l.flavour)}<div><b>${CATALOG[l.level].short} · ${l.flavour===MIXED?"Mixed flavours":(l.name||l.flavour)}</b><small>${l.label} · qty ${l.qty}</small></div><b>${eur(l.price*l.qty)}</b></div>`).join("");
   const t=totals();$("sSub").textContent=eur(t.sub);$("sShip").textContent=t.ship?eur(t.ship):"Free";$("sTot").textContent=eur(t.tot);$("payAmt").textContent=eur(t.tot);
   const std=$("smStd");if(std)std.innerHTML=`<span>${cartTotal()>=FREE_SHIP?"Free":eur(SHIP)}</span>`;
 }

@@ -45,7 +45,7 @@ function renderCart(){
   document.querySelectorAll("[data-cart-count]").forEach(e=>e.textContent=cartCount());
   const lines=$("cartLines");if(!lines)return;
   if(!cart.length){lines.innerHTML='<p class="empty">Your cart is empty.</p>'}
-  else lines.innerHTML=cart.map((l,i)=>`<div class="line">${pouchHTML(l.level,l.flavour)}<div><b>${CATALOG[l.level].short} · ${l.name||l.flavour}</b><small>${l.label} · qty ${l.qty}</small><br><button class="rm" data-rm="${i}" type="button">Remove</button></div><b>${eur(l.price*l.qty)}</b></div>`).join("");
+  else lines.innerHTML=cart.map((l,i)=>`<div class="line">${pouchHTML(l.level,l.flavour)}<div><b>${CATALOG[l.level].short} · ${l.flavour===MIXED?"Mixed flavours":(l.name||l.flavour)}</b><small>${l.label} · qty ${l.qty}</small><br><button class="rm" data-rm="${i}" type="button">Remove</button></div><b>${eur(l.price*l.qty)}</b></div>`).join("");
   const t=cartTotal();$("cartTotal").textContent=eur(t);
   const left=FREE_SHIP-t;
   $("shipMsg").textContent=t===0?`Free EU shipping from ${eur(FREE_SHIP)}`:left>0?`${eur(left)} away from free EU shipping`:"You get free EU shipping";
