@@ -33,9 +33,9 @@ legend{font:800 1.4rem/1 var(--display);text-transform:uppercase;margin-bottom:1
 .check{display:flex;gap:10px;align-items:flex-start;font-size:.88rem;color:var(--muted);margin-top:12px}
 .check input{margin-top:3px;width:18px;height:18px;accent-color:var(--accent)}
 .pm{display:grid;gap:10px}
-.pm label{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;border:1.5px solid var(--line);background:var(--surface);border-radius:8px;padding:14px 16px;cursor:pointer}
-.pm input{width:18px;height:18px;accent-color:var(--accent);margin:0}
-.pm label:has(input:checked){border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.pm>label,.pm .opt>label{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;border:1.5px solid var(--line);background:var(--surface);border-radius:8px;padding:14px 16px;cursor:pointer}
+.pm label>input[type=radio]{width:18px;height:18px;accent-color:var(--accent);margin:0}
+
 .pm b{font-weight:600}
 .pm small{display:block;color:var(--muted);font-size:.8rem}
 .pm .logos{display:flex;gap:4px}
@@ -60,6 +60,42 @@ legend{font:800 1.4rem/1 var(--display);text-transform:uppercase;margin-bottom:1
 .reveal .code{font:700 1.4rem/1 var(--mono);letter-spacing:.1em;border:2px dashed var(--accent);color:var(--accent-deep);padding:12px;text-align:center;border-radius:8px}
 .spinner{width:18px;height:18px;border:3px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* floating-label fields */
+.fl{position:relative;min-width:0}
+.fl input,.fl select{font:inherit;width:100%;border:1.5px solid var(--line);border-radius:10px;background-color:var(--surface);color:var(--ink);padding:24px 14px 8px;height:58px}
+.fl select{padding-top:24px}
+.fl label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100% - 30px);position:absolute;left:15px;top:19px;font-size:1rem;color:var(--muted);pointer-events:none;transition:all .12s ease}
+.fl input:focus,.fl select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(36,64,230,.15)}
+.fl input:focus+label,.fl input:not(:placeholder-shown)+label,.fl select+label{top:8px;font-size:.76rem}
+.fl .err{display:block;color:var(--bad);font-size:.8rem;min-height:0;margin-top:4px}
+.fl .err:empty{display:none}
+.fl.bad input,.fl.bad select{border-color:var(--bad)}
+.fl .tip{position:absolute;right:14px;top:17px;width:22px;height:22px;border-radius:50%;border:1.8px solid var(--muted);color:var(--muted);font:700 .8rem/19px var(--body,inherit);text-align:center;cursor:help}
+.fl .tip span{display:none;position:absolute;right:-6px;bottom:30px;width:220px;background:var(--ink);color:var(--bg);font:400 .8rem/1.4 inherit;padding:8px 10px;border-radius:8px;text-align:left;z-index:5}
+.fl .tip:hover span,.fl .tip:focus span{display:block}
+.fl:has(.tip) input{padding-right:48px}
+/* payment list */
+.pm-note{font-size:.85rem;color:var(--muted);margin:-6px 0 12px}
+.pm{gap:0!important;border:1.5px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}
+.pm>label,.pm .opt>label{border:0!important;border-radius:0!important;box-shadow:none!important;border-bottom:1px solid var(--line)!important}
+.pm>label:last-child,.pm .opt:last-child>label{border-bottom:0!important}
+.pm>label:has(input:checked),.pm .opt>label:has(input:checked){background:#EEF1FF;box-shadow:inset 0 0 0 1.5px var(--accent)!important}
+.pm .amt{font:600 .92rem/1 var(--mono)}
+.pm .opt .panel{display:none;padding:14px 16px 16px;background:var(--soft);border-bottom:1px solid var(--line)}
+.pm .opt:last-child .panel{border-bottom:0}
+.pm .opt:has(>label input:checked) .panel{display:block}
+.pm .panel p{margin:0;font-size:.88rem;color:var(--muted);display:flex;gap:10px;align-items:center}
+.pm .panel p svg{flex:none}
+.pic{display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.pic i{display:inline-grid;place-items:center;width:38px;height:24px;background:#fff;border:1px solid #d9dcd6;border-radius:4px;padding:3px 4px}
+.pic i svg{max-width:100%;max-height:100%;display:block}
+.pic i.kl{background:#FFB3C7;border-color:#FFB3C7}
+.card-f{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card-f .full{grid-column:1/-1}
+.card-f .fl input{background:#fff}
+.card-f .brand{position:absolute;right:12px;top:17px}
+.card-safe{font-size:.78rem!important;margin-top:10px!important}
 </style>
 </head>
 <body>
@@ -81,39 +117,37 @@ legend{font:800 1.4rem/1 var(--display);text-transform:uppercase;margin-bottom:1
 
       <fieldset>
         <legend>Contact</legend>
-        <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required placeholder="you@example.com"><span class="err" id="emailErr"></span></div>
+        <div class="fl"><input id="email" name="email" type="email" autocomplete="email" required placeholder=" "><label for="email">Email</label><span class="err" id="emailErr"></span></div>
         <label class="check"><input type="checkbox" id="consent"> Also send me training tips and offers. Unsubscribe anytime.</label>
       </fieldset>
 
       <fieldset>
         <legend>Delivery</legend>
         <div class="f-grid">
-          <div class="field"><label for="fname">First name</label><input id="fname" autocomplete="given-name" required><span class="err" id="fnameErr"></span></div>
-          <div class="field"><label for="lname">Last name</label><input id="lname" autocomplete="family-name"><span class="err"></span></div>
-          <div class="field full"><label for="country">Country</label>
-            <select id="country" autocomplete="country-name" required>
-              <option>Lithuania</option><option>Latvia</option><option>Estonia</option><option>Poland</option><option>Germany</option><option>Finland</option><option>Sweden</option><option>Denmark</option><option>Netherlands</option><option>Belgium</option><option>France</option><option>Ireland</option><option>Austria</option><option>Czechia</option><option>Slovakia</option><option>Spain</option><option>Italy</option><option>Portugal</option><option>Other EU country</option>
-            </select></div>
+          <div class="fl full"><select id="country" autocomplete="country-name" required></select><label for="country">Country/Region</label></div>
+          <div class="fl"><input id="fname" autocomplete="given-name" placeholder=" " required><label for="fname">First name</label><span class="err" id="fnameErr"></span></div>
+          <div class="fl"><input id="lname" autocomplete="family-name" placeholder=" " required><label for="lname">Last name</label><span class="err" id="lnameErr"></span></div>
+          <div class="fl full"><input id="addr1" autocomplete="address-line1" placeholder=" " required><label for="addr1">Address</label><span class="err" id="addr1Err"></span></div>
+          <div class="fl full"><input id="addr2" autocomplete="address-line2" placeholder=" "><label for="addr2">Apartment, suite, etc. (optional)</label></div>
+          <div class="fl"><input id="city" autocomplete="address-level2" placeholder=" " required><label for="city">City</label><span class="err" id="cityErr"></span></div>
+          <div class="fl" id="regionWrap" hidden><select id="region" autocomplete="address-level1"></select><label for="region">State</label><span class="err" id="regionErr"></span></div>
+          <div class="fl"><input id="zip" autocomplete="postal-code" placeholder=" " required><label for="zip" id="zipL">Postal code</label><span class="err" id="zipErr"></span></div>
+          <div class="fl full"><input id="phone" type="tel" autocomplete="tel" placeholder=" "><label for="phone">Phone (optional)</label><span class="tip" tabindex="0" aria-label="Why we ask for a phone number">?<span role="tooltip">In case the courier needs to reach you about your delivery.</span></span></div>
         </div>
       </fieldset>
 
       <fieldset>
         <legend>Shipping method</legend>
         <div class="pm" role="radiogroup" aria-label="Shipping method">
-          <label><input type="radio" name="sm" value="standard" checked><span><b>Standard</b><small>2–6 business days · free from €49</small></span><span class="logos" id="smStd"></span></label>
-          <label><input type="radio" name="sm" value="express"><span><b>DHL Express</b><small>1–3 business days</small></span><span class="logos"><span>€14,95</span></span></label>
+          <label><input type="radio" name="sm" value="standard" checked><span><b id="smStdName">Standard</b><small id="smStdSub"></small></span><span class="amt" id="smStd"></span></label>
+          <label><input type="radio" name="sm" value="express"><span><b>DHL Express</b><small id="smExpSub"></small></span><span class="amt" id="smExp"></span></label>
         </div>
       </fieldset>
 
       <fieldset>
         <legend>Payment</legend>
-        <div class="pm" role="radiogroup" aria-label="Payment method">
-          <label><input type="radio" name="pm" value="card" checked><span><b>Card</b><small>Visa, Mastercard, Amex</small></span><span class="logos"><span>VISA</span><span>MC</span></span></label>
-          <label><input type="radio" name="pm" value="paypal"><span><b>PayPal</b></span><span class="logos"><span>PayPal</span></span></label>
-          <label><input type="radio" name="pm" value="apple_pay"><span><b>Apple Pay</b></span><span class="logos"><span>Pay</span></span></label>
-          <label><input type="radio" name="pm" value="google_pay"><span><b>Google Pay</b></span><span class="logos"><span>G Pay</span></span></label>
-          <label><input type="radio" name="pm" value="klarna"><span><b>Klarna</b><small>Pay later or in 3 instalments</small></span><span class="logos"><span>Klarna</span></span></label>
-        </div>
+        <p class="pm-note">All transactions are secure and encrypted.</p>
+        <div class="pm" role="radiogroup" aria-label="Payment method" id="pmList"></div>
       </fieldset>
 
       <button class="btn block big pay-btn" type="submit" id="payBtn">Pay <span id="payAmt"></span></button>
@@ -126,7 +160,7 @@ legend{font:800 1.4rem/1 var(--display);text-transform:uppercase;margin-bottom:1
       <div class="s-row"><span>Subtotal</span><span id="sSub"></span></div>
       <div class="s-row"><span>Shipping</span><span id="sShip"></span></div>
       <div class="s-row total"><span>Total</span><span id="sTot"></span></div>
-      <p class="fine2" style="text-align:left">Incl. VAT. Free EU shipping from €49.</p>
+      <p class="fine2" style="text-align:left" id="sumFine"></p>
     </aside>
   </div>
 </main>
@@ -149,34 +183,107 @@ legend{font:800 1.4rem/1 var(--display);text-transform:uppercase;margin-bottom:1
 
 <script src="assets/site.js"></script>
 <script>
-const SHIP=4.95,EXPRESS=14.95;
+const SHIP=MK.ship,EXPRESS=MK.express;
 const shipMethod=()=>(document.querySelector('input[name=sm]:checked')||{}).value||"standard";
 function totals(){const sub=cartTotal();const ship=sub===0?0:shipMethod()==="express"?EXPRESS:(sub>=FREE_SHIP?0:SHIP);return {sub,ship,tot:sub+ship}}
+
+/* countries per market */
+const EU_C=["Austria","Belgium","Bulgaria","Croatia","Cyprus","Czechia","Denmark","Estonia","Finland","France","Germany","Greece","Hungary","Ireland","Italy","Latvia","Lithuania","Luxembourg","Malta","Netherlands","Poland","Portugal","Romania","Slovakia","Slovenia","Spain","Sweden"];
+const US_S=["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","District of Columbia","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"];
+if(MARKET==="us"){$("country").innerHTML="<option>United States</option>";$("regionWrap").hidden=false;$("region").innerHTML='<option value="" selected disabled hidden></option>'+US_S.map(x=>`<option>${x}</option>`).join("");$("zipL").textContent="ZIP code";}
+else $("country").innerHTML=EU_C.map(c=>`<option${c==="Lithuania"?" selected":""}>${c}</option>`).join("");
+
+/* which wallets this device/browser can really use */
+const UA=navigator.userAgent,IOS=/iPhone|iPad|iPod/.test(UA)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1),
+  ANDROID=/Android/.test(UA),MAC=/Macintosh/.test(UA)&&!IOS,SAFARI=/Safari/.test(UA)&&!/Chrome|Chromium|CriOS|FxiOS|EdgiOS|Edg\/|OPR|Android/.test(UA);
+let WALLETS;
+if(ANDROID)WALLETS=["google_pay"];
+else if(IOS)WALLETS=SAFARI?["apple_pay"]:["apple_pay","google_pay"];
+else if(MAC&&SAFARI)WALLETS=["apple_pay"];
+else WALLETS=["google_pay","apple_pay"];
+const DESK=!IOS&&!ANDROID;
+const lock='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+const redir='<svg width="34" height="22" viewBox="0 0 34 22" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="22" height="15" rx="2"/><path d="M16 12h16m-4-4 4 4-4 4"/></svg>';
+const OPTS={
+  card:{name:"Credit or debit card",icons:["visa","mastercard","amex","maestro"],panel:`<div class="card-f">
+      <div class="fl full"><input id="ccNum" inputmode="numeric" autocomplete="cc-number" placeholder=" " maxlength="23"><label for="ccNum">Card number</label><span class="brand" id="ccBrand"></span><span class="err" id="ccNumErr"></span></div>
+      <div class="fl"><input id="ccExp" inputmode="numeric" autocomplete="cc-exp" placeholder=" " maxlength="7"><label for="ccExp">Expiry (MM / YY)</label><span class="err" id="ccExpErr"></span></div>
+      <div class="fl"><input id="ccCvc" inputmode="numeric" autocomplete="cc-csc" placeholder=" " maxlength="4"><label for="ccCvc">Security code</label><span class="err" id="ccCvcErr"></span></div>
+      <div class="fl full"><input id="ccName" autocomplete="cc-name" placeholder=" "><label for="ccName">Name on card</label><span class="err" id="ccNameErr"></span></div>
+    </div><p class="card-safe">${lock} Card details stay in your browser and are never sent to or stored by us.</p>`},
+  paypal:{name:"PayPal",icons:["paypal"],panel:`<p>${redir} After clicking “Pay with PayPal”, you'll be redirected to PayPal to complete your purchase securely.</p>`},
+  apple_pay:{name:"Apple Pay",icons:["apple-pay"],panel:`<p>${DESK&&!SAFARI?"You'll see a QR code to scan with your iPhone and confirm with Face ID.":"Confirm with Face ID or Touch ID. No card details to type."}</p>`},
+  google_pay:{name:"Google Pay",icons:["google-pay"],panel:`<p>${ANDROID?"Confirm with your fingerprint or face unlock.":"Pay with a card saved in your Google account."}</p>`},
+  klarna:{name:"Klarna",sub:"Pay later or in 3 interest-free instalments",icons:["klarna"],panel:`<p>${redir} You'll be redirected to Klarna to choose how you pay.</p>`}
+};
+const ORDER=["card",...WALLETS,"paypal",...(MK.klarna?["klarna"]:[])];
+$("pmList").innerHTML=ORDER.map((k,n)=>{const o=OPTS[k];return `<div class="opt"><label><input type="radio" name="pm" value="${k}"${n?"":" checked"}><span><b>${o.name}</b>${o.sub?`<small>${o.sub}</small>`:""}</span><span class="pic">${o.icons.map(pic).join("")}</span></label><div class="panel">${o.panel}</div></div>`}).join("");
+
+/* card fields: format + validate digit counts only (nothing is stored or sent) */
+const digits=v=>v.replace(/\D/g,"");
+function brandOf(n){if(/^3[47]/.test(n))return"amex";if(/^4/.test(n))return"visa";if(/^(5[1-5]|2[2-7])/.test(n))return"mastercard";if(/^(5[06-9]|6)/.test(n))return"maestro";return""}
+$("ccNum").addEventListener("input",e=>{const d=digits(e.target.value).slice(0,19),b=brandOf(d);
+  e.target.value=b==="amex"?d.replace(/^(\d{0,4})(\d{0,6})(\d{0,5}).*/,(m,a,c,f)=>[a,c,f].filter(Boolean).join(" ")):d.replace(/(\d{4})(?=\d)/g,"$1 ");
+  $("ccBrand").innerHTML=b?`<span class="pic">${pic(b)}</span>`:"";$("ccCvc").maxLength=b==="amex"?4:3;});
+$("ccExp").addEventListener("input",e=>{let d=digits(e.target.value).slice(0,4);if(d.length===1&&+d>1)d="0"+d;e.target.value=d.length>2?d.slice(0,2)+" / "+d.slice(2):d;});
+$("ccCvc").addEventListener("input",e=>{e.target.value=digits(e.target.value).slice(0,4)});
+function setErr(id,msg){const el=$(id+"Err");if(el)el.textContent=msg;const w=$(id).closest(".fl");if(w)w.classList.toggle("bad",!!msg);return !msg}
+function cardOk(){
+  const n=digits($("ccNum").value),b=brandOf(n),ex=digits($("ccExp").value),c=$("ccCvc").value;
+  const len=b==="amex"?[15]:b==="visa"?[13,16,19]:b==="mastercard"?[16]:b==="maestro"?[12,13,14,15,16,17,18,19]:[16];
+  let ok=setErr("ccNum",len.includes(n.length)?"":"Enter a valid card number.");
+  const mm=+ex.slice(0,2),yy=+ex.slice(2),now=new Date(),cy=now.getFullYear()%100,cm=now.getMonth()+1;
+  ok=setErr("ccExp",ex.length===4&&mm>=1&&mm<=12&&(yy>cy||(yy===cy&&mm>=cm))&&yy<cy+21?"":"Enter a valid expiration date.")&&ok;
+  ok=setErr("ccCvc",c.length===(b==="amex"?4:3)?"":"Enter the "+(b==="amex"?"4":"3")+"-digit security code.")&&ok;
+  ok=setErr("ccName",$("ccName").value.trim().length>1?"":"Enter the name on your card.")&&ok;
+  return ok;
+}
+function clearCard(){["ccNum","ccExp","ccCvc","ccName"].forEach(i=>{$(i).value=""});$("ccBrand").innerHTML=""}
+
+const PAYL={card:"Pay now",paypal:"Pay with PayPal",apple_pay:"Pay with Apple Pay",google_pay:"Pay with Google Pay",klarna:"Continue with Klarna"};
 function renderSummary(){
   if(!cart.length){$("emptyCo").hidden=false;$("co").hidden=true;return}
   $("co").hidden=false;$("emptyCo").hidden=true;
   $("sLines").innerHTML=cart.map(l=>`<div class="s-line">${pouchHTML(l.level,l.flavour)}<div><b>${lineTitle(l)}</b><small>${l.label} · qty ${l.qty}</small></div><b>${eur(l.price*l.qty)}</b></div>`).join("");
-  const t=totals();$("sSub").textContent=eur(t.sub);$("sShip").textContent=t.ship?eur(t.ship):"Free";$("sTot").textContent=eur(t.tot);$("payAmt").textContent=eur(t.tot);
-  const std=$("smStd");if(std)std.innerHTML=`<span>${cartTotal()>=FREE_SHIP?"Free":eur(SHIP)}</span>`;
+  const t=totals(),pm=(document.querySelector('input[name=pm]:checked')||{}).value||"card";
+  $("sSub").textContent=eur(t.sub);$("sShip").textContent=t.ship?eur(t.ship):"Free";$("sTot").textContent=eur(t.tot);
+  $("payBtn").innerHTML=`${PAYL[pm]} · <span id="payAmt">${eur(t.tot)}</span>`;
+  $("smStd").textContent=cartTotal()>=FREE_SHIP?"Free":eur(SHIP);$("smExp").textContent=eur(EXPRESS);
+  $("smStdSub").textContent=MARKET==="us"?`Import duties included · 7–12 business days · free from ${eur0(FREE_SHIP)}`:`2–6 business days · free from ${eur0(FREE_SHIP)}`;
+  $("smExpSub").textContent=MARKET==="us"?"Import duties included · 3–5 business days":"1–3 business days";
+  $("sumFine").textContent=MARKET==="us"?`Import duties included. Free US shipping from ${eur0(FREE_SHIP)}.`:`Incl. VAT. Free EU shipping from ${eur0(FREE_SHIP)}.`;
 }
 renderSummary();
-if(cart.length)track("checkout_start",{items:cart.length,total:totals().tot});
+if(cart.length)track("checkout_start",{items:cart.length,total:totals().tot,market:MARKET});
 document.querySelectorAll('input[name=sm]').forEach(r=>r.addEventListener("change",()=>{renderSummary();track("shipping_method",{method:r.value});}));
-document.querySelectorAll('input[name=pm]').forEach(r=>r.addEventListener("change",()=>track("payment_method",{method:r.value})));
+document.querySelectorAll('input[name=pm]').forEach(r=>r.addEventListener("change",()=>{renderSummary();track("payment_method",{method:r.value});}));
+["fname","lname","addr1","city","zip","region","email"].forEach(id=>{const el=$(id);if(el)el.addEventListener("input",()=>setErr(id,""))});
 
 $("coForm").addEventListener("submit",async e=>{
   e.preventDefault();
-  const email=$("email").value.trim(),fname=$("fname").value.trim();
-  let ok=true;
-  $("emailErr").textContent=/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)?"":(ok=false,"Enter a valid email address.");
-  $("fnameErr").textContent=fname?"":(ok=false,"Enter your first name.");
-  if(!ok){(email&&/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)?$("fname"):$("email")).focus();return}
-  const pm=document.querySelector('input[name=pm]:checked').value,t=totals();
+  const v=id=>$(id).value.trim(),email=v("email");
+  let ok=true,first=null;const chk=(id,cond,msg)=>{const good=setErr(id,cond?"":msg);if(!good&&!first)first=id;ok=ok&&good};
+  chk("email",/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email),"Enter a valid email address.");
+  chk("fname",v("fname"),"Enter your first name.");chk("lname",v("lname"),"Enter your last name.");
+  chk("addr1",v("addr1").length>3,"Enter your address.");chk("city",v("city"),"Enter your city.");
+  if(MARKET==="us"){chk("region",v("region"),"Select a state.");chk("zip",/^\d{5}(-\d{4})?$/.test(v("zip")),"Enter a valid ZIP code.")}
+  else chk("zip",v("zip").length>=3,"Enter your postal code.");
+  const pm=document.querySelector('input[name=pm]:checked').value;
+  if(pm==="card"&&!cardOk()){ok=false;if(!first)first=["ccNum","ccExp","ccCvc","ccName"].find(i=>$(i).closest(".fl").classList.contains("bad"))}
+  if(!ok){track("checkout_invalid",{method:pm});$(first).focus();return}
+  const t=totals();
   const btn=$("payBtn");btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Processing';
+  const cardBrand=pm==="card"?brandOf(digits($("ccNum").value)):undefined;
+  if(pm==="card")clearCard();
   const items=cart.map(l=>({level:l.duo?"duo":l.level,flavour:l.name||l.flavour,mix:l.mix||undefined,duo:l.duo||undefined,sub:l.sub||undefined,pack:l.pack,qty:l.qty,price:l.price}));
+  const r2=n=>Math.round(n*100)/100;
   await Promise.all([
-    sbInsert("leads",{session_id:getSID(),source:"checkout",email:email.slice(0,254),first_name:fname.slice(0,100),country:$("country").value,payment_method:pm,items,total_eur:Math.round(t.tot*100)/100,marketing_consent:$("consent").checked,utm:UTM}),
-    track("pay_click",{method:pm,shipping:shipMethod(),ship_eur:t.ship,total:t.tot,items:items.length})
+    sbInsert("leads",{session_id:getSID(),source:"checkout",email:email.slice(0,254),first_name:v("fname").slice(0,100),last_name:v("lname").slice(0,100),
+      country:$("country").value,region:MARKET==="us"?v("region").slice(0,100):null,address1:v("addr1").slice(0,200),address2:v("addr2").slice(0,200)||null,
+      city:v("city").slice(0,100),postal_code:v("zip").slice(0,20),phone:v("phone").slice(0,40)||null,shipping_method:shipMethod(),
+      payment_method:pm,items,market:MARKET,currency:MK.cur,total_local:r2(t.tot),total_eur:r2(MARKET==="us"?t.tot/1.1216:t.tot),
+      marketing_consent:$("consent").checked,utm:UTM}),
+    track("pay_click",{method:pm,card_brand:cardBrand,shipping:shipMethod(),ship:t.ship,total:t.tot,currency:MK.cur,items:items.length})
   ]);
   await new Promise(r=>setTimeout(r,900));
   $("revealEmail").textContent=email;$("reveal").hidden=false;

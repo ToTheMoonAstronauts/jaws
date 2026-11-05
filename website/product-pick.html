@@ -137,6 +137,8 @@
 .sticky-buy b{display:block;font:700 1rem/1.2 var(--mono)}
 .sticky-buy .btn{padding:12px 20px}
 @media (max-width:900px){.sticky-buy.on{display:flex}}
+/* mobile: no breadcrumbs or eyebrow above the title */
+@media (max-width:760px){.crumbs,#lvlEyebrow{display:none}.buy h1{margin-top:0}}
 /* offer column at 80% on desktop */
 @media (min-width:901px){.buy{zoom:.8}}
 </style>
@@ -333,7 +335,7 @@ function render(){
   $("bullets").innerHTML=I.bullets.map(b=>`<li><span>${b}</span></li>`).join("");
   document.querySelectorAll(".seg button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.level===st.level));
   $("flName").textContent=st.flavour;
-  $("swatches").innerHTML=Object.entries(L.flavours).map(([f,c])=>`<button type="button" data-f="${f}" aria-pressed="${f===st.flavour}" style="--c:${c}"><i></i>${f}</button>`).join("")+`<button type="button" data-f="${MIXED}" aria-pressed="${mixed}" style="--c:${MIXED_C}" ${st.pack===1?'disabled title="Available in 3 and 6 packs"':'title="Mint, mango and watermelon"'}><i></i>${MIXED}</button>`;
+  $("swatches").innerHTML=Object.entries(L.flavours).map(([f,c])=>`<button type="button" data-f="${f}" aria-pressed="${f===st.flavour}" style="--c:${c}">${flIcon(f)}${f}</button>`).join("")+`<button type="button" data-f="${MIXED}" aria-pressed="${mixed}" style="--c:${MIXED_C}" ${st.pack===1?'disabled title="Available in 3 and 6 packs"':'title="Mint, mango and watermelon"'}><i></i>${MIXED}</button>`;
   const mixTxt=mixed&&st.mix?mixLabel(st.mix):st.flavour;
   $("flName").textContent=mixed?"Mixed · "+mixTxt:st.flavour;
   $("packs").innerHTML=PACKS.map(p=>{
