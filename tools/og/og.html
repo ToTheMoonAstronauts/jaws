@@ -1,0 +1,26 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../website/assets/site.css">
+<style>
+html,body{margin:0;width:1200px;height:630px;overflow:hidden;background:#0E1116}
+.og{position:relative;width:1200px;height:630px;display:grid;grid-template-columns:560px 1fr;color:#fff;font-family:"IBM Plex Sans",sans-serif}
+.l{padding:56px 0 56px 64px;display:flex;flex-direction:column;justify-content:space-between;z-index:2}
+.logo{color:#fff;transform:scale(1.6);transform-origin:left top}
+.logo i{background:#fff}
+h1{font:900 92px/.92 "Big Shoulders Display";text-transform:uppercase;margin:0;letter-spacing:.005em}
+h1 b{color:#5B7BFF;display:block;font-weight:900}
+.sub{font-size:23px;white-space:nowrap;font-weight:500;opacity:.85;margin:0}
+.r{position:absolute;inset:0 0 0 auto;width:760px;background-size:cover;background-position:center}
+.r:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#0E1116 0%,rgba(14,17,22,.85) 22%,rgba(14,17,22,0) 55%)}
+.p .r{width:700px;background-size:cover;background-position:center 45%}
+.p .r:after{background:linear-gradient(90deg,#0E1116 0%,rgba(14,17,22,0) 18%)}
+</style></head><body>
+<div class="og" id="og"><div class="r" id="img"></div><div class="l">
+<a class="logo"><i></i><span class="wm"></span></a>
+<div><h1 id="h"></h1></div><p class="sub" id="s"></p></div></div>
+<script>
+const q=new URLSearchParams(location.search);
+document.getElementById("h").innerHTML=q.get("h");document.getElementById("s").textContent=q.get("s");
+document.getElementById("img").style.backgroundImage=`url(${q.get("img")})`;
+if(q.get("p"))document.getElementById("og").classList.add("p");
+</script></body></html>

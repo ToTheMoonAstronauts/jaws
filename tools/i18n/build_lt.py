@@ -29,6 +29,16 @@ def make_fn(where):
 def out_name(p): return p
 def clean(p): return "" if p == "index.html" else p[:-5]
 
+def fix_og(doc):
+    """LT copies of the OG block: LT url, LT image, swapped locales."""
+    def blk(m):
+        b = m.group(0)
+        b = re.sub(r'(rel="canonical" href=|property="og:url" content=)"https://jawzr\.com/', r'\1"https://jawzr.com/lt/', b)
+        b = re.sub(r'(images/og-[a-z]+)-en\.jpg', r'\1-lt.jpg', b)
+        b = b.replace('og:locale" content="en_US"', 'og:locale" content="lt_LT"').replace('og:locale:alternate" content="lt_LT"', 'og:locale:alternate" content="en_US"')
+        return b
+    return re.sub(r"<!--og-->.*?<!--/og-->", blk, doc, flags=re.S)
+
 def fix_links(doc):
     # pages that exist only in English live one level up
     doc = re.sub(r'(href|src)="(articles\.html|article-[^"]+|dash/[^"]*|v1\.html|product-pick\.html)', r'\1="../\2', doc)
@@ -54,6 +64,7 @@ def main(src, out, report):
         if 'name="robots" content="noindex' not in doc: doc = add_hreflang(doc, p)
         doc = html_segments(doc, make_fn(p))
         doc = fix_links(doc)
+        doc = fix_og(doc)
         open(os.path.join(out, out_name(p)), "w", encoding="utf-8").write(doc)
     os.makedirs(os.path.join(out, "assets"), exist_ok=True)
     for j in JS:

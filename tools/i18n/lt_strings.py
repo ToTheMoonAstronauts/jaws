@@ -3,6 +3,8 @@
 # Not listed on purpose: code strings, flavour names used as data keys (Mint, Mango, ...),
 # US-only texts and country/state names in the US form.
 T = {
+"JAWZR Hard & Ultra Hard Gum": "JAWZR kieta ir ypač kieta guma",
+"JAWZR hard chewing gum": "JAWZR kieta kramtomoji guma",
 "This is a training product, much harder than regular gum. No more than 15 minutes a day; alternate full and light days.": "Tai treniruočių priemonė, daug kietesnė už paprastą gumą. Ne daugiau kaip 15 minučių per dieną; kaitaliok pilnas ir lengvas dienas.",
 "A muscle burn that fades within a day is normal; sharp pain, clicking or locking is not.": "Raumenų deginimas, praeinantis per dieną, yra normalus; aštrus skausmas, spragsėjimas ar užstrigimas – ne.",
 "Subscribe & save": "Prenumeruok ir sutaupyk",

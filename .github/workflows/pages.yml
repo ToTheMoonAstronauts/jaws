@@ -28,7 +28,7 @@ jobs:
         run: |
           mkdir _site
           cp -R website/. _site/
-          sed 's#</head>#<link rel="canonical" href="https://jawzr.com/">\n</head>#' _site/index.html > _site/go.html
+          cp _site/index.html _site/go.html
           python3 tools/i18n/build_lt.py website _site/lt --report --en-hreflang
           touch _site/.nojekyll
       - uses: actions/configure-pages@v5
