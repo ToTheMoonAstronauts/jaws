@@ -302,3 +302,16 @@ select{appearance:none;-webkit-appearance:none;background-image:url("data:image/
 .cur-sw a{color:inherit;text-decoration:none;padding:3px 8px;border-radius:6px;font-size:.72rem;letter-spacing:.06em;opacity:.75}
 .cur-sw a[aria-current="true"]{background:rgba(251,248,241,.95);color:#121614;opacity:1}
 @media (max-width:560px){.top-bar .wrap.has-sw{gap:8px}.top-bar .tb-txt{font-size:.64rem;text-align:left;padding-left:0}}
+/* JAWZR vs table on phones: row label full width, the 4 values on the line under it */
+@media (max-width:640px){
+  .compare.vs,.compare.vs thead,.compare.vs tbody{display:block}
+  .compare.vs tr{display:grid;grid-template-columns:repeat(4,1fr)}
+  .compare.vs th,.compare.vs td{padding:10px 6px;border-bottom:0}
+  .compare.vs thead th:first-child{display:none}
+  .compare.vs thead th{font-size:.8rem;line-height:1.1;display:flex;align-items:center;justify-content:center;text-align:center}
+  .compare.vs tbody tr{border-top:1px solid var(--line)}
+  .compare.vs tbody td:first-child{grid-column:1/-1;min-width:0;padding:12px 14px 2px;font-weight:600;text-align:left}
+  .compare.vs td.c{width:auto;font-size:.8rem;line-height:1.25;padding:6px 4px 12px}
+  .compare.vs .y,.compare.vs .n{width:22px;height:22px;font-size:.8rem}
+  .table-scroll:has(.compare.vs){overflow:visible}
+}
