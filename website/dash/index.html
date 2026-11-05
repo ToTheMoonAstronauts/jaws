@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>JAWZR Dashboard</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root{--bg:#F6F4EF;--card:#fff;--ink:#121614;--muted:#67706b;--line:#E3E0D8;--accent:#2440E6;--ok:#1d6b3a;--bad:#B42318;--soft:#EEF1FF}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 "IBM Plex Sans",system-ui,sans-serif}
+h1,h2{font-family:"Big Shoulders Display",sans-serif;text-transform:uppercase;letter-spacing:.01em;margin:0}
+h1{font-size:2rem}h2{font-size:1.25rem}
+.mono{font-family:"JetBrains Mono",monospace}
+.wrap{max-width:1240px;margin:0 auto;padding:0 20px}
+header{background:var(--ink);color:#fff}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;flex-wrap:wrap}
+header .who{font-size:.85rem;opacity:.8}
+header button{background:none;border:1px solid #fff6;color:#fff;border-radius:10px;padding:7px 12px;font:inherit;cursor:pointer}
+/* login */
+.login{min-height:100vh;display:grid;place-items:center;padding:20px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:30px;width:100%;max-width:380px;display:grid;gap:14px}
+.box label{display:grid;gap:6px;font-size:.85rem;font-weight:500}
+.box input{font:inherit;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px}
+.box input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(36,64,230,.15)}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:13px;font:600 1rem inherit;cursor:pointer}
+.btn:disabled{opacity:.6}
+.link{background:none;border:0;color:var(--accent);text-decoration:underline;cursor:pointer;font:inherit;padding:0;justify-self:start;font-size:.88rem}
+.msg{font-size:.88rem;min-height:1.2em}.msg.err{color:var(--bad)}.msg.ok{color:var(--ok)}
+/* toolbar */
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:22px 0 16px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+.seg button{border:0;background:none;padding:8px 12px;font:inherit;font-size:.88rem;cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.bar input[type=date]{font:inherit;font-size:.88rem;padding:7px 10px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.bar .note{margin-left:auto;font-size:.8rem;color:var(--muted)}
+/* tiles */
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.tile .l{font:600 .68rem/1.2 "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.tile .v{font:700 1.7rem/1.1 "JetBrains Mono",monospace;margin-top:8px;font-variant-numeric:tabular-nums}
+.tile .s{font-size:.8rem;color:var(--muted);margin-top:4px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+@media(max-width:980px){.grid2,.grid3{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;min-width:0}
+.card h2{margin-bottom:12px}
+/* funnel */
+.fun{display:grid;gap:8px}
+.fun .row{display:grid;grid-template-columns:150px 1fr 110px;gap:10px;align-items:center;font-size:.9rem}
+.fun .track{height:22px;background:#F1EFEA;border-radius:6px;overflow:hidden}
+.fun .fill{height:100%;background:var(--accent);border-radius:6px}
+.fun .n{text-align:right;font-family:"JetBrains Mono",monospace;font-size:.85rem}
+.fun .n small{color:var(--muted)}
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 .68rem/1.2 "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
+.scroll{overflow-x:auto}
+.bars td .b{display:block;height:6px;background:var(--soft);border-radius:3px;margin-top:4px}.bars td .b i{display:block;height:100%;background:var(--accent);border-radius:3px}
+.pill{display:inline-block;font:600 .7rem/1 "JetBrains Mono",monospace;padding:3px 6px;border-radius:4px;background:#F1EFEA}
+.pill.ok{background:#E3F3EA;color:var(--ok)}.pill.bad{background:#FDECEC;color:var(--bad)}
+svg text{font:11px "JetBrains Mono",monospace;fill:var(--muted)}
+.empty{color:var(--muted);font-size:.88rem}
+footer{color:var(--muted);font-size:.78rem;padding:30px 0 40px}
+</style>
+</head>
+<body>
+<div id="loginView" class="login" hidden>
+  <form class="box" id="loginForm" novalidate>
+    <h1>JAWZR dashboard</h1>
+    <label>Email<input id="em" type="email" autocomplete="username" required></label>
+    <label>Password<input id="pw" type="password" autocomplete="current-password" required minlength="8"></label>
+    <button class="btn" id="goBtn" type="submit">Log in</button>
+    <p class="msg" id="msg"></p>
+    <button class="link" type="button" id="modeBtn">First time here? Create your password</button>
+    <button class="link" type="button" id="resetBtn">Forgot password?</button>
+  </form>
+</div>
+
+<div id="appView" hidden>
+  <header><div class="wrap"><h1>JAWZR · Fake door dashboard</h1><span class="who" id="who"></span><button type="button" id="outBtn">Log out</button></div></header>
+  <main class="wrap">
+    <div class="bar">
+      <div class="seg" id="rangeSeg"><button data-r="1">Today</button><button data-r="7">7 days</button><button data-r="30" aria-pressed="true">30 days</button><button data-r="all">All time</button></div>
+      <input type="date" id="dFrom" aria-label="From"> <input type="date" id="dTo" aria-label="To">
+      <div class="seg" id="mktSeg"><button data-m="" aria-pressed="true">All markets</button><button data-m="eu">EU</button><button data-m="us">US</button></div>
+      <span class="note" id="upd"></span>
+    </div>
+    <div class="tiles" id="tiles"></div>
+    <div class="grid2">
+      <div class="card"><h2>Funnel (sessions that accepted cookies)</h2><div class="fun" id="funnel"></div></div>
+      <div class="card"><h2>By day</h2><div id="chart"></div></div>
+    </div>
+    <div class="grid3">
+      <div class="card"><h2>Products</h2><div id="tProduct"></div></div>
+      <div class="card"><h2>Flavours</h2><div id="tFlavour"></div></div>
+      <div class="card"><h2>One-time vs subscription</h2><div id="tType"></div></div>
+      <div class="card"><h2>Payment method</h2><div id="tPay"></div></div>
+      <div class="card"><h2>Country</h2><div id="tCountry"></div></div>
+      <div class="card"><h2>Traffic source</h2><div id="tCampaign"></div></div>
+      <div class="card"><h2>Shipping</h2><div id="tShip"></div></div>
+      <div class="card"><h2>Market</h2><div id="tMarket"></div></div>
+      <div class="card"><h2>Meta server events (CAPI)</h2><div id="tCapi"></div></div>
+    </div>
+    <div class="card" style="margin-top:14px"><h2>Latest pre-orders and sign-ups</h2><div class="scroll" id="tRecent"></div></div>
+    <footer>Pre-orders are fake-door checkouts: nobody was charged. Visitor and funnel numbers only include people who accepted cookies; pre-orders and sign-ups include everyone. Test emails are excluded. Values in EUR (US orders converted at 1.1216).</footer>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+const sb=supabase.createClient("https://vzfwovxlzgrtghxlfkbj.supabase.co","sb_publishable_JP7_gwTXfMBITq2e2gHe8A_snjOsWTT",{auth:{persistSession:true,storageKey:"jawzr-dash"}});
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const eur=n=>"€"+(Number(n)||0).toLocaleString("en-IE",{minimumFractionDigits:2,maximumFractionDigits:2});
+const num=n=>(Number(n)||0).toLocaleString("en-IE");
+const pct=(a,b)=>b?Math.round(a/b*1000)/10+"%":"–";
+const iso=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+let mode="login",state={from:null,to:null,market:""};
+
+/* ---------- auth ---------- */
+function msg(t,c=""){const m=$("msg");m.textContent=t;m.className="msg "+c}
+$("modeBtn").onclick=()=>{mode=mode==="login"?"signup":"login";$("goBtn").textContent=mode==="login"?"Log in":"Create password";
+  $("modeBtn").textContent=mode==="login"?"First time here? Create your password":"Already have a password? Log in";$("pw").autocomplete=mode==="login"?"current-password":"new-password";msg("")};
+$("resetBtn").onclick=async()=>{const e=$("em").value.trim();if(!e){msg("Enter your email first.","err");return}
+  const {error}=await sb.auth.resetPasswordForEmail(e,{redirectTo:location.href.split("#")[0]});msg(error?error.message:"If this email has access, a reset link is on its way.",error?"err":"ok")};
+$("loginForm").addEventListener("submit",async ev=>{ev.preventDefault();const e=$("em").value.trim(),p=$("pw").value;
+  if(!e||p.length<8){msg("Enter your email and a password of at least 8 characters.","err");return}
+  $("goBtn").disabled=true;msg("");
+  const r=mode==="login"?await sb.auth.signInWithPassword({email:e,password:p}):await sb.auth.signUp({email:e,password:p,options:{emailRedirectTo:location.href.split("#")[0]}});
+  $("goBtn").disabled=false;$("pw").value="";
+  if(r.error){msg(r.error.message,"err");return}
+  if(mode==="signup"&&!r.data.session){msg("Check your inbox and confirm your email, then log in here.","ok");$("modeBtn").click();return}
+  boot();});
+$("outBtn").onclick=async()=>{await sb.auth.signOut();show(false)};
+function show(app){$("appView").hidden=!app;$("loginView").hidden=app}
+sb.auth.onAuthStateChange((e,s)=>{if(e==="PASSWORD_RECOVERY"){const p=prompt("Choose a new password (at least 8 characters)");if(p&&p.length>=8)sb.auth.updateUser({password:p}).then(()=>boot())}});
+
+/* ---------- report ---------- */
+function setRange(r){const t=new Date(),to=iso(t);let from;
+  if(r==="all")from="2026-10-01";else{const f=new Date(t);f.setDate(f.getDate()-(Number(r)-1));from=iso(f)}
+  state.from=from;state.to=to;$("dFrom").value=from;$("dTo").value=to;
+  document.querySelectorAll("#rangeSeg button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.r===String(r)))}
+$("rangeSeg").onclick=e=>{const b=e.target.closest("button");if(!b)return;setRange(b.dataset.r);load()};
+$("mktSeg").onclick=e=>{const b=e.target.closest("button");if(!b)return;state.market=b.dataset.m;document.querySelectorAll("#mktSeg button").forEach(x=>x.setAttribute("aria-pressed",x===b));load()};
+["dFrom","dTo"].forEach(id=>$(id).onchange=()=>{state.from=$("dFrom").value;state.to=$("dTo").value;document.querySelectorAll("#rangeSeg button").forEach(b=>b.setAttribute("aria-pressed","false"));load()});
+
+async function boot(){
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){show(false);return}
+  const {data:ok}=await sb.rpc("dash_is_admin");
+  if(!ok){await sb.auth.signOut();show(false);msg("This account has no dashboard access (or its email isn't confirmed yet).","err");return}
+  $("who").textContent=session.user.email;show(true);if(!state.from)setRange(30);load();
+}
+async function load(){
+  $("upd").textContent="Loading…";
+  const {data,error}=await sb.rpc("dash_report",{p_from:state.from,p_to:state.to,p_market:state.market||null});
+  if(error){$("upd").textContent="Error: "+error.message;return}
+  render(data);$("upd").textContent="Updated "+new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
+}
+function table(rows,cols,bar){if(!rows||!rows.length)return '<p class="empty">No data in this range.</p>';
+  const max=bar?Math.max(...rows.map(r=>Number(r[bar])||0),1):1;
+  return `<table class="${bar?"bars":""}"><thead><tr>${cols.map(c=>`<th class="${c.r?"r":""}">${c.h}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${cols.map((c,i)=>`<td class="${c.r?"r":""}">${c.f?c.f(r[c.k],r):esc(r[c.k])}${bar&&i===0?`<span class="b"><i style="width:${(Number(r[bar])||0)/max*100}%"></i></span>`:""}</td>`).join("")}</tr>`).join("")}</tbody></table>`}
+function render(d){
+  const t=d.totals;
+  const tiles=[["Visitors",num(t.visitors),`${num(t.page_views)} page views`],["Added to cart",num(t.add_to_cart_sessions),`${pct(t.add_to_cart_sessions,t.visitors)} of visitors`],
+    ["Started checkout",num(t.checkout_sessions),`${pct(t.checkout_sessions,t.add_to_cart_sessions)} of carts`],["Pre-orders",num(t.orders),`${num(t.buyers)} people · ${pct(t.pay_click_sessions,t.visitors)} of visitors`],
+    ["Pre-order value",eur(t.order_value_eur),`avg ${eur(t.avg_order_eur)}`],["Subscription orders",num(t.subscription_orders),pct(t.subscription_orders,t.orders)+" of pre-orders"],
+    ["Email sign-ups",num(t.popup_leads+t.newsletter_leads),`${num(t.popup_leads)} popup · ${num(t.newsletter_leads)} newsletter`]];
+  $("tiles").innerHTML=tiles.map(([l,v,s])=>`<div class="tile"><div class="l">${l}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join("");
+  const steps=[["Visited",t.visitors],["Viewed a product",t.product_viewers],["Added to cart",t.add_to_cart_sessions],["Started checkout",t.checkout_sessions],["Clicked pay",t.pay_click_sessions]];
+  const top=Math.max(steps[0][1],1);
+  $("funnel").innerHTML=steps.map(([l,n],i)=>`<div class="row"><span>${l}</span><div class="track"><div class="fill" style="width:${n/top*100}%"></div></div><span class="n">${num(n)} <small>${i?pct(n,steps[i-1][1]):""}</small></span></div>`).join("");
+  chart(d.daily);
+  $("tProduct").innerHTML=table(d.by_product,[{h:"Product",k:"k"},{h:"Orders",k:"n",r:1},{h:"Value",k:"v",r:1,f:v=>eur(v)}],"n");
+  $("tFlavour").innerHTML=table(d.by_flavour,[{h:"Flavour",k:"k"},{h:"Lines",k:"n",r:1}],"n");
+  $("tType").innerHTML=table(d.by_purchase_type,[{h:"Type",k:"k"},{h:"Lines",k:"n",r:1}],"n");
+  $("tPay").innerHTML=table(d.by_payment,[{h:"Method",k:"k"},{h:"Orders",k:"n",r:1},{h:"Value",k:"v",r:1,f:v=>eur(v)}],"n");
+  $("tCountry").innerHTML=table(d.by_country,[{h:"Country",k:"k"},{h:"Orders",k:"n",r:1},{h:"Value",k:"v",r:1,f:v=>eur(v)}],"n");
+  $("tCampaign").innerHTML=table(d.by_campaign,[{h:"Source · campaign",k:"k"},{h:"Orders",k:"n",r:1},{h:"Value",k:"v",r:1,f:v=>eur(v)}],"n");
+  $("tShip").innerHTML=table(d.by_shipping,[{h:"Method",k:"k"},{h:"Orders",k:"n",r:1}],"n");
+  $("tMarket").innerHTML=table(d.by_market,[{h:"Market",k:"k",f:v=>esc(String(v).toUpperCase())},{h:"Orders",k:"n",r:1},{h:"Value (local)",k:"v",r:1,f:(v,r)=>r.k==="us"?"$"+(Number(v)||0).toFixed(2):eur(v)}],"n");
+  $("tCapi").innerHTML=table(d.capi,[{h:"Event",k:"event"},{h:"Status",k:"status",f:v=>`<span class="pill ${v==="sent"?"ok":v==="failed"?"bad":""}">${esc(v)}</span>`},{h:"Count",k:"n",r:1}]);
+  $("tRecent").innerHTML=table(d.recent,[
+    {h:"When",k:"at",f:v=>esc(new Date(v).toLocaleString("en-GB",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}))},
+    {h:"Type",k:"source",f:v=>`<span class="pill">${esc(v==="checkout"?"pre-order":v)}</span>`},{h:"Email",k:"email"},{h:"Name",k:"name"},
+    {h:"Where",k:"country",f:(v,r)=>esc([r.city,v].filter(Boolean).join(", "))},
+    {h:"Items",k:"items",f:v=>esc((v||[]).map(i=>`${i.level==="duo"?"Duo":i.level==="ultra"?"Ultra":"Hard"} ${i.pack}× ${i.flavour}${i.sub?" (sub "+i.sub.every+")":""}${i.qty>1?" ×"+i.qty:""}`).join("; "))},
+    {h:"Pay",k:"payment"},{h:"Total",k:"total",r:1,f:(v,r)=>v==null&&r.total_eur==null?"":(r.currency==="USD"?"$"+Number(v).toFixed(2):eur(v??r.total_eur))},
+    {h:"Ad click",k:"fbclid",f:v=>v?"Meta":""}]);
+}
+function chart(rows){
+  if(!rows||!rows.length){$("chart").innerHTML='<p class="empty">No data.</p>';return}
+  const W=560,H=200,p={l:30,r:10,t:10,b:24},n=rows.length,bw=(W-p.l-p.r)/n;
+  const max=Math.max(1,...rows.map(r=>Math.max(r.visitors,r.atc,r.orders)));
+  const y=v=>H-p.b-(v/max)*(H-p.t-p.b);
+  const line=k=>rows.map((r,i)=>`${i?"L":"M"}${(p.l+bw*i+bw/2).toFixed(1)},${y(r[k]).toFixed(1)}`).join("");
+  const step=Math.ceil(n/8);
+  $("chart").innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Visitors, carts and pre-orders by day">
+    ${[0,.5,1].map(f=>`<line x1="${p.l}" x2="${W-p.r}" y1="${y(max*f)}" y2="${y(max*f)}" stroke="#E3E0D8"/><text x="${p.l-6}" y="${y(max*f)+4}" text-anchor="end">${Math.round(max*f)}</text>`).join("")}
+    ${rows.map((r,i)=>`<rect x="${p.l+bw*i+bw*.2}" y="${y(r.orders)}" width="${bw*.6}" height="${H-p.b-y(r.orders)}" fill="#2440E6"><title>${r.d}: ${r.orders} pre-orders, ${eur(r.value_eur)}</title></rect>`).join("")}
+    <path d="${line("visitors")}" fill="none" stroke="#121614" stroke-width="1.6"/><path d="${line("atc")}" fill="none" stroke="#F4B23E" stroke-width="1.6"/>
+    ${rows.map((r,i)=>i%step?"":`<text x="${p.l+bw*i+bw/2}" y="${H-6}" text-anchor="middle">${r.d.slice(5)}</text>`).join("")}
+  </svg><p class="empty" style="margin:6px 0 0"><span style="color:#121614">━</span> visitors &nbsp; <span style="color:#F4B23E">━</span> added to cart &nbsp; <span style="color:#2440E6">■</span> pre-orders</p>`;
+}
+boot();
+</script>
+</body>
+</html>
