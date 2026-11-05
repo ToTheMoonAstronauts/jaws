@@ -254,7 +254,13 @@ function renderSummary(){
   $("sumFine").textContent=MARKET==="us"?`Import duties included. Free US shipping from ${eur0(FREE_SHIP)}.`:`Incl. VAT. Free EU shipping from ${eur0(FREE_SHIP)}.`;
 }
 renderSummary();
-if(cart.length)track("checkout_start",{items:cart.length,total:totals().tot,market:MARKET});
+if(cart.length){track("checkout_start",{items:cart.length,total:totals().tot,market:MARKET});
+  metaEvent("InitiateCheckout",{value:totals().sub,currency:MK.cur,content_type:"product",content_ids:cartContents().map(c=>c.id),contents:cartContents(),num_items:cartCount()});}
+/* Meta Lead: first valid email typed at checkout (once per browser session) */
+function leadOnce(){const em=$("email").value.trim().toLowerCase();if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em))return;
+  let done=false;try{done=sessionStorage.getItem("jawzr-lead")===em}catch(e){}if(done)return;
+  if(metaEvent("Lead",{content_name:"checkout_email",currency:MK.cur,value:0},{server:true,user:{email:em,country:$("country").value}})){try{sessionStorage.setItem("jawzr-lead",em)}catch(e){}}}
+$("email").addEventListener("change",leadOnce);$("email").addEventListener("blur",leadOnce);
 document.querySelectorAll('input[name=sm]').forEach(r=>r.addEventListener("change",()=>{renderSummary();track("shipping_method",{method:r.value});}));
 document.querySelectorAll('input[name=pm]').forEach(r=>r.addEventListener("change",()=>{renderSummary();track("payment_method",{method:r.value});}));
 ["fname","lname","addr1","city","zip","region","email"].forEach(id=>{const el=$(id);if(el)el.addEventListener("input",()=>setErr(id,""))});
@@ -277,12 +283,17 @@ $("coForm").addEventListener("submit",async e=>{
   if(pm==="card")clearCard();
   const items=cart.map(l=>({level:l.duo?"duo":l.level,flavour:l.name||l.flavour,mix:l.mix||undefined,duo:l.duo||undefined,sub:l.sub||undefined,pack:l.pack,qty:l.qty,price:l.price}));
   const r2=n=>Math.round(n*100)/100;
+  leadOnce();
+  /* Meta Purchase: the fake-door "order" passed validation; value = order total actually shown */
+  const user={email:email.toLowerCase(),first_name:v("fname"),last_name:v("lname"),phone:v("phone"),city:v("city"),zip:v("zip"),state:MARKET==="us"?v("region"):"",country:$("country").value};
+  const metaId=metaEvent("Purchase",{value:r2(t.tot),currency:MK.cur,content_type:"product",content_ids:cartContents().map(c=>c.id),contents:cartContents(),num_items:cartCount()},{server:true,user});
+  const att=metaAttribution();
   await Promise.all([
     sbInsert("leads",{session_id:getSID(),source:"checkout",email:email.slice(0,254),first_name:v("fname").slice(0,100),last_name:v("lname").slice(0,100),
       country:$("country").value,region:MARKET==="us"?v("region").slice(0,100):null,address1:v("addr1").slice(0,200),address2:v("addr2").slice(0,200)||null,
       city:v("city").slice(0,100),postal_code:v("zip").slice(0,20),phone:v("phone").slice(0,40)||null,shipping_method:shipMethod(),
       payment_method:pm,items,market:MARKET,currency:MK.cur,total_local:r2(t.tot),total_eur:r2(MARKET==="us"?t.tot/1.1216:t.tot),
-      marketing_consent:$("consent").checked,utm:UTM}),
+      marketing_consent:$("consent").checked,utm:UTM,meta_event_id:metaId,...(getConsent()==="granted"?att:{user_agent:att.user_agent})}),
     track("pay_click",{method:pm,card_brand:cardBrand,shipping:shipMethod(),ship:t.ship,total:t.tot,currency:MK.cur,items:items.length})
   ]);
   await new Promise(r=>setTimeout(r,900));

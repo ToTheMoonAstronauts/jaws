@@ -134,20 +134,24 @@ function track(event,props={}){
 document.addEventListener("DOMContentLoaded",()=>track("page_view"));
 /* wrap addToCart so every add is tracked */
 const _addToCart=addToCart;
-addToCart=function(level,flavour,packId,mix,opts={}){track("add_to_cart",{level,flavour,pack:packId,mix:mix?mix.join("|"):undefined,duo:opts.duo?opts.duo.join("|"):undefined,sub:opts.sub?opts.sub.every:undefined});return _addToCart(level,flavour,packId,mix,opts)};
+addToCart=function(level,flavour,packId,mix,opts={}){
+  try{const lv=opts.duo?"hard":level,base=packPrice(lv,packId),pr=opts.sub?subPrice(base):base,id=skuOf({level:lv,duo:opts.duo,pack:packId,sub:opts.sub});
+    metaEvent("AddToCart",{value:pr,currency:MK.cur,content_type:"product",content_ids:[id],contents:[{id,quantity:1,item_price:pr}],num_items:1})}catch(e){}
+  track("add_to_cart",{level,flavour,pack:packId,mix:mix?mix.join("|"):undefined,duo:opts.duo?opts.duo.join("|"):undefined,sub:opts.sub?opts.sub.every:undefined});return _addToCart(level,flavour,packId,mix,opts)};
 
 /* cookie banner */
 function cookieBanner(){
   let b=document.getElementById("cookieBar");
   if(!b){b=document.createElement("div");b.id="cookieBar";b.className="cookie-bar";b.setAttribute("role","dialog");b.setAttribute("aria-label","Cookie choice");
-    b.innerHTML='<p>We use your browser\'s storage to keep your cart. With your OK, we also measure visits and shop steps to see how many people are interested in JAWZR. No advertising cookies. <a href="privacy.html">Privacy &amp; Cookies</a></p><div class="cookie-btns"><button type="button" class="btn ghost" data-consent="denied">Decline</button><button type="button" class="btn" data-consent="granted">Accept analytics</button></div>';
+    b.innerHTML='<p>We use your browser\'s storage to keep your cart. With your OK, we also measure visits and shop steps, and use the Meta Pixel to measure our Facebook and Instagram ads. <a href="privacy.html">Privacy &amp; Cookies</a></p><div class="cookie-btns"><button type="button" class="btn ghost" data-consent="denied">Decline</button><button type="button" class="btn" data-consent="granted">Accept</button></div>';
     document.body.appendChild(b);}
   b.hidden=false;
 }
 document.addEventListener("click",e=>{
   const c=e.target.closest("[data-consent]");
   if(c){const v=c.dataset.consent,was=getConsent();setConsent(v);document.getElementById("cookieBar").hidden=true;
-    if(v==="granted"&&was!=="granted"){track("consent",{value:v});track("page_view")}}
+    if(v==="granted"&&was!=="granted"){track("consent",{value:v});track("page_view");metaBoot()}
+    if(v==="denied"&&window.fbq)fbq("consent","revoke");}
   if(e.target.closest("[data-cookie-settings]")){e.preventDefault();cookieBanner()}
 });
 document.addEventListener("DOMContentLoaded",()=>{if(!getConsent())cookieBanner()});
@@ -286,3 +290,43 @@ const pic=k=>`<i class="${k==="klarna"?"kl":""}" title="${k}">${PAY_ICON[k]}</i>
 /* product pages: icon row under the buy button, Klarna only where it's offered */
 document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll(".pay").forEach(el=>{
   el.classList.add("pic");el.innerHTML=["visa","mastercard","amex","paypal","apple-pay","google-pay",...(MK.klarna?["klarna"]:[])].map(pic).join("");})});
+
+/* ---------- Meta Pixel + Conversions API (only after the visitor clicks Accept) ----------
+   Browser: PageView, AddToCart, InitiateCheckout, Lead, Purchase.
+   Server (capi edge function): Lead + Purchase with the same event_id, so Meta keeps one of each pair. */
+const META_PIXEL="28889931507316454";
+const CAPI_URL="https://vzfwovxlzgrtghxlfkbj.supabase.co/functions/v1/capi";
+const uuid=()=>(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2));
+/* ad click id: fbclid in the landing URL, kept with the time we first saw it (milliseconds) */
+const FBCLID=(()=>{const q=new URLSearchParams(location.search).get("fbclid");
+  if(q){const v={id:q.slice(0,250),ts:Date.now(),landing:(location.origin+location.pathname).slice(0,500)};try{sessionStorage.setItem("jawzr-fbclid",JSON.stringify(v))}catch(e){}return v}
+  try{return JSON.parse(sessionStorage.getItem("jawzr-fbclid")||"null")}catch(e){return null}})();
+function persistClick(){if(FBCLID&&getConsent()==="granted"){try{localStorage.setItem("jawzr-fbclid",JSON.stringify(FBCLID))}catch(e){}}}
+function clickInfo(){let c=FBCLID;if(!c){try{c=JSON.parse(localStorage.getItem("jawzr-fbclid")||"null")}catch(e){}}return c}
+const cookie=n=>{const m=document.cookie.match(new RegExp("(?:^|; )"+n+"=([^;]*)"));return m?decodeURIComponent(m[1]):undefined};
+function fbc(){const c=cookie("_fbc");if(c)return c;const k=clickInfo();return k?`fb.1.${k.ts}.${k.id}`:undefined}
+const fbp=()=>cookie("_fbp");
+function metaAttribution(){const k=clickInfo();return {fbc:(fbc()||"").slice(0,300)||null,fbp:(fbp()||"").slice(0,120)||null,fbclid:k?k.id:null,landing_page:k?k.landing:null,user_agent:navigator.userAgent.slice(0,500)}}
+let metaReady=false;
+function metaBoot(){
+  if(metaReady||getConsent()!=="granted")return;metaReady=true;persistClick();
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");
+  try{fbq("consent","grant");fbq("init",META_PIXEL);fbq("track","PageView")}catch(e){}
+  const q=window.__metaQ||[];window.__metaQ=[];q.forEach(a=>metaEvent.apply(null,a));
+}
+/* name: Meta standard event · params: custom_data · opt.server: also send via CAPI with opt.user · opt.eventID to reuse */
+function metaEvent(name,params={},opt={}){
+  if(getConsent()!=="granted")return null;
+  const eventID=opt.eventID||uuid();
+  if(!metaReady){(window.__metaQ=window.__metaQ||[]).push([name,params,{...opt,eventID}]);metaBoot();return eventID}
+  try{fbq("track",name,params,{eventID})}catch(e){}
+  if(opt.server){try{fetch(CAPI_URL,{method:"POST",keepalive:true,headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({event_name:name,event_id:eventID,event_time_ms:Date.now(),consent:true,event_source_url:location.href.split("#")[0].slice(0,500),
+      session_id:getSID(),fbc:fbc(),fbp:fbp(),user:opt.user||{},custom_data:params})}).catch(()=>{})}catch(e){}}
+  track("meta_"+name.toLowerCase(),{event_id:eventID,server:!!opt.server,value:params.value});
+  return eventID;
+}
+/* product ids for Meta: hard-3, ultra-1, duo-2; "-sub" for subscriptions */
+function skuOf(l){return `${l.duo?"duo":l.level}-${l.pack}${l.sub?"-sub":""}`}
+function cartContents(){return cart.map(l=>({id:skuOf(l),quantity:l.qty,item_price:l.price}))}
+document.addEventListener("DOMContentLoaded",metaBoot);
