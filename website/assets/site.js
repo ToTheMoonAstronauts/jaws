@@ -5,6 +5,17 @@ const CATALOG={
   ultra:{name:"JAWZR Ultra Hard Gum",short:"Ultra Hard",grams:100,cls:"ultra",
     flavours:{"Mint":"#7CC9EA","Mango":"#F4B23E","Watermelon":"#EE6A7A","Blueberry":"#7D5CD9"}}
 };
+/* ---------- language: <html lang="lt"> on the Lithuanian pages (built by tools/i18n/build_lt.py) ---------- */
+const LANG=(document.documentElement.lang||"en").slice(0,2);
+/* display names for values that are also data keys (flavours, frequencies): data stays English */
+const TR_LT={Mint:"Mėtų",Mango:"Mangų",Watermelon:"Arbūzų",Blueberry:"Mėlynių",Mixed:"Mišrūs",Pack:"Pakuotė","bought singly":"perkant atskirai","/ piece":"/ gab.",Save:"Sutaupyk","/ pack":"/ pak.",
+  "4 weeks":"4 savaites","6 weeks":"6 savaites","2 months":"2 mėnesius","3 months":"3 mėnesius","4 months":"4 mėnesius",
+  "5 months":"5 mėnesius","6 months":"6 mėnesius","8 months":"8 mėnesius","10 months":"10 mėnesių",
+  Austria:"Austrija",Belgium:"Belgija",Bulgaria:"Bulgarija",Croatia:"Kroatija",Cyprus:"Kipras",Czechia:"Čekija",Denmark:"Danija",
+  Estonia:"Estija",Finland:"Suomija",France:"Prancūzija",Germany:"Vokietija",Greece:"Graikija",Hungary:"Vengrija",Ireland:"Airija",
+  Italy:"Italija",Latvia:"Latvija",Lithuania:"Lietuva",Luxembourg:"Liuksemburgas",Malta:"Malta",Netherlands:"Nyderlandai",
+  Poland:"Lenkija",Portugal:"Portugalija",Romania:"Rumunija",Slovakia:"Slovakija",Slovenia:"Slovėnija",Spain:"Ispanija",Sweden:"Švedija"};
+const tr=s=>(LANG==="lt"&&TR_LT[s])||s;
 /* ---------- market & currency: ?market=us | ?market=eu (remembered in this browser) ---------- */
 const MARKETS={
   eu:{cur:"EUR",sym:"€",free:49,ship:4.95,express:14.95,klarna:true,region:"EU",
@@ -14,7 +25,7 @@ const MARKETS={
 };
 const MARKET=(()=>{let m=new URLSearchParams(location.search).get("market");
   try{if(m&&MARKETS[m.toLowerCase()]){m=m.toLowerCase();localStorage.setItem("jawzr-market",m)}else m=localStorage.getItem("jawzr-market")}catch(e){}
-  return MARKETS[m]?m:"eu"})();
+  return LANG==="lt"?"eu":(MARKETS[m]?m:"eu")})();
 const MK=MARKETS[MARKET];
 const PACKS=[
   {id:1,label:"1 Pack · 40 pieces",sub:"Covers the full 30-day plan",price:MK.price[1]},
@@ -29,8 +40,8 @@ const SUB_OFF=0.15;
 const subPrice=p=>Math.round(p*(1-SUB_OFF)*100)/100;
 const FREE_SHIP=MK.free;
 /* money in the current market's format: €17,95 or $19.95 */
-const eur=n=>MARKET==="us"?"$"+n.toFixed(2):"€"+n.toFixed(2).replace(".",",");
-const eur0=n=>eur(n).replace(/[.,]00$/,"");
+const eur=n=>MARKET==="us"?"$"+n.toFixed(2):LANG==="lt"?n.toFixed(2).replace(".",",")+" €":"€"+n.toFixed(2).replace(".",",");
+const eur0=n=>eur(n).replace(/[.,]00( €)?$/,"$1");
 const $=id=>document.getElementById(id);
 function inkOn(h){const n=parseInt(h.slice(1),16),r=n>>16,g=n>>8&255,b=n&255;return (0.299*r+0.587*g+0.114*b)>150?"#121614":"#fff"}
 const slug=f=>f.toLowerCase().replace(/[^a-z]+/g,"-");
@@ -39,7 +50,7 @@ function packSrc(level,flavour){return flavour===MIXED?`images/products/bundle-$
 function trioSrc(level,flavour){return flavour===MIXED?`images/products/bundle-${level}.webp`:`images/products/trio-${level}-${slug(flavour)}.webp`}
 function pouchHTML(level,flavour,extra=""){
   const L=CATALOG[level];const c=L.flavours[flavour]||Object.values(L.flavours)[0];
-  return `<div class="pouch ${L.cls} ${extra} ${flavour===MIXED?"mixed":""}"><img src="${packSrc(level,flavour)}" alt="JAWZR ${L.short} gum, ${flavour===MIXED?"mixed flavours (mint, mango, watermelon)":flavour+" flavour"}" loading="lazy"></div>`;
+  return `<div class="pouch ${L.cls} ${extra} ${flavour===MIXED?"mixed":""}"><img src="${packSrc(level,flavour)}" alt="JAWZR ${L.short} gum, ${flavour===MIXED?"mixed flavours (mint, mango, watermelon)":tr(flavour)+" flavour"}" loading="lazy"></div>`;
 }
 
 /* cart (kept in this browser only) */
@@ -49,7 +60,7 @@ function saveCart(){try{localStorage.setItem("jawzr-cart-v2-"+MARKET,JSON.string
 function cartTotal(){return cart.reduce((s,l)=>s+l.price*l.qty,0)}
 function cartCount(){return cart.reduce((s,l)=>s+l.qty,0)}
 /* mix (optional): array of flavours, one per pack, e.g. ["Mint","Mint","Mango"] */
-function mixLabel(mix){const o=Object.keys(CATALOG.hard.flavours),c={};mix.forEach(f=>c[f]=(c[f]||0)+1);return Object.entries(c).sort((x,y)=>o.indexOf(x[0])-o.indexOf(y[0])).map(([f,n])=>n>1?`${f} ×${n}`:f).join(", ")}
+function mixLabel(mix,display){const o=Object.keys(CATALOG.hard.flavours),c={},d=f=>display?tr(f):f;mix.forEach(f=>c[f]=(c[f]||0)+1);return Object.entries(c).sort((x,y)=>o.indexOf(x[0])-o.indexOf(y[0])).map(([f,n])=>n>1?`${d(f)} ×${n}`:d(f)).join(", ")}
 /* opts.duo: [hardFlavour, ultraFlavour] for the Starter Duo · opts.sub: {every:"4 months"} for a subscription */
 function addToCart(level,flavour,packId,mix,opts={}){
   const P=PACKS.find(p=>p.id===packId);
@@ -59,10 +70,10 @@ function addToCart(level,flavour,packId,mix,opts={}){
   const key=level+"|"+name+"|"+packId+"|"+(sub?sub.every:"once");
   const price=sub?subPrice(P.price[level]):P.price[level];
   const ex=cart.find(l=>l.key===key);
-  if(ex)ex.qty++;else cart.push({key,level,flavour,name,mix:mix||null,duo,sub,pack:packId,label:P.label+(sub?` · Subscription, every ${sub.every} (−${SUB_OFF*100}%)`:""),price,qty:1});
+  if(ex)ex.qty++;else cart.push({key,level,flavour,name,mix:mix||null,duo,sub,pack:packId,label:P.label+(sub?` · Subscription, every ${tr(sub.every)} (−${SUB_OFF*100}%)`:""),price,qty:1});
   saveCart();renderCart();openCart();
 }
-function lineTitle(l){return l.duo?`Starter Duo · Hard ${l.duo[0]} + Ultra Hard ${l.duo[1]}`:`${CATALOG[l.level].short} · ${l.flavour===MIXED?"Mixed flavours":(l.name||l.flavour)}`}
+function lineTitle(l){return l.duo?`Starter Duo · Hard ${tr(l.duo[0])} + Ultra Hard ${tr(l.duo[1])}`:`${CATALOG[l.level].short} · ${l.flavour===MIXED?"Mixed flavours":tr(l.name||l.flavour)}`}
 function renderCart(){
   document.querySelectorAll("[data-cart-count]").forEach(e=>e.textContent=cartCount());
   const lines=$("cartLines");if(!lines)return;
@@ -70,7 +81,8 @@ function renderCart(){
   else lines.innerHTML=cart.map((l,i)=>`<div class="line">${pouchHTML(l.level,l.flavour)}<div><b>${lineTitle(l)}</b><small>${l.label} · qty ${l.qty}</small><br><button class="rm" data-rm="${i}" type="button">Remove</button></div><b>${eur(l.price*l.qty)}</b></div>`).join("");
   const t=cartTotal();$("cartTotal").textContent=eur(t);
   const left=FREE_SHIP-t;
-  $("shipMsg").textContent=t===0?`Free ${MK.region} shipping from ${eur0(FREE_SHIP)}`:left>0?`${eur(left)} away from free ${MK.region} shipping`:`You get free ${MK.region} shipping`;
+  $("shipMsg").textContent=LANG==="lt"?(t===0?`Nemokamas pristatymas ES nuo ${eur0(FREE_SHIP)}`:left>0?`Iki nemokamo pristatymo trūksta ${eur(left)}`:"Tau taikomas nemokamas pristatymas"):
+    t===0?`Free ${MK.region} shipping from ${eur0(FREE_SHIP)}`:left>0?`${eur(left)} away from free ${MK.region} shipping`:`You get free ${MK.region} shipping`;
   $("shipBar").style.width=Math.min(100,t/FREE_SHIP*100)+"%";
 }
 function openCart(){$("drawerBg").hidden=false;$("drawer").hidden=false}
@@ -89,7 +101,7 @@ document.addEventListener("DOMContentLoaded",renderCart);
 document.addEventListener("submit",e=>{
   const f=e.target.closest("[data-news]");if(!f)return;e.preventDefault();
   const email=(f.querySelector("input[type=email]")||{}).value||"";
-  sbInsert("leads",{session_id:getSID(),source:"newsletter",email:email.trim().slice(0,254),marketing_consent:true,utm:UTM});track("newsletter_signup");
+  sbInsert("leads",{session_id:getSID(),source:"newsletter",email:email.trim().slice(0,254),marketing_consent:true,utm:UTM,lang:LANG,market:MARKET});track("newsletter_signup");
   f.hidden=true;const ok=f.nextElementSibling;if(ok)ok.hidden=false;
 });
 
@@ -184,7 +196,7 @@ document.addEventListener("DOMContentLoaded",()=>{if(!getConsent())cookieBanner(
     const f=bg.querySelector("form"),inp=f.querySelector("input");
     f.addEventListener("submit",e=>{e.preventDefault();const v=inp.value.trim();
       if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){inp.setCustomValidity("Enter a valid email address.");inp.reportValidity();return}
-      sbInsert("leads",{session_id:getSID(),source:"popup_10",email:v.slice(0,254),marketing_consent:true,utm:UTM});track("popup_signup",{trigger});
+      sbInsert("leads",{session_id:getSID(),source:"popup_10",email:v.slice(0,254),marketing_consent:true,utm:UTM,lang:LANG,market:MARKET});track("popup_signup",{trigger});
       bg.querySelector('[data-step="1"]').hidden=true;bg.querySelector('[data-step="2"]').hidden=false;});
     inp.addEventListener("input",()=>inp.setCustomValidity(""));
     setTimeout(()=>inp.focus(),50);track("popup_show",{trigger});
@@ -210,8 +222,8 @@ const flIcon=f=>`<span class="fl-ic">${FL_ICON[f]||""}</span>`;
 /* list: option values (defaults to the flavours, with icons) · icons:false for plain text options */
 function fselHTML(kind,i,val,label,list,icons=true){
   list=list||Object.keys(FL_ICON);const ic=v=>icons?flIcon(v):"";
-  const opts=list.map(f=>`<li role="option" tabindex="-1" data-v="${f}" aria-selected="${f===val}">${ic(f)}<span>${f}</span>${f===val?'<span class="ck" aria-hidden="true">✓</span>':""}</li>`).join("");
-  return `<div class="fsel" data-kind="${kind}" data-i="${i}"><button type="button" class="fsel-btn" aria-haspopup="listbox" aria-expanded="false" aria-label="${label}: ${val}">${ic(val)}<span class="nm">${val}</span><span class="cv" aria-hidden="true"><svg viewBox="0 0 12 12" width="12" height="12"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button><ul class="fsel-list" role="listbox" aria-label="${label}" hidden>${opts}</ul></div>`;
+  const opts=list.map(f=>`<li role="option" tabindex="-1" data-v="${f}" aria-selected="${f===val}">${ic(f)}<span>${tr(f)}</span>${f===val?'<span class="ck" aria-hidden="true">✓</span>':""}</li>`).join("");
+  return `<div class="fsel" data-kind="${kind}" data-i="${i}"><button type="button" class="fsel-btn" aria-haspopup="listbox" aria-expanded="false" aria-label="${label}: ${tr(val)}">${ic(val)}<span class="nm">${tr(val)}</span><span class="cv" aria-hidden="true"><svg viewBox="0 0 12 12" width="12" height="12"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button><ul class="fsel-list" role="listbox" aria-label="${label}" hidden>${opts}</ul></div>`;
 }
 function fselClose(except){document.querySelectorAll(".fsel-list:not([hidden])").forEach(l=>{if(l.parentNode!==except){l.hidden=true;l.previousElementSibling.setAttribute("aria-expanded","false")}})}
 function fselOpen(f,focusSel){fselClose(f);const l=f.querySelector(".fsel-list");l.hidden=false;f.querySelector(".fsel-btn").setAttribute("aria-expanded","true");
@@ -335,3 +347,28 @@ function metaEvent(name,params={},opt={}){
 function skuOf(l){return `${l.duo?"duo":l.level}-${l.pack}${l.sub?"-sub":""}`}
 function cartContents(){return cart.map(l=>({id:skuOf(l),quantity:l.qty,item_price:l.price}))}
 document.addEventListener("DOMContentLoaded",metaBoot);
+
+/* ---------- top bar currency switch (English pages) + footer language link ---------- */
+const LT_PAGES=["index.html","index-v2.html","product-sub.html","product.html","checkout.html","terms.html","returns.html","withdraw.html","shipping.html","privacy.html","safety.html","legal.html"];
+document.addEventListener("DOMContentLoaded",()=>{
+  const file=(location.pathname.split("/").pop()||"index.html");
+  if(LANG!=="lt"){
+    const w=document.querySelector(".top-bar .wrap");
+    if(w&&!w.querySelector(".cur-sw")){
+      const link=m=>{const u=new URL(location.href);u.searchParams.set("market",m);return u.pathname.split("/").pop()+u.search+u.hash};
+      const sp=document.createElement("span");sp.className="cur-sw";sp.setAttribute("aria-label","Currency");
+      sp.innerHTML=`<a href="${link("eu")}" ${MARKET==="eu"?'aria-current="true"':""}>€ EUR</a><a href="${link("us")}" ${MARKET==="us"?'aria-current="true"':""}>$ USD</a>`;
+      const t=document.createElement("span");t.className="tb-txt";while(w.firstChild)t.appendChild(w.firstChild);w.appendChild(t);
+      w.classList.add("has-sw");w.appendChild(sp);
+      sp.addEventListener("click",e=>{const a=e.target.closest("a");if(a)track("currency_switch",{to:a.textContent.trim()})});
+    }
+  }
+  const f=document.querySelector("footer .legal");
+  if(f&&!document.getElementById("langLink")){
+    const to=LANG==="lt"?"../"+(file==="index.html"?"":file):"lt/"+(LT_PAGES.includes(file)?(file==="index-v2.html"||file==="index.html"?"":file):"");
+    const a=document.createElement("p");a.id="langLink";a.className="mk-switch";
+    a.innerHTML=LANG==="lt"?`<a href="${to}" hreflang="en" lang="en">English</a>`:`<a href="${to}" hreflang="lt" lang="lt">Lietuviškai</a>`;
+    f.parentNode.insertBefore(a,f);
+  }
+  if(LANG==="lt"){const m=document.getElementById("mkSwitch");if(m)m.remove()}
+});
