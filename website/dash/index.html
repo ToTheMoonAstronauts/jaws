@@ -135,10 +135,11 @@ $("loginForm").addEventListener("submit",async ev=>{ev.preventDefault();const e=
   if(!e||p.length<8){msg("Enter your email and a password of at least 8 characters.","err");return}
   $("goBtn").disabled=true;msg("");
   const r=mode==="login"?await sb.auth.signInWithPassword({email:e,password:p}):await sb.auth.signUp({email:e,password:p,options:{emailRedirectTo:location.href.split("#")[0]}});
-  $("goBtn").disabled=false;$("pw").value="";
+  $("goBtn").disabled=false;
   if(r.error){msg(r.error.message,"err");return}
-  if(mode==="signup"&&!r.data.session){msg("Check your inbox and confirm your email, then log in here.","ok");$("modeBtn").click();return}
-  boot();});
+  if(mode==="signup"&&!r.data.session){const s2=await sb.auth.signInWithPassword({email:e,password:p});
+    if(s2.error){msg("Account created. Confirm your email from the inbox, then log in here.","ok");$("modeBtn").click();return}}
+  $("pw").value="";boot();});
 $("outBtn").onclick=async()=>{await sb.auth.signOut();show(false)};
 function show(app){$("appView").hidden=!app;$("loginView").hidden=app}
 sb.auth.onAuthStateChange((e,s)=>{if(e==="PASSWORD_RECOVERY"){const p=prompt("Choose a new password (at least 8 characters)");if(p&&p.length>=8)sb.auth.updateUser({password:p}).then(()=>boot())}});
