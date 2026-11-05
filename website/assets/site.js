@@ -349,9 +349,10 @@ function cartContents(){return cart.map(l=>({id:skuOf(l),quantity:l.qty,item_pri
 document.addEventListener("DOMContentLoaded",metaBoot);
 
 /* ---------- top bar currency switch (English pages) + footer language link ---------- */
-const LT_PAGES=["index.html","index-v2.html","product-sub.html","product.html","checkout.html","terms.html","returns.html","shipping.html","privacy.html","safety.html","legal.html"];
+const LT_PAGES=["index.html","gums.html","gum.html","checkout.html","terms.html","returns.html","shipping.html","privacy.html","safety.html","legal.html"];
 document.addEventListener("DOMContentLoaded",()=>{
-  const file=(location.pathname.split("/").pop()||"index.html");
+  let file=(location.pathname.split("/").pop()||"index.html");if(!file.includes("."))file+=".html";
+  const clean=file==="index.html"?"":file.replace(/\.html$/,"");
   if(LANG!=="lt"){
     const w=document.querySelector(".top-bar .wrap");
     if(w&&!w.querySelector(".cur-sw")){
@@ -365,7 +366,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   }
   const f=document.querySelector("footer .legal");
   if(f&&!document.getElementById("langLink")){
-    const to=LANG==="lt"?"../"+(file==="index.html"?"":file):"lt/"+(LT_PAGES.includes(file)?(file==="index-v2.html"||file==="index.html"?"":file):"");
+    const to=LANG==="lt"?"../"+clean:"lt/"+(LT_PAGES.includes(file)?clean:"");
     const a=document.createElement("p");a.id="langLink";a.className="mk-switch";
     a.innerHTML=LANG==="lt"?`<a href="${to}" hreflang="en" lang="en">English</a>`:`<a href="${to}" hreflang="lt" lang="lt">Lietuviškai</a>`;
     f.parentNode.insertBefore(a,f);

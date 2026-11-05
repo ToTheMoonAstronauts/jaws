@@ -26,10 +26,10 @@ def make_fn(where):
         return s
     return fn
 
-def out_name(p): return "index.html" if p == "index-v2.html" else p
+def out_name(p): return p
+def clean(p): return "" if p == "index.html" else p[:-5]
 
 def fix_links(doc):
-    doc = doc.replace('href="index-v2.html', 'href="index.html')
     # pages that exist only in English live one level up
     doc = re.sub(r'(href|src)="(articles\.html|article-[^"]+|dash/[^"]*|v1\.html|product-pick\.html)', r'\1="../\2', doc)
     doc = re.sub(r'<html lang="en"', '<html lang="lt"', doc)
@@ -37,8 +37,8 @@ def fix_links(doc):
     return doc
 
 def hreflang(en_file):
-    en = SITE + "/" + ("" if en_file == "index-v2.html" else en_file)
-    lt = SITE + "/lt/" + ("" if en_file == "index-v2.html" else en_file)
+    en = SITE + "/" + clean(en_file)
+    lt = SITE + "/lt/" + clean(en_file)
     return (f'<link rel="alternate" hreflang="en" href="{en}">\n'
             f'<link rel="alternate" hreflang="lt" href="{lt}">\n'
             f'<link rel="alternate" hreflang="x-default" href="{en}">\n')
@@ -70,6 +70,9 @@ def main(src, out, report):
         if f not in ("site.js", "site.css"):
             s = os.path.join(src, "assets", f)
             (shutil.copytree(s, os.path.join(out, "assets", f), dirs_exist_ok=True) if os.path.isdir(s) else shutil.copy(s, os.path.join(out, "assets", f)))
+    # old URLs keep working
+    for old, new in (("index-v2.html", "./"), ("product-sub.html", "gums"), ("product.html", "gum")):
+        open(os.path.join(out, old), "w", encoding="utf-8").write(open(os.path.join(src, old), encoding="utf-8").read().replace('https://jawzr.com/', 'https://jawzr.com/lt/'))
     # Lithuanian-only assets (e.g. gallery images with LT text) replace the EN copies
     ov = os.path.join(os.path.dirname(__file__), "lt_overrides")
     if os.path.isdir(ov): shutil.copytree(ov, out, dirs_exist_ok=True)
@@ -80,8 +83,7 @@ def main(src, out, report):
 def add_en_hreflang(site):
     """EN pages in the built site get the same alternates."""
     for p in PAGES:
-        f = os.path.join(site, out_name(p) if p == "index-v2.html" else p)
-        for target in ([f, os.path.join(site, "index-v2.html")] if p == "index-v2.html" else [f]):
+        for target in [os.path.join(site, p)]:
             if not os.path.exists(target): continue
             doc = open(target, encoding="utf-8").read()
             if 'name="robots" content="noindex' in doc: continue
