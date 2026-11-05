@@ -114,7 +114,11 @@ function renderReviews(el,list,n){
 const SB_URL="https://vzfwovxlzgrtghxlfkbj.supabase.co/rest/v1/";
 const SB_KEY="sb_publishable_JP7_gwTXfMBITq2e2gHe8A_snjOsWTT";
 /* Consent: analytics only after the visitor accepts (ePrivacy/GDPR). Cart storage is strictly necessary. */
-function getConsent(){try{return localStorage.getItem("cutline-consent")}catch(e){return null}}
+/* EU: opt-in (banner). US: tracking on by default (no banner), off if the visitor opts out
+   via "Your privacy choices" or their browser sends Global Privacy Control. */
+const GPC=navigator.globalPrivacyControl===true;
+function getConsent(){let v=null;try{v=localStorage.getItem("cutline-consent")}catch(e){}
+  if(v)return v;return MARKET==="us"?(GPC?"denied":"granted"):null}
 function setConsent(v){try{localStorage.setItem("cutline-consent",v)}catch(e){}}
 const TMP_SID="tmp-"+Math.random().toString(36).slice(2,12);
 function getSID(){
@@ -154,7 +158,8 @@ document.addEventListener("click",e=>{
     if(v==="denied"&&window.fbq)fbq("consent","revoke");}
   if(e.target.closest("[data-cookie-settings]")){e.preventDefault();cookieBanner()}
 });
-document.addEventListener("DOMContentLoaded",()=>{if(!getConsent())cookieBanner()});
+document.addEventListener("DOMContentLoaded",()=>{if(!getConsent())cookieBanner();
+  if(MARKET==="us")document.querySelectorAll("[data-cookie-settings]").forEach(a=>a.textContent="Your privacy choices");});
 
 /* ---------- 10% welcome popup (exit intent on desktop, timed/scroll on mobile; once per 14 days) ---------- */
 (function(){
