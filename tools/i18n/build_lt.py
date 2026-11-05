@@ -70,6 +70,9 @@ def main(src, out, report):
         if f not in ("site.js", "site.css"):
             s = os.path.join(src, "assets", f)
             (shutil.copytree(s, os.path.join(out, "assets", f), dirs_exist_ok=True) if os.path.isdir(s) else shutil.copy(s, os.path.join(out, "assets", f)))
+    # Lithuanian-only assets (e.g. gallery images with LT text) replace the EN copies
+    ov = os.path.join(os.path.dirname(__file__), "lt_overrides")
+    if os.path.isdir(ov): shutil.copytree(ov, out, dirs_exist_ok=True)
     if report:
         for k, w in sorted(missing.items(), key=lambda x: x[1]): print(f"[{w}] {k[:140]}")
         print(len(missing), "untranslated segments")
