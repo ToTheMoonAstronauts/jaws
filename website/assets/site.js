@@ -349,7 +349,7 @@ function cartContents(){return cart.map(l=>({id:skuOf(l),quantity:l.qty,item_pri
 document.addEventListener("DOMContentLoaded",metaBoot);
 
 /* ---------- top bar currency switch (English pages) + footer language link ---------- */
-const LT_PAGES=["index.html","index-v2.html","product-sub.html","product.html","checkout.html","terms.html","returns.html","withdraw.html","shipping.html","privacy.html","safety.html","legal.html"];
+const LT_PAGES=["index.html","index-v2.html","product-sub.html","product.html","checkout.html","terms.html","returns.html","shipping.html","privacy.html","safety.html","legal.html"];
 document.addEventListener("DOMContentLoaded",()=>{
   const file=(location.pathname.split("/").pop()||"index.html");
   if(LANG!=="lt"){
