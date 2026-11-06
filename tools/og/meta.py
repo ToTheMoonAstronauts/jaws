@@ -32,7 +32,7 @@ for f in sorted(glob.glob("*.html")):
         '<meta property="og:image:alt" content="JAWZR hard chewing gum">',
         '<meta property="og:locale" content="en_US">',
     ]
-    if f in LT_PAGES: tags.append('<meta property="og:locale:alternate" content="lt_LT">')
+    if f in LT_PAGES: tags += ['<meta property="og:locale:alternate" content="de_DE">', '<meta property="og:locale:alternate" content="lt_LT">']
     tags += ['<meta name="twitter:card" content="summary_large_image">',
              f'<meta name="twitter:image" content="{SITE}/images/{img}-en.jpg">']
     s = s.replace("</head>", "<!--og-->\n" + "\n".join(tags) + "\n<!--/og-->\n</head>", 1)

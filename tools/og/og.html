@@ -22,5 +22,6 @@ h1 b{color:#5B7BFF;display:block;font-weight:900}
 const q=new URLSearchParams(location.search);
 document.getElementById("h").innerHTML=q.get("h");document.getElementById("s").textContent=q.get("s");
 document.getElementById("img").style.backgroundImage=`url(${q.get("img")})`;
+if(q.get("fs"))document.getElementById("h").style.fontSize=q.get("fs")+"px";
 if(q.get("p"))document.getElementById("og").classList.add("p");
 </script></body></html>

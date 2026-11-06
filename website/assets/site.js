@@ -5,7 +5,7 @@ const CATALOG={
   ultra:{name:"JAWZR Ultra Hard Gum",short:"Ultra Hard",grams:100,cls:"ultra",
     flavours:{"Mint":"#7CC9EA","Mango":"#F4B23E","Watermelon":"#EE6A7A","Blueberry":"#7D5CD9"}}
 };
-/* ---------- language: <html lang="lt"> on the Lithuanian pages (built by tools/i18n/build_lt.py) ---------- */
+/* ---------- language: <html lang="lt|de"> on the translated pages (built by tools/i18n/build_lang.py) ---------- */
 const LANG=(document.documentElement.lang||"en").slice(0,2);
 /* display names for values that are also data keys (flavours, frequencies): data stays English */
 const TR_LT={Mint:"Mėtų",Mango:"Mangų",Watermelon:"Arbūzų",Blueberry:"Mėlynių",Mixed:"Mišrūs",Pack:"Pakuotė","bought singly":"perkant atskirai","/ piece":"/ gab.",Save:"Sutaupyk","/ pack":"/ pak.",
@@ -15,7 +15,15 @@ const TR_LT={Mint:"Mėtų",Mango:"Mangų",Watermelon:"Arbūzų",Blueberry:"Mėly
   Estonia:"Estija",Finland:"Suomija",France:"Prancūzija",Germany:"Vokietija",Greece:"Graikija",Hungary:"Vengrija",Ireland:"Airija",
   Italy:"Italija",Latvia:"Latvija",Lithuania:"Lietuva",Luxembourg:"Liuksemburgas",Malta:"Malta",Netherlands:"Nyderlandai",
   Poland:"Lenkija",Portugal:"Portugalija",Romania:"Rumunija",Slovakia:"Slovakija",Slovenia:"Slovėnija",Spain:"Ispanija",Sweden:"Švedija"};
-const tr=s=>(LANG==="lt"&&TR_LT[s])||s;
+const TR_DE={Mint:"Minze",Mango:"Mango",Watermelon:"Wassermelone",Blueberry:"Blaubeere",Mixed:"Gemischt",Pack:"Packung","bought singly":"einzeln","/ piece":"/ Stück",Save:"Spare","/ pack":"/ Packung",
+  "4 weeks":"4 Wochen","6 weeks":"6 Wochen","2 months":"2 Monate","3 months":"3 Monate","4 months":"4 Monate",
+  "5 months":"5 Monate","6 months":"6 Monate","8 months":"8 Monate","10 months":"10 Monate",
+  Austria:"Österreich",Belgium:"Belgien",Bulgaria:"Bulgarien",Croatia:"Kroatien",Cyprus:"Zypern",Czechia:"Tschechien",Denmark:"Dänemark",
+  Estonia:"Estland",Finland:"Finnland",France:"Frankreich",Germany:"Deutschland",Greece:"Griechenland",Hungary:"Ungarn",Ireland:"Irland",
+  Italy:"Italien",Latvia:"Lettland",Lithuania:"Litauen",Luxembourg:"Luxemburg",Malta:"Malta",Netherlands:"Niederlande",
+  Poland:"Polen",Portugal:"Portugal",Romania:"Rumänien",Slovakia:"Slowakei",Slovenia:"Slowenien",Spain:"Spanien",Sweden:"Schweden"};
+const TR={lt:TR_LT,de:TR_DE};
+const tr=s=>(TR[LANG]&&TR[LANG][s])||s;
 /* ---------- market & currency: ?market=us | ?market=eu (remembered in this browser) ---------- */
 const MARKETS={
   eu:{cur:"EUR",sym:"€",free:49,ship:4.95,express:14.95,klarna:true,region:"EU",
@@ -25,7 +33,7 @@ const MARKETS={
 };
 const MARKET=(()=>{let m=new URLSearchParams(location.search).get("market");
   try{if(m&&MARKETS[m.toLowerCase()]){m=m.toLowerCase();localStorage.setItem("jawzr-market",m)}else m=localStorage.getItem("jawzr-market")}catch(e){}
-  return LANG==="lt"?"eu":(MARKETS[m]?m:"eu")})();
+  return LANG!=="en"?"eu":(MARKETS[m]?m:"eu")})();
 const MK=MARKETS[MARKET];
 const PACKS=[
   {id:1,label:"1 Pack · 40 pieces",sub:"Covers the full 30-day plan",price:MK.price[1]},
@@ -40,7 +48,7 @@ const SUB_OFF=0.15;
 const subPrice=p=>Math.round(p*(1-SUB_OFF)*100)/100;
 const FREE_SHIP=MK.free;
 /* money in the current market's format: €17,95 or $19.95 */
-const eur=n=>MARKET==="us"?"$"+n.toFixed(2):LANG==="lt"?n.toFixed(2).replace(".",",")+" €":"€"+n.toFixed(2).replace(".",",");
+const eur=n=>MARKET==="us"?"$"+n.toFixed(2):LANG!=="en"?n.toFixed(2).replace(".",",")+" €":"€"+n.toFixed(2).replace(".",",");
 const eur0=n=>eur(n).replace(/[.,]00( €)?$/,"$1");
 const $=id=>document.getElementById(id);
 function inkOn(h){const n=parseInt(h.slice(1),16),r=n>>16,g=n>>8&255,b=n&255;return (0.299*r+0.587*g+0.114*b)>150?"#121614":"#fff"}
@@ -82,6 +90,7 @@ function renderCart(){
   const t=cartTotal();$("cartTotal").textContent=eur(t);
   const left=FREE_SHIP-t;
   $("shipMsg").textContent=LANG==="lt"?(t===0?`Nemokamas pristatymas ES nuo ${eur0(FREE_SHIP)}`:left>0?`Iki nemokamo pristatymo trūksta ${eur(left)}`:"Tau taikomas nemokamas pristatymas"):
+    LANG==="de"?(t===0?`Kostenloser EU-Versand ab ${eur0(FREE_SHIP)}`:left>0?`Noch ${eur(left)} bis zum kostenlosen Versand`:"Dein Versand ist kostenlos"):
     t===0?`Free ${MK.region} shipping from ${eur0(FREE_SHIP)}`:left>0?`${eur(left)} away from free ${MK.region} shipping`:`You get free ${MK.region} shipping`;
   $("shipBar").style.width=Math.min(100,t/FREE_SHIP*100)+"%";
 }
@@ -349,11 +358,12 @@ function cartContents(){return cart.map(l=>({id:skuOf(l),quantity:l.qty,item_pri
 document.addEventListener("DOMContentLoaded",metaBoot);
 
 /* ---------- top bar currency switch (English pages) + footer language link ---------- */
+const LANGS={en:"English",de:"Deutsch",lt:"Lietuviškai"};
 const LT_PAGES=["index.html","gums.html","gum.html","checkout.html","terms.html","returns.html","shipping.html","privacy.html","safety.html","legal.html"];
 document.addEventListener("DOMContentLoaded",()=>{
   let file=(location.pathname.split("/").pop()||"index.html");if(!file.includes("."))file+=".html";
   const clean=file==="index.html"?"":file.replace(/\.html$/,"");
-  if(LANG!=="lt"){
+  if(LANG==="en"){
     const w=document.querySelector(".top-bar .wrap");
     if(w&&!w.querySelector(".cur-sw")){
       const link=m=>{const u=new URL(location.href);u.searchParams.set("market",m);return u.pathname.split("/").pop()+u.search+u.hash};
@@ -366,10 +376,10 @@ document.addEventListener("DOMContentLoaded",()=>{
   }
   const f=document.querySelector("footer .legal");
   if(f&&!document.getElementById("langLink")){
-    const to=LANG==="lt"?"../"+clean:"lt/"+(LT_PAGES.includes(file)?clean:"");
+    const base=LANG==="en"?"":"../",page=LT_PAGES.includes(file)?clean:"";
     const a=document.createElement("p");a.id="langLink";a.className="mk-switch";
-    a.innerHTML=LANG==="lt"?`<a href="${to}" hreflang="en" lang="en">English</a>`:`<a href="${to}" hreflang="lt" lang="lt">Lietuviškai</a>`;
+    a.innerHTML=Object.keys(LANGS).filter(l=>l!==LANG).map(l=>`<a href="${base}${l==="en"?"":l+"/"}${page}" hreflang="${l}" lang="${l}">${LANGS[l]}</a>`).join(" · ");
     f.parentNode.insertBefore(a,f);
   }
-  if(LANG==="lt"){const m=document.getElementById("mkSwitch");if(m)m.remove()}
+  if(LANG!=="en"){const m=document.getElementById("mkSwitch");if(m)m.remove()}
 });

@@ -29,7 +29,8 @@ jobs:
           mkdir _site
           cp -R website/. _site/
           cp _site/index.html _site/go.html
-          python3 tools/i18n/build_lt.py website _site/lt --report --en-hreflang
+          python3 tools/i18n/build_lang.py lt website _site/lt --report
+          python3 tools/i18n/build_lang.py de website _site/de --report --en-hreflang
           touch _site/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
