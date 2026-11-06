@@ -51,6 +51,7 @@ def fix_links(doc, lang):
     # pages that exist only in English live one level up
     doc = re.sub(r'(href|src)="(articles\.html|article-[^"]+|dash/[^"]*|v1\.html|product-pick\.html)', r'\1="../\2', doc)
     doc = re.sub(r'<html lang="en"', f'<html lang="{lang}"', doc)
+    doc = re.sub(r"€(\d+(?:,\d\d)?)(?![\d,])", r"\1 €", doc)  # €31,95 -> 31,95 € (prices with no words are skipped by the translator)
     w = LANGS[lang][2]  # single lowercase words are skipped as code, so join words are fixed here
     return doc.replace("</b> at <b>", "</b> <b>").replace("</a> and <a", f"</a> {w} <a").replace("</a>, and <a", f"</a> {w} <a")
 
