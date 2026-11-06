@@ -27,6 +27,22 @@
 .vid .play i::after{content:"";border-left:18px solid #fff;border-top:10.5px solid transparent;border-bottom:10.5px solid transparent;margin-left:5px}
 .vid .play span{position:absolute;left:18px;bottom:16px;font:700 .72rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;background:rgba(12,15,14,.6);padding:8px 10px;border-radius:4px}
 .ai-note{margin-top:12px;color:var(--muted);font-size:.8rem;line-height:1.5}
+/* preview: Hard + Caffeine on the home page */
+.cards.c4{grid-template-columns:repeat(4,1fr)}
+@media (max-width:1100px){.cards.c4{grid-template-columns:1fr 1fr}}
+@media (max-width:620px){.cards.c4{grid-template-columns:1fr}}
+.badge.caf{background:#f5c518;color:#121614}
+.energy-band{background:#0e1116;color:#fff;border-radius:14px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);align-items:center;overflow:hidden}
+.energy-band .im{background:radial-gradient(circle at 50% 60%,#2a3340,#0e1116 70%);display:flex;justify-content:center;padding:28px 0}
+.energy-band .im .pouch{width:52%}
+.energy-band .tx{padding:36px 40px}
+.energy-band .tx .eyebrow{color:#f5c518}
+.energy-band h2{color:#fff;margin:6px 0 12px}
+.energy-band p{color:#c9ced6;max-width:46ch}
+.energy-band ul{list-style:none;padding:0;margin:16px 0 22px;display:grid;gap:8px}
+.energy-band li{display:flex;gap:10px;align-items:center;font-weight:600}
+.energy-band li:before{content:"";width:8px;height:8px;background:#f5c518;transform:rotate(45deg);flex:none}
+@media (max-width:760px){.energy-band{grid-template-columns:1fr}.energy-band .tx{padding:24px 20px 28px}.energy-band .im .pouch{width:42%}}
 </style>
 <style>.jgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .jcard{display:grid;gap:10px;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;transition:border-color .15s,transform .15s}
@@ -59,7 +75,7 @@
 <div class="top-bar"><div class="wrap">Free EU shipping from €49 · Ships from Lithuania</div></div>
 <nav class="site"><div class="wrap">
   <a class="logo" href="./"><i></i><span class="wm" aria-hidden="true"></span><span class="sr">JAWZR</span></a>
-  <div class="links"><a href="gums">Shop</a><a href="#why">Why hard gum</a><a href="articles.html">Articles</a><a href="#faq">FAQ</a></div>
+  <div class="links"><a href="gums">Shop</a><a href="energy">Energy <span class="new-dot">New</span></a><a href="#why">Why hard gum</a><a href="articles.html">Articles</a><a href="#faq">FAQ</a></div>
   <button class="cart-btn" type="button" data-open-cart>Cart (<span data-cart-count>0</span>)</button>
 </div></nav>
 
@@ -77,14 +93,14 @@
 </section>
 
 <div class="ticker" aria-label="Store highlights"><div class="ticker-track">
-  <span>2 hardness levels</span><span>Free EU shipping from €49</span><span>Train Masseter Muscle</span><span>Looksmaxxing Gum</span><span>Sugar-free &amp; vegan</span>
+  <span>New: Hard + Caffeine</span><span>2 hardness levels</span><span>Free EU shipping from €49</span><span>Train Masseter Muscle</span><span>Looksmaxxing Gum</span><span>Sugar-free &amp; vegan</span>
   <span aria-hidden="true">2 hardness levels</span><span aria-hidden="true">Free EU shipping from €49</span><span aria-hidden="true">Train Masseter Muscle</span><span aria-hidden="true">Looksmaxxing Gum</span><span aria-hidden="true">Sugar-free &amp; vegan</span><span aria-hidden="true">2 hardness levels</span><span aria-hidden="true">Free EU shipping from €49</span><span aria-hidden="true">Train Masseter Muscle</span><span aria-hidden="true">Looksmaxxing Gum</span><span aria-hidden="true">Sugar-free &amp; vegan</span>
 </div></div>
 
 <section id="shop">
   <div class="wrap">
     <div class="sec-head"><p class="eyebrow">Shop</p><h2>Choose your hardness</h2></div>
-    <div class="cards">
+    <div class="cards c4">
       <a class="card" href="gums#hard">
         <div class="card-visual"><span class="badge">Start here</span><div id="cv-hard" style="display:contents"></div></div>
         <h3>Hard Gum</h3>
@@ -106,6 +122,13 @@
         <div class="price-line"><b>€31,95</b><small>vs €53,85 bought singly</small></div>
         <span class="go">Build your bundle <span aria-hidden="true">→</span></span>
       </a>
+      <a class="card" href="energy">
+        <div class="card-visual"><span class="badge caf">New · 40 mg caffeine</span><div id="cv-caf" style="display:contents"></div></div>
+        <h3>Hard + Caffeine</h3>
+        <p class="desc">Same hardness as Hard, in mint, with 40 mg caffeine in every piece.</p>
+        <div class="price-line"><b>from €19,95</b><small>40 pieces per pack</small></div>
+        <span class="go">See Hard + Caffeine <span aria-hidden="true">→</span></span>
+      </a>
     </div>
   </div>
 </section>
@@ -119,6 +142,22 @@
   </div>
 </section>
 
+
+<section id="energy" style="padding-top:0">
+  <div class="wrap">
+    <div class="energy-band">
+      <div class="im"><div id="ebPouch" style="display:contents"></div></div>
+      <div class="tx">
+        <p class="eyebrow">New · Energy line</p>
+        <h2>Hard gum + caffeine</h2>
+        <p>Your jaw session and your caffeine in one piece. Chew it before the gym or a long work block.</p>
+        <ul><li>40 mg caffeine per piece</li><li>Same hardness as JAWZR Hard, mint</li><li>Sugar-free and vegan</li></ul>
+        <a class="btn big" href="energy">Shop Hard + Caffeine</a>
+        <p style="font-size:.78rem;margin-top:14px;color:#8d95a1">Contains caffeine. Not recommended for children, pregnant or breastfeeding women.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section id="why" style="background:var(--surface);border-block:1px solid var(--line)">
   <div class="wrap split">
@@ -249,7 +288,7 @@
 
 <footer><div class="wrap">
   <div><a class="logo" href="./" style="color:var(--bg)"><i></i><span class="wm" aria-hidden="true"></span><span class="sr">JAWZR</span></a><p style="margin-top:12px;opacity:.75;max-width:40ch">Hard chewing gum. Train your jaw. Unleash the shark.</p></div>
-  <div><h4>Shop</h4><ul><li><a href="gums#hard">Hard Gum</a></li><li><a href="gums#ultra">Ultra Hard Gum</a></li><li><a href="gums#hard-mixed-3">3-Pack Bundle</a></li><li><a href="gums#duo">Starter Duo</a></li><li><a href="articles.html">Articles</a></li></ul></div>
+  <div><h4>Shop</h4><ul><li><a href="gums#hard">Hard Gum</a></li><li><a href="gums#ultra">Ultra Hard Gum</a></li><li><a href="gums#hard-mixed-3">3-Pack Bundle</a></li><li><a href="gums#duo">Starter Duo</a></li><li><a href="energy">Hard + Caffeine</a></li><li><a href="articles.html">Articles</a></li></ul></div>
   <div><h4>Info</h4><ul><li><a href="terms.html">Terms of Service</a></li><li><a href="returns.html">Returns &amp; Refunds</a></li><li><a href="shipping.html">Shipping &amp; Payment</a></li><li><a href="privacy.html">Privacy &amp; Cookies</a></li><li><a href="safety.html">Safety Instructions</a></li><li><a href="legal.html">Legal Notice</a></li><li><a href="#" data-cookie-settings>Cookie settings</a></li></ul></div>
   <p class="legal">© 2026 JAWZR</p>
 </div></footer>
@@ -267,7 +306,7 @@
 <script src="assets/site.js"></script>
 <script>
 renderReviews($("reviews"),SAMPLE_REVIEWS,3);
-$("cv-hard").innerHTML=pouchHTML("hard","Mint");
+$("cv-hard").innerHTML=pouchHTML("hard","Mint");$("cv-caf").innerHTML=pouchHTML("caffeine","Mint");$("ebPouch").innerHTML=pouchHTML("caffeine","Mint");
 $("cv-ultra").innerHTML=pouchHTML("ultra","Blueberry");
 document.querySelectorAll("[data-pack]").forEach(el=>{const [l,f]=el.dataset.pack.split("|");el.innerHTML=pouchHTML(l,f)});
 $("cv-bundle").innerHTML='<img class="scene" src="images/products/bundle-hard.webp" alt="Three JAWZR Hard gum bags: mint, mango and watermelon">';$("cv-bundle").parentElement.classList.add("has-scene");

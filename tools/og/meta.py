@@ -4,8 +4,8 @@ import re, glob, os, html
 SITE = "https://jawzr.com"
 os.chdir(os.path.join(os.path.dirname(__file__), "../../website"))
 HOME_DESC = "Hard chewing gum for jaw training. Two hardness levels, sugar-free and vegan. Ships from Lithuania."
-LT_PAGES = {"index.html","gums.html","gum.html","checkout.html","terms.html","returns.html","shipping.html","privacy.html","safety.html","legal.html"}
-IMG = {"gums.html": "og-gums", "gum.html": "og-gums"}
+LT_PAGES = {"index.html","gums.html","gum.html","energy.html","checkout.html","terms.html","returns.html","shipping.html","privacy.html","safety.html","legal.html"}
+IMG = {"gums.html": "og-gums", "gum.html": "og-gums", "energy.html": "og-energy"}
 TITLE = {"gums.html": "JAWZR Hard & Ultra Hard Gum", "gum.html": "JAWZR Hard & Ultra Hard Gum"}
 SKIP = {"v1.html", "product-pick.html", "index-v2.html", "product-sub.html", "product.html"}
 for f in sorted(glob.glob("*.html")):

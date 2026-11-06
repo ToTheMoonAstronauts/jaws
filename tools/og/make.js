@@ -7,6 +7,9 @@ const J=[
  ['og-gums-en','Hard &amp; Ultra<b>Hard gum</b>','4 flavours · 40 pieces per pack','products/bundle-hard.webp',1],
  ['og-gums-lt','Kieta ir<b>ypač kieta guma</b>','4 skoniai · 40 vnt. pakuotėje','products/bundle-hard.webp',1],
   ['og-gums-de','Hard &amp; Ultra<b>Hard Gum</b>','4 Geschmäcker · 40 Stück pro Packung','products/bundle-hard.webp',1],
+  ['og-energy-en','Hard gum<b>+ caffeine</b>','40 mg caffeine per piece · mint','products/trio-caffeine-mint.webp',1],
+  ['og-energy-lt','Kieta guma<b>+ kofeinas</b>','40 mg kofeino gabalėlyje · mėtų','products/trio-caffeine-mint.webp',1],
+  ['og-energy-de','Hard Gum<b>+ Koffein</b>','40 mg Koffein pro Stück · Minze','products/trio-caffeine-mint.webp',1],
 ];
 (async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:1200,height:630}});
 for(const [n,h,s,img,pp,fs] of J.filter(j=>!process.argv[2]||j[0].includes(process.argv[2]))){const u='file://'+path.resolve(__dirname,'og.html')+'?'+new URLSearchParams({h,s,img:'file://'+W+'/'+img,p:pp?'1':'',fs:fs||''});
