@@ -31,6 +31,9 @@ jobs:
           cp _site/index.html _site/go.html
           python3 tools/i18n/build_lang.py lt website _site/lt --report
           python3 tools/i18n/build_lang.py de website _site/de --report --en-hreflang
+          # cache-busting: every deploy makes browsers fetch the new script and styles
+          V=${GITHUB_SHA::8}
+          find _site -name '*.html' -exec sed -i "s#assets/site.js\"#assets/site.js?v=$V\"#g; s#assets/site.css\"#assets/site.css?v=$V\"#g" {} +
           touch _site/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
