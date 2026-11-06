@@ -3,10 +3,10 @@
 # Not listed on purpose: code strings, flavour names used as data keys (Mint, Mango, ...),
 # US-only texts and country/state names in the US form.
 T = {
-"1-month supply": "1 mėnesio atsarga",
-"1 Hard + 1 Ultra Hard · 2-month supply": "1 kieta + 1 ypač kieta · 2 mėnesių atsarga",
-"3-month supply, mix flavours": "3 mėnesių atsarga, derink skonius",
-"6-month supply, free shipping": "6 mėnesių atsarga, nemokamas pristatymas",
+"1-month supply": "Užteks vienam mėnesiui",
+"1 Hard + 1 Ultra Hard · 2-month supply": "1 kieta + 1 ypač kieta · Rinkinys dviems mėnesiams",
+"3-month supply, mix flavours": "3 mėnesių treniruotėms, derink skonius",
+"6-month supply, free shipping": "Pusmečio rinkinys, nemokamas pristatymas",
 "Best results": "Geriausi rezultatai",
 "JAWZR Hard & Ultra Hard Gum": "JAWZR kieta ir ypač kieta guma",
 "JAWZR hard chewing gum": "JAWZR kieta kramtomoji guma",
