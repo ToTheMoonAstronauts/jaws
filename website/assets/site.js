@@ -3,7 +3,10 @@ const CATALOG={
   hard:{name:"JAWZR Hard Gum",short:"Hard",grams:116,cls:"",
     flavours:{"Mint":"#7CC9EA","Mango":"#F4B23E","Watermelon":"#EE6A7A","Blueberry":"#7D5CD9"}},
   ultra:{name:"JAWZR Ultra Hard Gum",short:"Ultra Hard",grams:100,cls:"ultra",
-    flavours:{"Mint":"#7CC9EA","Mango":"#F4B23E","Watermelon":"#EE6A7A","Blueberry":"#7D5CD9"}}
+    flavours:{"Mint":"#7CC9EA","Mango":"#F4B23E","Watermelon":"#EE6A7A","Blueberry":"#7D5CD9"}},
+  /* separate product line, own page (energy.html): Hard hardness, mint only, 40 mg caffeine per piece */
+  caffeine:{name:"JAWZR Hard + Caffeine",short:"Hard + Caffeine",grams:116,cls:"caffeine",caffeineMg:40,
+    flavours:{"Mint":"#7CC9EA"}}
 };
 /* ---------- language: <html lang="lt|de"> on the translated pages (built by tools/i18n/build_lang.py) ---------- */
 const LANG=(document.documentElement.lang||"en").slice(0,2);
@@ -27,9 +30,9 @@ const tr=s=>(TR[LANG]&&TR[LANG][s])||s;
 /* ---------- market & currency: ?market=us | ?market=eu (remembered in this browser) ---------- */
 const MARKETS={
   eu:{cur:"EUR",sym:"€",free:49,ship:4.95,express:14.95,klarna:true,region:"EU",
-      price:{1:{hard:17.95,ultra:23.95},2:{hard:37.95,ultra:37.95},3:{hard:31.95,ultra:41.95},6:{hard:53.95,ultra:71.95}}},
+      price:{1:{hard:17.95,ultra:23.95,caffeine:19.95},2:{hard:37.95,ultra:37.95},3:{hard:31.95,ultra:41.95,caffeine:35.95},6:{hard:53.95,ultra:71.95,caffeine:59.95}}},
   us:{cur:"USD",sym:"$",free:59,ship:9.95,express:24.95,klarna:false,region:"US",
-      price:{1:{hard:19.95,ultra:26.95},2:{hard:41.95,ultra:41.95},3:{hard:35.95,ultra:46.95},6:{hard:59.95,ultra:79.95}}}
+      price:{1:{hard:19.95,ultra:26.95,caffeine:22.95},2:{hard:41.95,ultra:41.95},3:{hard:35.95,ultra:46.95,caffeine:39.95},6:{hard:59.95,ultra:79.95,caffeine:65.95}}}
 };
 const MARKET=(()=>{let m=new URLSearchParams(location.search).get("market");
   try{if(m&&MARKETS[m.toLowerCase()]){m=m.toLowerCase();localStorage.setItem("jawzr-market",m)}else m=localStorage.getItem("jawzr-market")}catch(e){}
@@ -148,7 +151,9 @@ function getSID(){
 }
 const UTM=(()=>{const q=new URLSearchParams(location.search),u={};["utm_source","utm_medium","utm_campaign","utm_content","utm_term","fbclid"].forEach(k=>{if(q.get(k))u[k]=q.get(k).slice(0,200)});
   try{if(Object.keys(u).length&&getConsent()==="granted")sessionStorage.setItem("cutline-utm",JSON.stringify(u));return Object.keys(u).length?u:JSON.parse(sessionStorage.getItem("cutline-utm")||"{}")}catch(e){return u}})();
+const LOCAL_PREVIEW=location.protocol==="file:";
 function sbInsert(table,row){
+  if(LOCAL_PREVIEW)return Promise.resolve(false);
   return fetch(SB_URL+table,{method:"POST",keepalive:true,headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify(row)})
     .then(r=>r.ok).catch(()=>false);
 }
@@ -334,14 +339,14 @@ function fbc(){const c=cookie("_fbc");if(c)return c;const k=clickInfo();return k
 const fbp=()=>cookie("_fbp");
 function metaAttribution(){const k=clickInfo();return {fbc:(fbc()||"").slice(0,300)||null,fbp:(fbp()||"").slice(0,120)||null,fbclid:k?k.id:null,landing_page:k?k.landing:null,user_agent:navigator.userAgent.slice(0,500)}}
 let metaReady=false;
-function metaBoot(){
+function metaBoot(){if(LOCAL_PREVIEW)return;
   if(metaReady||getConsent()!=="granted")return;metaReady=true;persistClick();
   !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");
   try{fbq("consent","grant");fbq("init",META_PIXEL);fbq("track","PageView")}catch(e){}
   const q=window.__metaQ||[];window.__metaQ=[];q.forEach(a=>metaEvent.apply(null,a));
 }
 /* name: Meta standard event · params: custom_data · opt.server: also send via CAPI with opt.user · opt.eventID to reuse */
-function metaEvent(name,params={},opt={}){
+function metaEvent(name,params={},opt={}){if(LOCAL_PREVIEW)return;
   if(getConsent()!=="granted")return null;
   const eventID=opt.eventID||uuid();
   if(!metaReady){(window.__metaQ=window.__metaQ||[]).push([name,params,{...opt,eventID}]);metaBoot();return eventID}
