@@ -34,10 +34,13 @@ const MARKETS={
   us:{cur:"USD",sym:"$",free:59,ship:9.95,express:24.95,klarna:false,region:"US",
       price:{1:{hard:19.95,ultra:26.95,caffeine:22.95},2:{hard:41.95,ultra:41.95},3:{hard:35.95,ultra:46.95,caffeine:39.95},6:{hard:59.95,ultra:79.95,caffeine:65.95}}}
 };
+/* ?market=useur: the US market (prices, shipping, rules) shown in euros */
+MARKETS.useur={...MARKETS.us,cur:"EUR",sym:"€"};
 const MARKET=(()=>{let m=new URLSearchParams(location.search).get("market");
   try{if(m&&MARKETS[m.toLowerCase()]){m=m.toLowerCase();localStorage.setItem("jawzr-market",m)}else m=localStorage.getItem("jawzr-market")}catch(e){}
   return LANG!=="en"?"eu":(MARKETS[m]?m:"eu")})();
 const MK=MARKETS[MARKET];
+const US=MK.region==="US";
 const PACKS=[
   {id:1,label:"1 Pack · 40 pieces",sub:"1-month supply",price:MK.price[1]},
   {id:2,label:"Starter Duo · 80 pieces",sub:"1 Hard + 1 Ultra Hard · 2-month supply",price:MK.price[2],duo:true},
@@ -51,7 +54,7 @@ const SUB_OFF=0.15;
 const subPrice=p=>Math.round(p*(1-SUB_OFF)*100)/100;
 const FREE_SHIP=MK.free;
 /* money in the current market's format: €17,95 or $19.95 */
-const eur=n=>MARKET==="us"?"$"+n.toFixed(2):LANG!=="en"?n.toFixed(2).replace(".",",")+" €":"€"+n.toFixed(2).replace(".",",");
+const eur=n=>MK.cur==="USD"?"$"+n.toFixed(2):LANG!=="en"?n.toFixed(2).replace(".",",")+" €":"€"+n.toFixed(2).replace(".",",");
 const eur0=n=>eur(n).replace(/[.,]00( €)?$/,"$1");
 const $=id=>document.getElementById(id);
 function inkOn(h){const n=parseInt(h.slice(1),16),r=n>>16,g=n>>8&255,b=n&255;return (0.299*r+0.587*g+0.114*b)>150?"#121614":"#fff"}
@@ -142,7 +145,7 @@ const SB_KEY="sb_publishable_JP7_gwTXfMBITq2e2gHe8A_snjOsWTT";
    via "Your privacy choices" or their browser sends Global Privacy Control. */
 const GPC=navigator.globalPrivacyControl===true;
 function getConsent(){let v=null;try{v=localStorage.getItem("cutline-consent")}catch(e){}
-  if(v)return v;return MARKET==="us"?(GPC?"denied":"granted"):null}
+  if(v)return v;return US?(GPC?"denied":"granted"):null}
 function setConsent(v){try{localStorage.setItem("cutline-consent",v)}catch(e){}}
 const TMP_SID="tmp-"+Math.random().toString(36).slice(2,12);
 function getSID(){
@@ -185,7 +188,7 @@ document.addEventListener("click",e=>{
   if(e.target.closest("[data-cookie-settings]")){e.preventDefault();cookieBanner()}
 });
 document.addEventListener("DOMContentLoaded",()=>{if(!getConsent())cookieBanner();
-  if(MARKET==="us")document.querySelectorAll("[data-cookie-settings]").forEach(a=>a.textContent="Your privacy choices");});
+  if(US)document.querySelectorAll("[data-cookie-settings]").forEach(a=>a.textContent="Your privacy choices");});
 
 /* ---------- 10% welcome popup (exit intent on desktop, timed/scroll on mobile; once per 14 days) ---------- */
 (function(){
@@ -306,9 +309,10 @@ const US_TEXT=[
  ["vs €53,85 bought singly","vs $59.85 bought singly"],["€31,95","$35.95"],["save 41%","save 40%"]
 ];
 function applyMarketText(root){
-  if(MARKET!=="us")return;
+  if(!US)return;
+  const toLocal=t=>MK.cur==="USD"?t:t.replace(/\$(\d+)(?:\.(\d\d))?/g,(m,x,c)=>"€"+x+(c?","+c:""));
   const w=document.createTreeWalker(root||document.body,NodeFilter.SHOW_TEXT);let n;
-  while((n=w.nextNode())){let t=n.nodeValue,o=t;if(!/[€]|EU/.test(t))continue;US_TEXT.forEach(([a,b])=>{if(t.includes(a))t=t.split(a).join(b)});if(t!==o)n.nodeValue=t}
+  while((n=w.nextNode())){let t=n.nodeValue,o=t;if(!/[€]|EU/.test(t))continue;US_TEXT.forEach(([a,b])=>{if(t.includes(a))t=t.split(a).join(toLocal(b))});if(t!==o)n.nodeValue=t}
 }
 document.addEventListener("DOMContentLoaded",()=>{applyMarketText();document.documentElement.dataset.market=MARKET;
   /* footer market switch */

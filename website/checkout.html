@@ -208,7 +208,7 @@ function totals(){const sub=cartTotal();const ship=sub===0?0:shipMethod()==="exp
 /* countries per market */
 const EU_C=["Austria","Belgium","Bulgaria","Croatia","Cyprus","Czechia","Denmark","Estonia","Finland","France","Germany","Greece","Hungary","Ireland","Italy","Latvia","Lithuania","Luxembourg","Malta","Netherlands","Poland","Portugal","Romania","Slovakia","Slovenia","Spain","Sweden"];
 const US_S=["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","District of Columbia","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"];
-if(MARKET==="us"){$("country").innerHTML="<option>United States</option>";$("regionWrap").hidden=false;$("region").innerHTML='<option value="" selected disabled hidden></option>'+US_S.map(x=>`<option>${x}</option>`).join("");$("zipL").textContent="ZIP code";}
+if(US){$("country").innerHTML="<option>United States</option>";$("regionWrap").hidden=false;$("region").innerHTML='<option value="" selected disabled hidden></option>'+US_S.map(x=>`<option>${x}</option>`).join("");$("zipL").textContent="ZIP code";}
 else $("country").innerHTML=EU_C.map(c=>`<option value="${c}"${c===(LANG==="de"?"Germany":"Lithuania")?" selected":""}>${tr(c)}</option>`).join("");
 
 /* which wallets this device/browser can really use */
@@ -267,9 +267,9 @@ function renderSummary(){
   $("sSub").textContent=eur(t.sub);$("sShip").textContent=t.ship?eur(t.ship):"Free";$("sTot").textContent=eur(t.tot);
   $("payBtn").innerHTML=`${PAYL[pm]} · <span id="payAmt">${eur(t.tot)}</span>`;
   $("smStd").textContent=cartTotal()>=FREE_SHIP?"Free":eur(SHIP);$("smExp").textContent=eur(EXPRESS);
-  $("smStdSub").textContent=MARKET==="us"?`Import duties included · 7–12 business days · free from ${eur0(FREE_SHIP)}`:`2–6 business days · free from ${eur0(FREE_SHIP)}`;
-  $("smExpSub").textContent=MARKET==="us"?"Import duties included · 3–5 business days":"1–3 business days";
-  $("sumFine").textContent=MARKET==="us"?`Import duties included. Free US shipping from ${eur0(FREE_SHIP)}.`:`Incl. VAT. Free EU shipping from ${eur0(FREE_SHIP)}.`;
+  $("smStdSub").textContent=US?`Import duties included · 7–12 business days · free from ${eur0(FREE_SHIP)}`:`2–6 business days · free from ${eur0(FREE_SHIP)}`;
+  $("smExpSub").textContent=US?"Import duties included · 3–5 business days":"1–3 business days";
+  $("sumFine").textContent=US?`Import duties included. Free US shipping from ${eur0(FREE_SHIP)}.`:`Incl. VAT. Free EU shipping from ${eur0(FREE_SHIP)}.`;
 }
 renderSummary();
 if(cart.length){track("checkout_start",{items:cart.length,total:totals().tot,market:MARKET});
@@ -290,7 +290,7 @@ $("coForm").addEventListener("submit",async e=>{
   chk("email",/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email),"Enter a valid email address.");
   chk("fname",v("fname"),"Enter your first name.");chk("lname",v("lname"),"Enter your last name.");
   chk("addr1",v("addr1").length>3,"Enter your address.");chk("city",v("city"),"Enter your city.");
-  if(MARKET==="us"){chk("region",v("region"),"Select a state.");chk("zip",/^\d{5}(-\d{4})?$/.test(v("zip")),"Enter a valid ZIP code.")}
+  if(US){chk("region",v("region"),"Select a state.");chk("zip",/^\d{5}(-\d{4})?$/.test(v("zip")),"Enter a valid ZIP code.")}
   else chk("zip",v("zip").length>=3,"Enter your postal code.");
   const pm=document.querySelector('input[name=pm]:checked').value;
   if(pm==="card"&&!cardOk()){ok=false;if(!first)first=["ccNum","ccExp","ccCvc","ccName"].find(i=>$(i).closest(".fl").classList.contains("bad"))}
@@ -303,14 +303,14 @@ $("coForm").addEventListener("submit",async e=>{
   const r2=n=>Math.round(n*100)/100;
   leadOnce();
   /* Meta Purchase: the fake-door "order" passed validation; value = order total actually shown */
-  const user={email:email.toLowerCase(),first_name:v("fname"),last_name:v("lname"),phone:v("phone"),city:v("city"),zip:v("zip"),state:MARKET==="us"?v("region"):"",country:$("country").value};
+  const user={email:email.toLowerCase(),first_name:v("fname"),last_name:v("lname"),phone:v("phone"),city:v("city"),zip:v("zip"),state:US?v("region"):"",country:$("country").value};
   const metaId=metaEvent("Purchase",{value:r2(t.tot),currency:MK.cur,content_type:"product",content_ids:cartContents().map(c=>c.id),contents:cartContents(),num_items:cartCount()},{server:true,user});
   const att=metaAttribution();
   await Promise.all([
     sbInsert("leads",{session_id:getSID(),source:"checkout",lang:LANG,email:email.slice(0,254),first_name:v("fname").slice(0,100),last_name:v("lname").slice(0,100),
-      country:$("country").value,region:MARKET==="us"?v("region").slice(0,100):null,address1:v("addr1").slice(0,200),address2:v("addr2").slice(0,200)||null,
+      country:$("country").value,region:US?v("region").slice(0,100):null,address1:v("addr1").slice(0,200),address2:v("addr2").slice(0,200)||null,
       city:v("city").slice(0,100),postal_code:v("zip").slice(0,20),phone:v("phone").slice(0,40)||null,shipping_method:shipMethod(),
-      payment_method:pm,items,market:MARKET,currency:MK.cur,total_local:r2(t.tot),total_eur:r2(MARKET==="us"?t.tot/1.1216:t.tot),
+      payment_method:pm,items,market:MARKET,currency:MK.cur,total_local:r2(t.tot),total_eur:r2(MK.cur==="USD"?t.tot/1.1216:t.tot),
       marketing_consent:$("consent").checked,utm:UTM,meta_event_id:metaId,...(getConsent()==="granted"?att:{user_agent:att.user_agent})}),
     track("pay_click",{method:pm,card_brand:cardBrand,shipping:shipMethod(),ship:t.ship,total:t.tot,currency:MK.cur,items:items.length})
   ]);
