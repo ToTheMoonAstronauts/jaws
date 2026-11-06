@@ -1,5 +1,10 @@
 # German (shop: du, legal pages: Sie). Keys are the English source segments.
 T = {
+"1-month supply": "Vorrat für 1 Monat",
+"1 Hard + 1 Ultra Hard · 2-month supply": "1 Hard + 1 Ultra Hard · Vorrat für 2 Monate",
+"3-month supply, mix flavours": "Vorrat für 3 Monate, Geschmäcker kombinierbar",
+"6-month supply, free shipping": "Vorrat für 6 Monate, kostenloser Versand",
+"Best results": "Beste Ergebnisse",
 'JAWZR · Hard Chewing Gum': 'JAWZR · Harter Kaugummi',
 'Hard chewing gum for jaw training. Two hardness levels, sugar-free and vegan. Ships from Lithuania.': 'Harter Kaugummi für das Kiefertraining. Zwei Härtegrade, zuckerfrei und vegan. Versand aus Litauen.',
 'JAWZR hard chewing gum': 'JAWZR harter Kaugummi',

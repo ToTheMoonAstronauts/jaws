@@ -36,10 +36,10 @@ const MARKET=(()=>{let m=new URLSearchParams(location.search).get("market");
   return LANG!=="en"?"eu":(MARKETS[m]?m:"eu")})();
 const MK=MARKETS[MARKET];
 const PACKS=[
-  {id:1,label:"1 Pack · 40 pieces",sub:"Covers the full 30-day plan",price:MK.price[1]},
-  {id:2,label:"Starter Duo · 80 pieces",sub:"1 Hard + 1 Ultra Hard, made for the 30-day plan",price:MK.price[2],tag:"New",duo:true},
-  {id:3,label:"3 Packs · 120 pieces",sub:"4 months of daily training, mix flavours",price:MK.price[3],tag:"Bestseller"},
-  {id:6,label:"6 Packs · 240 pieces",sub:"8 months of daily training, free shipping",price:MK.price[6]}
+  {id:1,label:"1 Pack · 40 pieces",sub:"1-month supply",price:MK.price[1]},
+  {id:2,label:"Starter Duo · 80 pieces",sub:"1 Hard + 1 Ultra Hard · 2-month supply",price:MK.price[2],duo:true},
+  {id:3,label:"3 Packs · 120 pieces",sub:"3-month supply, mix flavours",price:MK.price[3],tag:"Bestseller"},
+  {id:6,label:"6 Packs · 240 pieces",sub:"6-month supply, free shipping",price:MK.price[6],tag:"Best results",tagCls:"green"}
 ];
 const packPrice=(level,id)=>PACKS.find(p=>p.id===id).price[level];
 /* what the same pieces cost as single packs (for "Save x%") */

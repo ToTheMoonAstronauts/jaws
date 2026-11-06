@@ -5,7 +5,7 @@ const J=[
  ['og-home-lt','Kieta guma<b>stipresniam žandikauliui</b>','Du kietumo lygiai · be cukraus · veganiška','hero-01.webp'],
  ['og-home-de','Harter Kaugummi<b>für einen stärkeren Kiefer</b>','Zwei Härtegrade · zuckerfrei · vegan','hero-01.webp',0,70],
  ['og-gums-en','Hard &amp; Ultra<b>Hard gum</b>','4 flavours · 40 pieces per pack','products/bundle-hard.webp',1],
- ['og-gums-lt','Kieta ir<b>ypač kieta guma</b>','4 skoniai · 40 gabalėlių pakuotėje','products/bundle-hard.webp',1],
+ ['og-gums-lt','Kieta ir<b>ypač kieta guma</b>','4 skoniai · 40 vnt. pakuotėje','products/bundle-hard.webp',1],
   ['og-gums-de','Hard &amp; Ultra<b>Hard Gum</b>','4 Geschmäcker · 40 Stück pro Packung','products/bundle-hard.webp',1],
 ];
 (async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:1200,height:630}});

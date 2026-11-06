@@ -87,6 +87,7 @@
 .packs .s{font-size:.82rem;color:var(--muted)}
 .packs .pr{text-align:right;font:700 1.05rem/1.25 var(--mono);font-variant-numeric:tabular-nums}
 .packs .pr span{display:block;font:500 .72rem/1.4 var(--mono);color:var(--muted)}
+.packs .tag.green{background:#15803d}
 .packs .tag{position:absolute;top:-10px;right:14px;font:700 .64rem/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;background:var(--accent);color:#fff;padding:5px 7px;border-radius:3px}
 .packs .save{display:inline-block;margin-left:8px;font:700 .66rem/1 var(--mono);color:var(--ok);background:#E3F3EA;padding:4px 6px;border-radius:3px;vertical-align:2px}
 .stock{display:flex;align-items:center;gap:8px;margin-top:18px;font-size:.9rem;color:var(--ok);font-weight:500}
@@ -178,7 +179,7 @@
 <div class="top-bar"><div class="wrap">Free EU shipping from €49 · Ships from Lithuania</div></div>
 <nav class="site"><div class="wrap">
   <a class="logo" href="./"><i></i><span class="wm" aria-hidden="true"></span><span class="sr">JAWZR</span></a>
-  <div class="links"><a href="gums">Shop</a><a href="./#how">How it works</a><a href="./#why">Why hard gum</a><a href="#faq">FAQ</a></div>
+  <div class="links"><a href="gums">Shop</a><a href="./#why">Why hard gum</a><a href="#faq">FAQ</a></div>
   <button class="cart-btn" type="button" data-open-cart>Cart (<span data-cart-count>0</span>)</button>
 </div></nav>
 
@@ -353,7 +354,7 @@ const GALLERY=[["2","Hard gum close-up: built to resist your bite"],["3","Modern
   ["6","Feel your masseter working"],["7","Why your jaw needs work"],["8","Why modern jaws do less work"],["9","Hard vs Ultra Hard"],["10","Why JAWZR"],["11","Take the 30-day JAWZR challenge"],["12","Join the JAWZR challenge"]];
 const ULTRA_V={"2":"Ultra Hard gum close-up: maximum resistance","3":"Modern soft diet vs JAWZR Ultra Hard"};
 const IMGS=level=>GALLERY.map(([n,alt])=>level==="ultra"&&ULTRA_V[n]?{src:`images/gallery/${n}-ultra.webp`,alt:ULTRA_V[n]}:{src:`images/gallery/${n}.webp`,alt});
-const EVERY={1:{def:"6 weeks",list:["4 weeks","6 weeks","2 months"]},2:{def:"3 months",list:["2 months","3 months","4 months"]},3:{def:"4 months",list:["3 months","4 months","5 months"]},6:{def:"8 months",list:["6 months","8 months","10 months"]}};
+const EVERY={1:{def:"4 weeks",list:["4 weeks","6 weeks","2 months"]},2:{def:"2 months",list:["6 weeks","2 months","3 months"]},3:{def:"3 months",list:["2 months","3 months","4 months"]},6:{def:"6 months",list:["4 months","6 months","8 months"]}};
 let st={every:null,level:"hard",flavour:"Mint",pack:3,view:0,mix:null,duo:["Mint","Mango"]};
 const FL=["Mint","Mango","Watermelon","Blueberry"];
 const DEF={3:["Mint","Mango","Watermelon"],6:["Mint","Mango","Watermelon","Blueberry","Mint","Mango"]};
@@ -389,8 +390,7 @@ function render(){
   $("packs").innerHTML=PACKS.map(p=>{
     const pp=p.price[st.level],save=p.id>1?Math.round((1-pp/singlesPrice(st.level,p.id))*100):0;
     const open=p.id===st.pack&&((mixed&&p.id>2)||p.duo);
-    const grams=p.duo?CATALOG.hard.grams+CATALOG.ultra.grams:p.id*L.grams;
-    return `<button type="button" data-p="${p.id}" aria-pressed="${p.id===st.pack}"${open?' class="has-mix"':""}>${p.tag?`<span class="tag">${p.tag}</span>`:""}<span class="radio"></span><span><strong>${p.label}${save?`<span class="save">${tr("Save")} ${save}%</span>`:""}</strong><span class="s">${p.sub} · ${grams} g</span></span><span class="pr">${eur(pp)}<span>${eur(pp/p.id)} ${tr("/ pack")}</span></span></button>${open?(p.duo?duoPanel():mixPanel(st.level)):""}`;}).join("");
+    return `<button type="button" data-p="${p.id}" aria-pressed="${p.id===st.pack}"${open?' class="has-mix"':""}>${p.tag?`<span class="tag${p.tagCls?" "+p.tagCls:""}">${p.tag}</span>`:""}<span class="radio"></span><span><strong>${p.label}${save?`<span class="save">${tr("Save")} ${save}%</span>`:""}</strong><span class="s">${p.sub}</span></span><span class="pr">${eur(pp)}<span>${eur(pp/p.id)} ${tr("/ pack")}</span></span></button>${open?(p.duo?duoPanel():mixPanel(st.level)):""}`;}).join("");
   const isSub=document.querySelector('input[name=po]:checked').value==="sub",sp=subPrice(pr);
   $("poOnce").textContent=eur(pr);$("poSub").innerHTML=`${eur(sp)}<s>${eur(pr)}</s>`;
   const opts=EVERY[st.pack];if(!opts.list.includes(st.every))st.every=opts.def;

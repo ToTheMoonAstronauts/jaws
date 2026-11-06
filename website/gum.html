@@ -74,6 +74,7 @@
 .packs .s{font-size:.82rem;color:var(--muted)}
 .packs .pr{text-align:right;font:700 1.05rem/1.25 var(--mono);font-variant-numeric:tabular-nums}
 .packs .pr span{display:block;font:500 .72rem/1.4 var(--mono);color:var(--muted)}
+.packs .tag.green{background:#15803d}
 .packs .tag{position:absolute;top:-10px;right:14px;font:700 .64rem/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;background:var(--accent);color:#fff;padding:5px 7px;border-radius:3px}
 .packs .save{display:inline-block;margin-left:8px;font:700 .66rem/1 var(--mono);color:var(--ok);background:#E3F3EA;padding:4px 6px;border-radius:3px;vertical-align:2px}
 .stock{display:flex;align-items:center;gap:8px;margin-top:18px;font-size:.9rem;color:var(--ok);font-weight:500}
@@ -165,7 +166,7 @@
 <div class="top-bar"><div class="wrap">Free EU shipping from €49 · Ships from Lithuania</div></div>
 <nav class="site"><div class="wrap">
   <a class="logo" href="./"><i></i><span class="wm" aria-hidden="true"></span><span class="sr">JAWZR</span></a>
-  <div class="links"><a href="gum">Shop</a><a href="./#how">How it works</a><a href="./#why">Why hard gum</a><a href="#faq">FAQ</a></div>
+  <div class="links"><a href="gum">Shop</a><a href="./#why">Why hard gum</a><a href="#faq">FAQ</a></div>
   <button class="cart-btn" type="button" data-open-cart>Cart (<span data-cart-count>0</span>)</button>
 </div></nav>
 
@@ -365,8 +366,7 @@ function render(){
   $("packs").innerHTML=PACKS.map(p=>{
     const pp=p.price[st.level],save=p.id>1?Math.round((1-pp/singlesPrice(st.level,p.id))*100):0;
     const open=p.id===st.pack&&((mixed&&p.id>2)||p.duo);
-    const grams=p.duo?CATALOG.hard.grams+CATALOG.ultra.grams:p.id*L.grams;
-    return `<button type="button" data-p="${p.id}" aria-pressed="${p.id===st.pack}"${open?' class="has-mix"':""}>${p.tag?`<span class="tag">${p.tag}</span>`:""}<span class="radio"></span><span><strong>${p.label}${save?`<span class="save">${tr("Save")} ${save}%</span>`:""}</strong><span class="s">${p.sub} · ${grams} g</span></span><span class="pr">${eur(pp)}<span>${eur(pp/p.id)} ${tr("/ pack")}</span></span></button>${open?(p.duo?duoPanel():mixPanel(st.level)):""}`;}).join("");
+    return `<button type="button" data-p="${p.id}" aria-pressed="${p.id===st.pack}"${open?' class="has-mix"':""}>${p.tag?`<span class="tag${p.tagCls?" "+p.tagCls:""}">${p.tag}</span>`:""}<span class="radio"></span><span><strong>${p.label}${save?`<span class="save">${tr("Save")} ${save}%</span>`:""}</strong><span class="s">${p.sub}</span></span><span class="pr">${eur(pp)}<span>${eur(pp/p.id)} ${tr("/ pack")}</span></span></button>${open?(p.duo?duoPanel():mixPanel(st.level)):""}`;}).join("");
   $("addPrice").textContent=eur(pr);
   $("ingredients").innerHTML=I.ingredients;
   // gallery
