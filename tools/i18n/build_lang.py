@@ -64,23 +64,47 @@ def add_hreflang(doc, en_file):
     doc = re.sub(r'<link rel="alternate" hreflang="[^"]+" href="[^"]*">\n?', "", doc)
     return doc.replace("</head>", hreflang(en_file) + "</head>", 1)
 
+def override_paths(lang):
+    """Relative paths (e.g. images/gallery/3.webp) the language overrides."""
+    ov = os.path.join(os.path.dirname(__file__), f"{lang}_overrides")
+    out = set()
+    for root, _, files in os.walk(ov) if os.path.isdir(ov) else []:
+        for f in files:
+            out.add(os.path.relpath(os.path.join(root, f), ov).replace(os.sep, "/"))
+    return out
+
+def share_assets(text, lang, overrides):
+    """Heavy assets identical across languages (the hero, product shots, article images, the
+    video) are served once from the site root, so translated pages point at /images/ and /media/
+    instead of carrying a copy. images/gallery/ is the exception: its slides are localised and the
+    product page builds their paths at runtime (images/gallery/${n}.webp), so that folder stays
+    relative and is duplicated per language."""
+    text = re.sub(r'(?<![\w/.])media/', '/media/', text)
+    text = re.sub(r'(?<![\w/.])images/(?!gallery/)', '/images/', text)
+    return text
+
 def build(lang, src, out, report):
     T = load(lang)
+    ov_paths = override_paths(lang)
     os.makedirs(out, exist_ok=True)
     for p in PAGES:
         doc = open(os.path.join(src, p), encoding="utf-8").read()
         if 'name="robots" content="noindex' not in doc: doc = add_hreflang(doc, p)
         doc = html_segments(doc, make_fn(T, p))
         doc = fix_og(fix_links(doc, lang), lang)
+        doc = share_assets(doc, lang, ov_paths)
         open(os.path.join(out, p), "w", encoding="utf-8").write(doc)
     os.makedirs(os.path.join(out, "assets"), exist_ok=True)
     for j in JS:
         code = open(os.path.join(src, j), encoding="utf-8").read()
-        open(os.path.join(out, j), "w", encoding="utf-8").write(js_segments(code, make_fn(T, j)))
+        code = share_assets(js_segments(code, make_fn(T, j)), lang, ov_paths)
+        open(os.path.join(out, j), "w", encoding="utf-8").write(code)
     shutil.copy(os.path.join(src, "assets/site.css"), os.path.join(out, "assets/site.css"))
+    # images/ and media/ are shared from the site root; only images/gallery/ is per language
+    shutil.copytree(os.path.join(src, "images/gallery"), os.path.join(out, "images/gallery"), dirs_exist_ok=True)
     for d in os.listdir(src):
         full = os.path.join(src, d)
-        if os.path.isdir(full) and d not in ("assets", "dash"):
+        if os.path.isdir(full) and d not in ("assets", "dash", "images", "media"):
             shutil.copytree(full, os.path.join(out, d), dirs_exist_ok=True)
         elif d.endswith((".ico", ".png", ".svg", ".webmanifest")):
             shutil.copy(full, os.path.join(out, d))
@@ -90,8 +114,9 @@ def build(lang, src, out, report):
             (shutil.copytree(s, os.path.join(out, "assets", f), dirs_exist_ok=True) if os.path.isdir(s) else shutil.copy(s, os.path.join(out, "assets", f)))
     # old URLs keep working
     for old in ("index-v2.html", "product-sub.html", "product.html"):
-        open(os.path.join(out, old), "w", encoding="utf-8").write(open(os.path.join(src, old), encoding="utf-8").read().replace("https://jawzr.com/", f"https://jawzr.com/{lang}/"))
-    # language-only assets (e.g. gallery images with translated text) replace the EN copies
+        doc = open(os.path.join(src, old), encoding="utf-8").read().replace("https://jawzr.com/", f"https://jawzr.com/{lang}/")
+        open(os.path.join(out, old), "w", encoding="utf-8").write(share_assets(doc, lang, ov_paths))
+    # language-only assets (e.g. gallery images with translated text): only these are duplicated
     ov = os.path.join(os.path.dirname(__file__), f"{lang}_overrides")
     if os.path.isdir(ov): shutil.copytree(ov, out, dirs_exist_ok=True)
     if report:
