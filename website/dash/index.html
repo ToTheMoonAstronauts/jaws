@@ -69,6 +69,7 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
 svg text{font:11px "JetBrains Mono",monospace;fill:var(--muted)}
 .empty{color:var(--muted);font-size:.88rem}
 footer{color:var(--muted);font-size:.78rem;padding:30px 0 40px}
+.tbtn{font:600 .72rem/1 inherit;padding:6px 9px;border:1px solid #d6d2c8;border-radius:6px;background:#fff;cursor:pointer;white-space:nowrap}.tbtn:hover{border-color:#121614}.tbtn:disabled{opacity:.5;cursor:default}
 </style>
 </head>
 <body>
@@ -110,6 +111,7 @@ footer{color:var(--muted);font-size:.78rem;padding:30px 0 40px}
       <div class="card"><h2>Meta server events (CAPI)</h2><div id="tCapi"></div></div>
     </div>
     <div class="card" style="margin-top:14px"><h2>Latest pre-orders and sign-ups</h2><div class="scroll" id="tRecent"></div></div>
+    <div class="card" style="margin-top:14px"><h2>Marked as test <small style="font-weight:400;color:#6b6f73">(left out of every number above)</small></h2><div class="scroll" id="tTests"></div></div>
     <footer>Pre-orders are fake-door checkouts: nobody was charged. Visitor and funnel numbers only include people who accepted cookies; pre-orders and sign-ups include everyone. Test emails are excluded. Values in EUR (US orders converted at 1.1216).</footer>
   </main>
 </div>
@@ -195,8 +197,19 @@ function render(d){
     {h:"Where",k:"country",f:(v,r)=>esc([r.city,v].filter(Boolean).join(", "))},
     {h:"Items",k:"items",f:v=>esc((v||[]).map(i=>`${i.level==="duo"?"Duo":i.level==="ultra"?"Ultra":"Hard"} ${i.pack}× ${i.flavour}${i.sub?" (sub "+i.sub.every+")":""}${i.qty>1?" ×"+i.qty:""}`).join("; "))},
     {h:"Pay",k:"payment"},{h:"Total",k:"total",r:1,f:(v,r)=>v==null&&r.total_eur==null?"":(r.currency==="USD"?"$"+Number(v).toFixed(2):eur(v??r.total_eur))},
-    {h:"Ad click",k:"fbclid",f:v=>v?"Meta":""}]);
+    {h:"Ad click",k:"fbclid",f:v=>v?"Meta":""},
+    {h:"",k:"id",f:v=>`<button type="button" class="tbtn" data-test="${v}" data-v="1">Mark as test</button>`}]);
+  $("tTests").innerHTML=(d.tests&&d.tests.length)?table(d.tests,[
+    {h:"When",k:"at",f:v=>esc(new Date(v).toLocaleString("en-GB",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}))},
+    {h:"Type",k:"source",f:v=>`<span class="pill">${esc(v==="checkout"?"pre-order":v)}</span>`},{h:"Email",k:"email"},{h:"Name",k:"name"},{h:"Where",k:"country"},
+    {h:"Total",k:"total",r:1,f:(v,r)=>v==null&&r.total_eur==null?"":(r.currency==="USD"?"$"+Number(v).toFixed(2):eur(v??r.total_eur))},
+    {h:"",k:"id",f:v=>`<button type="button" class="tbtn" data-test="${v}" data-v="0">Not a test</button>`}]):'<p class="empty">Nothing marked as test in this range.</p>';
 }
+document.addEventListener("click",async e=>{const b=e.target.closest("button[data-test]");if(!b)return;
+  const on=b.dataset.v==="1";b.disabled=true;b.textContent=on?"Marking…":"Restoring…";
+  const {error}=await sb.rpc("dash_set_test",{p_id:Number(b.dataset.test),p_test:on});
+  if(error){b.disabled=false;b.textContent="Error, retry";$("upd").textContent="Error: "+error.message;return}
+  load();});
 function chart(rows){
   if(!rows||!rows.length){$("chart").innerHTML='<p class="empty">No data.</p>';return}
   const W=560,H=200,p={l:30,r:10,t:10,b:24},n=rows.length,bw=(W-p.l-p.r)/n;
