@@ -311,7 +311,7 @@ $("coForm").addEventListener("submit",async e=>{
       country:$("country").value,region:US?v("region").slice(0,100):null,address1:v("addr1").slice(0,200),address2:v("addr2").slice(0,200)||null,
       city:v("city").slice(0,100),postal_code:v("zip").slice(0,20),phone:v("phone").slice(0,40)||null,shipping_method:shipMethod(),
       payment_method:pm,items,market:MARKET,currency:MK.cur,total_local:r2(t.tot),total_eur:r2(MK.cur==="USD"?t.tot/1.1216:t.tot),
-      marketing_consent:$("consent").checked,utm:UTM,meta_event_id:metaId,...(getConsent()==="granted"?att:{user_agent:att.user_agent})}),
+      marketing_consent:$("consent").checked,utm:UTM,meta_event_id:metaId,geo:(typeof GEO!=="undefined"&&GEO)||undefined,...(getConsent()==="granted"?att:{user_agent:att.user_agent})}),
     track("pay_click",{method:pm,card_brand:cardBrand,shipping:shipMethod(),ship:t.ship,total:t.tot,currency:MK.cur,items:items.length})
   ]);
   await new Promise(r=>setTimeout(r,900));

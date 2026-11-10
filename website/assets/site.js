@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded",renderCart);
 document.addEventListener("submit",e=>{
   const f=e.target.closest("[data-news]");if(!f)return;e.preventDefault();
   const email=(f.querySelector("input[type=email]")||{}).value||"";
-  sbInsert("leads",{session_id:getSID(),source:"newsletter",email:email.trim().slice(0,254),marketing_consent:true,utm:UTM,lang:LANG,market:MARKET});track("newsletter_signup");
+  sbInsert("leads",{session_id:getSID(),source:"newsletter",email:email.trim().slice(0,254),marketing_consent:true,utm:UTM,lang:LANG,market:MARKET,geo:GEO||undefined});track("newsletter_signup");
   f.hidden=true;const ok=f.nextElementSibling;if(ok)ok.hidden=false;
 });
 
@@ -155,6 +155,14 @@ function getSID(){
 const UTM=(()=>{const q=new URLSearchParams(location.search),u={};["utm_source","utm_medium","utm_campaign","utm_content","utm_term","fbclid"].forEach(k=>{if(q.get(k))u[k]=q.get(k).slice(0,200)});
   try{if(Object.keys(u).length&&getConsent()==="granted")sessionStorage.setItem("cutline-utm",JSON.stringify(u));return Object.keys(u).length?u:JSON.parse(sessionStorage.getItem("cutline-utm")||"{}")}catch(e){return u}})();
 const LOCAL_PREVIEW=location.protocol==="file:";
+/* Coarse visitor country (ISO-2) read same-origin from Cloudflare's trace endpoint, cached once per
+   visitor. Used only for analytics (which market converts); never for pricing or access. */
+let GEO=null;try{GEO=localStorage.getItem("jawzr-geo")||null}catch(e){}
+function loadGeo(){
+  if(GEO)return Promise.resolve(GEO);
+  if(LOCAL_PREVIEW)return Promise.resolve(null);
+  return fetch("/cdn-cgi/trace").then(r=>r.text()).then(t=>{const m=t.match(/\bloc=([A-Z]{2})\b/);if(m){GEO=m[1];try{localStorage.setItem("jawzr-geo",GEO)}catch(e){}}return GEO}).catch(()=>null);
+}
 function sbInsert(table,row){
   if(LOCAL_PREVIEW)return Promise.resolve(false);
   return fetch(SB_URL+table,{method:"POST",keepalive:true,headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify(row)})
@@ -162,9 +170,9 @@ function sbInsert(table,row){
 }
 function track(event,props={}){
   if(getConsent()!=="granted")return Promise.resolve(false);
-  return sbInsert("events",{session_id:getSID(),event,page:location.pathname.slice(-200),props,referrer:(document.referrer||"").slice(0,500),utm:UTM});
+  return sbInsert("events",{session_id:getSID(),event,page:location.pathname.slice(-200),props,referrer:(document.referrer||"").slice(0,500),utm:UTM,geo:GEO||undefined});
 }
-document.addEventListener("DOMContentLoaded",()=>track("page_view"));
+document.addEventListener("DOMContentLoaded",()=>loadGeo().then(()=>track("page_view")));
 /* wrap addToCart so every add is tracked */
 const _addToCart=addToCart;
 addToCart=function(level,flavour,packId,mix,opts={}){
@@ -213,7 +221,7 @@ document.addEventListener("DOMContentLoaded",()=>{if(!getConsent())cookieBanner(
     const f=bg.querySelector("form"),inp=f.querySelector("input");
     f.addEventListener("submit",e=>{e.preventDefault();const v=inp.value.trim();
       if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){inp.setCustomValidity("Enter a valid email address.");inp.reportValidity();return}
-      sbInsert("leads",{session_id:getSID(),source:"popup_10",email:v.slice(0,254),marketing_consent:true,utm:UTM,lang:LANG,market:MARKET});track("popup_signup",{trigger});
+      sbInsert("leads",{session_id:getSID(),source:"popup_10",email:v.slice(0,254),marketing_consent:true,utm:UTM,lang:LANG,market:MARKET,geo:GEO||undefined});track("popup_signup",{trigger});
       bg.querySelector('[data-step="1"]').hidden=true;bg.querySelector('[data-step="2"]').hidden=false;});
     inp.addEventListener("input",()=>inp.setCustomValidity(""));
     setTimeout(()=>inp.focus(),50);track("popup_show",{trigger});

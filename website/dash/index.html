@@ -92,6 +92,7 @@ footer{color:var(--muted);font-size:.78rem;padding:30px 0 40px}
       <div class="seg" id="rangeSeg"><button data-r="1">Today</button><button data-r="7">7 days</button><button data-r="30" aria-pressed="true">30 days</button><button data-r="all">All time</button></div>
       <input type="date" id="dFrom" aria-label="From"> <input type="date" id="dTo" aria-label="To">
       <div class="seg" id="mktSeg"><button data-m="" aria-pressed="true">All markets</button><button data-m="eu">EU</button><button data-m="us">US</button></div>
+      <select id="geoSel" aria-label="Country"><option value="">All countries</option></select>
       <span class="note" id="upd"></span>
     </div>
     <div class="tiles" id="tiles"></div>
@@ -110,6 +111,7 @@ footer{color:var(--muted);font-size:.78rem;padding:30px 0 40px}
       <div class="card"><h2>Market</h2><div id="tMarket"></div></div>
       <div class="card"><h2>Meta server events (CAPI)</h2><div id="tCapi"></div></div>
     </div>
+    <div class="card" style="margin-top:14px"><h2>By country <small style="font-weight:400;color:#6b6f73">(visitors need the new geo tag — fills in with traffic from now on)</small></h2><div class="scroll" id="tGeo"></div></div>
     <div class="card" style="margin-top:14px"><h2>Latest pre-orders and sign-ups</h2><div class="scroll" id="tRecent"></div></div>
     <div class="card" style="margin-top:14px"><h2>Marked as test <small style="font-weight:400;color:#6b6f73">(left out of every number above)</small></h2><div class="scroll" id="tTests"></div></div>
     <footer>Pre-orders are fake-door checkouts: nobody was charged. Visitor and funnel numbers only include people who accepted cookies; pre-orders and sign-ups include everyone. Test emails are excluded. Values in EUR (US orders converted at 1.1216).</footer>
@@ -125,7 +127,9 @@ const eur=n=>"€"+(Number(n)||0).toLocaleString("en-IE",{minimumFractionDigits:
 const num=n=>(Number(n)||0).toLocaleString("en-IE");
 const pct=(a,b)=>b?Math.round(a/b*1000)/10+"%":"–";
 const iso=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
-let mode="login",state={from:null,to:null,market:""};
+let mode="login",state={from:null,to:null,market:"",geo:""};
+const CNAME={LT:"Lithuania",LV:"Latvia",EE:"Estonia",US:"United States",DE:"Germany",GB:"United Kingdom",IE:"Ireland",FR:"France",IT:"Italy",ES:"Spain",PT:"Portugal",NL:"Netherlands",BE:"Belgium",LU:"Luxembourg",AT:"Austria",CH:"Switzerland",SE:"Sweden",FI:"Finland",DK:"Denmark",NO:"Norway",PL:"Poland",CZ:"Czechia",SK:"Slovakia",HU:"Hungary",RO:"Romania",BG:"Bulgaria",HR:"Croatia",SI:"Slovenia",GR:"Greece",CY:"Cyprus",MT:"Malta",CA:"Canada",AU:"Australia"};
+const cname=c=>c?(CNAME[c]||c):"Unknown";
 
 /* ---------- auth ---------- */
 function msg(t,c=""){const m=$("msg");m.textContent=t;m.className="msg "+c}
@@ -153,6 +157,7 @@ function setRange(r){const t=new Date(),to=iso(t);let from;
   document.querySelectorAll("#rangeSeg button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.r===String(r)))}
 $("rangeSeg").onclick=e=>{const b=e.target.closest("button");if(!b)return;setRange(b.dataset.r);load()};
 $("mktSeg").onclick=e=>{const b=e.target.closest("button");if(!b)return;state.market=b.dataset.m;document.querySelectorAll("#mktSeg button").forEach(x=>x.setAttribute("aria-pressed",x===b));load()};
+$("geoSel").onchange=e=>{state.geo=e.target.value;load()};
 ["dFrom","dTo"].forEach(id=>$(id).onchange=()=>{state.from=$("dFrom").value;state.to=$("dTo").value;document.querySelectorAll("#rangeSeg button").forEach(b=>b.setAttribute("aria-pressed","false"));load()});
 
 async function boot(){
@@ -164,7 +169,7 @@ async function boot(){
 }
 async function load(){
   $("upd").textContent="Loading…";
-  const {data,error}=await sb.rpc("dash_report",{p_from:state.from,p_to:state.to,p_market:state.market||null});
+  const {data,error}=await sb.rpc("dash_report",{p_from:state.from,p_to:state.to,p_market:state.market||null,p_geo:state.geo||null});
   if(error){$("upd").textContent="Error: "+error.message;return}
   render(data);$("upd").textContent="Updated "+new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
 }
@@ -182,6 +187,18 @@ function render(d){
   const top=Math.max(steps[0][1],1);
   $("funnel").innerHTML=steps.map(([l,n],i)=>`<div class="row"><span>${l}</span><div class="track"><div class="fill" style="width:${n/top*100}%"></div></div><span class="n">${num(n)} <small>${i?pct(n,steps[i-1][1]):""}</small></span></div>`).join("");
   chart(d.daily);
+  // country filter options (preserve current selection)
+  const cur=state.geo,opts=['<option value="">All countries</option>','<option value="EU">EU (all)</option>'];
+  (d.countries||[]).forEach(c=>opts.push(`<option value="${esc(c.code)}">${esc(cname(c.code))}</option>`));
+  if(cur&&cur!=="EU"&&!(d.countries||[]).some(c=>c.code===cur))opts.push(`<option value="${esc(cur)}">${esc(cname(cur))}</option>`);
+  $("geoSel").innerHTML=opts.join("");$("geoSel").value=cur;
+  // by-country table, with a unified-EU row on top
+  const cs=d.countries||[],grows=cs.map(c=>({name:cname(c.code),visitors:c.visitors,leads:c.leads,orders:c.orders,value_eur:c.value_eur}));
+  const euR=cs.filter(c=>c.eu);
+  if(euR.length){const s=k=>euR.reduce((a,c)=>a+(Number(c[k])||0),0);
+    grows.unshift({name:"EU (all)",visitors:s("visitors"),leads:s("leads"),orders:s("orders"),value_eur:Math.round(s("value_eur")*100)/100});}
+  $("tGeo").innerHTML=table(grows,[{h:"Country",k:"name"},{h:"Visitors",k:"visitors",r:1,f:v=>num(v)},{h:"Sign-ups",k:"leads",r:1,f:v=>num(v)},
+    {h:"Pre-orders",k:"orders",r:1,f:v=>num(v)},{h:"Value",k:"value_eur",r:1,f:v=>eur(v)},{h:"CVR",k:"cvr",r:1,f:(v,r)=>pct(r.orders,r.visitors)}],"visitors");
   $("tProduct").innerHTML=table(d.by_product,[{h:"Product",k:"k"},{h:"Orders",k:"n",r:1},{h:"Value",k:"v",r:1,f:v=>eur(v)}],"n");
   $("tFlavour").innerHTML=table(d.by_flavour,[{h:"Flavour",k:"k"},{h:"Lines",k:"n",r:1}],"n");
   $("tType").innerHTML=table(d.by_purchase_type,[{h:"Type",k:"k"},{h:"Lines",k:"n",r:1}],"n");
@@ -193,8 +210,9 @@ function render(d){
   $("tCapi").innerHTML=table(d.capi,[{h:"Event",k:"event"},{h:"Status",k:"status",f:v=>`<span class="pill ${v==="sent"?"ok":v==="failed"?"bad":""}">${esc(v)}</span>`},{h:"Count",k:"n",r:1}]);
   $("tRecent").innerHTML=table(d.recent,[
     {h:"When",k:"at",f:v=>esc(new Date(v).toLocaleString("en-GB",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}))},
-    {h:"Type",k:"source",f:v=>`<span class="pill">${esc(v==="checkout"?"pre-order":v)}</span>`},{h:"Email",k:"email"},{h:"Name",k:"name"},
-    {h:"Where",k:"country",f:(v,r)=>esc([r.city,v].filter(Boolean).join(", "))},
+    {h:"Source",k:"source",f:v=>`<span class="pill">${esc(v==="checkout"?"purchase":v==="popup_10"?"popup":v)}</span>`},{h:"Email",k:"email"},{h:"Name",k:"name"},
+    {h:"Country",k:"country",f:(v,r)=>esc(v||(r.geo?cname(r.geo):""))},
+    {h:"City",k:"city",f:v=>esc(v||"")},
     {h:"Items",k:"items",f:v=>esc((v||[]).map(i=>`${i.level==="duo"?"Duo":i.level==="ultra"?"Ultra":"Hard"} ${i.pack}× ${i.flavour}${i.sub?" (sub "+i.sub.every+")":""}${i.qty>1?" ×"+i.qty:""}`).join("; "))},
     {h:"Pay",k:"payment"},{h:"Total",k:"total",r:1,f:(v,r)=>v==null&&r.total_eur==null?"":(r.currency==="USD"?"$"+Number(v).toFixed(2):eur(v??r.total_eur))},
     {h:"Ad click",k:"fbclid",f:v=>v?"Meta":""},
