@@ -10,3 +10,5 @@ node_modules/
 __pycache__/
 tools/gallery/raw/
 tools/gallery/out/
+_site/
+_preview/

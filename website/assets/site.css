@@ -319,3 +319,9 @@ select{appearance:none;-webkit-appearance:none;background-image:url("data:image/
 }
 /* "New" marker next to the Energy menu link */
 .new-dot{font:700 .6rem/1 var(--mono);text-transform:uppercase;letter-spacing:.06em;background:#f5c518;color:#121614;padding:3px 5px;border-radius:3px;margin-left:4px;vertical-align:2px}
+/* LT: product pages drop the breadcrumb and the hardness eyebrow, keeping a small gap under the nav */
+:root[lang="lt"] .crumbs,[lang="lt"] .crumbs,:root[lang="lt"] #lvlEyebrow,[lang="lt"] #lvlEyebrow{display:none}
+[lang="lt"] .pdp{padding-top:24px}
+@media (max-width:900px){[lang="lt"] .pdp{padding-top:14px}}
+/* 4-bag lineup image: show it at its wide ratio inside the square stage instead of cropping to square */
+.stage img.qwide{object-fit:contain}

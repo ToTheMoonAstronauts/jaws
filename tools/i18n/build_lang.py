@@ -23,13 +23,14 @@ def load(lang):
     return {k: v for k, v in T.items() if v}
 
 def make_fn(T, where):
+    def v(x): return "" if x == "∅" else x  # "∅" means: render nothing in this language
     def fn(s):
         k = s.strip()
-        if k in T: return T[k]
+        if k in T: return v(T[k])
         k2 = re.sub(r"\s+", " ", k)  # tolerate collapsed whitespace in long paragraphs
-        if k2 in T: return T[k2]
+        if k2 in T: return v(T[k2])
         k3 = html.unescape(k2)
-        if k3 in T: return html.escape(T[k3], quote=False)
+        if k3 in T: return html.escape(v(T[k3]), quote=False)
         missing.setdefault(k2, where)
         return s
     return fn
@@ -78,12 +79,17 @@ def share_assets(text, lang, overrides):
     video) are served once from the site root, so translated pages point at /images/ and /media/
     instead of carrying a copy. images/gallery/ is the exception: its slides are localised and the
     product page builds their paths at runtime (images/gallery/${n}.webp), so that folder stays
-    relative and is duplicated per language."""
+    relative and is duplicated per language. images/products/ is kept relative too for a language that
+    ships its own localised bag shots (i.e. has overrides under images/products/)."""
     text = re.sub(r'(?<![\w/.])media/', '/media/', text)
-    text = re.sub(r'(?<![\w/.])images/(?!gallery/)', '/images/', text)
+    excl = "gallery/|products/" if any(p.startswith("images/products/") for p in overrides) else "gallery/"
+    text = re.sub(r'(?<![\w/.])images/(?!' + excl + r')', '/images/', text)
     return text
 
-def build(lang, src, out, report):
+def build(lang, src, out, report, local=False):
+    """local=True: a self-contained copy for file:// review — asset paths stay relative and the
+    full images/ and media/ trees are copied in (then the language overrides overlaid), so it opens
+    straight off disk. Production build (local=False) keeps images/ and media/ shared from the root."""
     T = load(lang)
     ov_paths = override_paths(lang)
     os.makedirs(out, exist_ok=True)
@@ -92,16 +98,26 @@ def build(lang, src, out, report):
         if 'name="robots" content="noindex' not in doc: doc = add_hreflang(doc, p)
         doc = html_segments(doc, make_fn(T, p))
         doc = fix_og(fix_links(doc, lang), lang)
-        doc = share_assets(doc, lang, ov_paths)
+        if not local: doc = share_assets(doc, lang, ov_paths)
         open(os.path.join(out, p), "w", encoding="utf-8").write(doc)
     os.makedirs(os.path.join(out, "assets"), exist_ok=True)
     for j in JS:
         code = open(os.path.join(src, j), encoding="utf-8").read()
-        code = share_assets(js_segments(code, make_fn(T, j)), lang, ov_paths)
+        code = js_segments(code, make_fn(T, j))
+        if not local: code = share_assets(code, lang, ov_paths)
         open(os.path.join(out, j), "w", encoding="utf-8").write(code)
     shutil.copy(os.path.join(src, "assets/site.css"), os.path.join(out, "assets/site.css"))
-    # images/ and media/ are shared from the site root; only images/gallery/ is per language
-    shutil.copytree(os.path.join(src, "images/gallery"), os.path.join(out, "images/gallery"), dirs_exist_ok=True)
+    if local:
+        # self-contained: full images + media, then language overrides win
+        shutil.copytree(os.path.join(src, "images"), os.path.join(out, "images"), dirs_exist_ok=True)
+        if os.path.isdir(os.path.join(src, "media")):
+            shutil.copytree(os.path.join(src, "media"), os.path.join(out, "media"), dirs_exist_ok=True)
+    else:
+        # images/ and media/ are shared from the site root; only images/gallery/ is per language
+        shutil.copytree(os.path.join(src, "images/gallery"), os.path.join(out, "images/gallery"), dirs_exist_ok=True)
+        # a language with its own bag shots keeps images/products/ per language too (overrides win below)
+        if any(p.startswith("images/products/") for p in ov_paths):
+            shutil.copytree(os.path.join(src, "images/products"), os.path.join(out, "images/products"), dirs_exist_ok=True)
     for d in os.listdir(src):
         full = os.path.join(src, d)
         if os.path.isdir(full) and d not in ("assets", "dash", "images", "media"):
@@ -134,5 +150,5 @@ def add_en_hreflang(site):
 
 if __name__ == "__main__":
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
-    build(args[0], args[1], args[2], "--report" in sys.argv)
+    build(args[0], args[1], args[2], "--report" in sys.argv, local="--local" in sys.argv)
     if "--en-hreflang" in sys.argv: add_en_hreflang(os.path.dirname(os.path.normpath(args[2])))

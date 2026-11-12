@@ -35,6 +35,7 @@
 .energy-band{background:#0e1116;color:#fff;border-radius:14px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);align-items:center;overflow:hidden}
 .energy-band .im{background:radial-gradient(circle at 50% 60%,#2a3340,#0e1116 70%);display:flex;justify-content:center;padding:28px 0}
 .energy-band .im .pouch{width:52%}
+.energy-band .im .eb-wide{width:88%;max-width:420px;height:auto;object-fit:contain;filter:drop-shadow(0 18px 20px rgba(0,0,0,.4))}
 .energy-band .tx{padding:36px 40px}
 .energy-band .tx .eyebrow{color:#f5c518}
 .energy-band h2{color:#fff;margin:6px 0 12px}
@@ -151,7 +152,7 @@
         <p class="eyebrow">New · Energy line</p>
         <h2>Hard gum + caffeine</h2>
         <p>Your jaw session and your caffeine in one piece. Chew it before the gym or a long work block.</p>
-        <ul><li>40 mg caffeine per piece</li><li>Same hardness as JAWZR Hard, mint</li><li>Sugar-free and vegan</li></ul>
+        <ul><li>40 mg caffeine per piece</li><li>Same hardness as JAWZR Hard, mint</li><li>Sugar-free</li></ul>
         <a class="btn big" href="energy">Shop Hard + Caffeine</a>
         <p style="font-size:.78rem;margin-top:14px;color:#8d95a1">Contains caffeine. Not recommended for children, pregnant or breastfeeding women.</p>
       </div>
@@ -306,7 +307,8 @@
 <script src="assets/site.js"></script>
 <script>
 renderReviews($("reviews"),SAMPLE_REVIEWS,3);
-$("cv-hard").innerHTML=pouchHTML("hard","Mint");$("cv-caf").innerHTML=pouchHTML("caffeine","Mint");$("ebPouch").innerHTML=pouchHTML("caffeine","Mint");
+$("cv-hard").innerHTML=pouchHTML("hard","Mint");$("cv-caf").innerHTML=pouchHTML("caffeine","Mint");
+$("ebPouch").innerHTML=LANG==="lt"?`<img class="eb-wide" src="images/products/caffeine-wide.webp" alt="JAWZR Kieta guma su kofeinu, mėtų">`:pouchHTML("caffeine","Mint");
 $("cv-ultra").innerHTML=pouchHTML("ultra","Blueberry");
 document.querySelectorAll("[data-pack]").forEach(el=>{const [l,f]=el.dataset.pack.split("|");el.innerHTML=pouchHTML(l,f)});
 $("cv-bundle").innerHTML='<img class="scene" src="images/products/bundle-hard.webp" alt="Three JAWZR Hard gum bags: mint, mango and watermelon">';$("cv-bundle").parentElement.classList.add("has-scene");

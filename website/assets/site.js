@@ -10,8 +10,10 @@ const CATALOG={
 };
 /* ---------- language: <html lang="lt|de"> on the translated pages (built by tools/i18n/build_lang.py) ---------- */
 const LANG=(document.documentElement.lang||"en").slice(0,2);
+/* LT launch: caffeine line comes in all four flavours (EN/DE stay mint-only until their art is ready) */
+if(LANG==="lt")Object.assign(CATALOG.caffeine.flavours,{"Mango":"#F4B23E","Watermelon":"#EE6A7A","Blueberry":"#7D5CD9"});
 /* display names for values that are also data keys (flavours, frequencies): data stays English */
-const TR_LT={Mint:"Mėtų",Mango:"Mangų",Watermelon:"Arbūzų",Blueberry:"Mėlynių",Mixed:"Mišrūs",Pack:"Pakuotė","bought singly":"perkant atskirai","/ piece":"/ gab.",Save:"Sutaupyk","/ pack":"/ pak.",
+const TR_LT={Mint:"Mėtų",Mango:"Mangų",Watermelon:"Arbūzų",Blueberry:"Šilauogių",Mixed:"Mišrūs",Pack:"Pakuotė","bought singly":"perkant atskirai","/ piece":"/ gab.",Save:"Sutaupyk","/ pack":"/ pak.",
   "4 weeks":"4 savaites","6 weeks":"6 savaites","2 months":"2 mėnesius","3 months":"3 mėnesius","4 months":"4 mėnesius",
   "5 months":"5 mėnesius","6 months":"6 mėnesius","8 months":"8 mėnesius","10 months":"10 mėnesių",
   Austria:"Austrija",Belgium:"Belgija",Bulgaria:"Bulgarija",Croatia:"Kroatija",Cyprus:"Kipras",Czechia:"Čekija",Denmark:"Danija",
@@ -30,9 +32,9 @@ const tr=s=>(TR[LANG]&&TR[LANG][s])||s;
 /* ---------- market & currency: ?market=us | ?market=eu (remembered in this browser) ---------- */
 const MARKETS={
   eu:{cur:"EUR",sym:"€",free:49,ship:4.95,express:14.95,klarna:true,region:"EU",
-      price:{1:{hard:17.95,ultra:23.95,caffeine:19.95},2:{hard:37.95,ultra:37.95},3:{hard:31.95,ultra:41.95,caffeine:35.95},6:{hard:53.95,ultra:71.95,caffeine:59.95}}},
+      price:{1:{hard:17.95,ultra:23.95,caffeine:19.95},2:{hard:37.95,ultra:37.95},3:{hard:31.95,ultra:41.95,caffeine:35.95},4:{hard:41.95,ultra:55.95,caffeine:46.95},6:{hard:53.95,ultra:71.95,caffeine:59.95}}},
   us:{cur:"USD",sym:"$",free:59,ship:9.95,express:24.95,klarna:false,region:"US",
-      price:{1:{hard:19.95,ultra:26.95,caffeine:22.95},2:{hard:41.95,ultra:41.95},3:{hard:35.95,ultra:46.95,caffeine:39.95},6:{hard:59.95,ultra:79.95,caffeine:65.95}}}
+      price:{1:{hard:19.95,ultra:26.95,caffeine:22.95},2:{hard:41.95,ultra:41.95},3:{hard:35.95,ultra:46.95,caffeine:39.95},4:{hard:45.95,ultra:59.95,caffeine:51.95},6:{hard:59.95,ultra:79.95,caffeine:65.95}}}
 };
 /* ?market=useur: the US market (prices, shipping, rules) shown in euros */
 MARKETS.useur={...MARKETS.us,cur:"EUR",sym:"€"};
@@ -45,6 +47,7 @@ const PACKS=[
   {id:1,label:"1 Pack · 40 pieces",sub:"1-month supply",price:MK.price[1]},
   {id:2,label:"Starter Duo · 80 pieces",sub:"1 Hard + 1 Ultra Hard · 2-month supply",price:MK.price[2],duo:true},
   {id:3,label:"3 Packs · 120 pieces",sub:"3-month supply, mix flavours",price:MK.price[3],tag:"Bestseller"},
+  ...(LANG==="lt"?[{id:4,label:"4 pakuotės · 160 vnt.",sub:"Po vieną kiekvieno skonio · kaina preliminari",price:MK.price[4],tag:"Visi skoniai"}]:[]),
   {id:6,label:"6 Packs · 240 pieces",sub:"6-month supply, free shipping",price:MK.price[6],tag:"Best results",tagCls:"green"}
 ];
 const packPrice=(level,id)=>PACKS.find(p=>p.id===id).price[level];
@@ -62,6 +65,7 @@ const slug=f=>f.toLowerCase().replace(/[^a-z]+/g,"-");
 const MIXED="Mixed",MIXED_C="conic-gradient(#7CC9EA 0 33%,#F4B23E 0 66%,#EE6A7A 0)";
 function packSrc(level,flavour){return flavour===MIXED?`images/products/bundle-${level}.webp`:`images/products/${level}-${slug(flavour)}.webp`}
 function trioSrc(level,flavour){return flavour===MIXED?`images/products/bundle-${level}.webp`:`images/products/trio-${level}-${slug(flavour)}.webp`}
+function quadSrc(level){return `images/products/quad-${level}.webp`}
 function pouchHTML(level,flavour,extra=""){
   const L=CATALOG[level];const c=L.flavours[flavour]||Object.values(L.flavours)[0];
   return `<div class="pouch ${L.cls} ${extra} ${flavour===MIXED?"mixed":""}"><img src="${packSrc(level,flavour)}" alt="JAWZR ${L.short} gum, ${flavour===MIXED?"mixed flavours (mint, mango, watermelon)":tr(flavour)+" flavour"}" loading="lazy"></div>`;
