@@ -409,10 +409,10 @@ function render(){
   if(st.view>=thumbs.length)st.view=0;
   const v=thumbs[st.view];
   const nProd=isDuo?2:mixed?1:(st.pack>1?2:1);
-  $("stage").innerHTML=(st.view<nProd&&P.id>1?`<span class="badge accent">${P.label}</span>`:"")+`<img${/quad-/.test(v.src)?' class="qwide"':""} src="${v.src}" alt="${v.alt}">`
+  $("stage").innerHTML=(st.view<nProd&&P.id>1?`<span class="badge accent">${P.label}</span>`:"")+`<img${/\/products\//.test(v.src)?' class="pfit"':""} src="${v.src}" alt="${v.alt}">`
     +`<button type="button" class="nav prev" data-step="-1" aria-label="Previous image">‹</button><button type="button" class="nav next" data-step="1" aria-label="Next image">›</button><span class="count">${st.view+1} / ${thumbs.length}</span>`;
   st.nThumbs=thumbs.length;
-  $("thumbs").innerHTML=thumbs.map((x,i)=>`<button type="button" data-v="${i}" aria-pressed="${i===st.view}" aria-label="View image ${i+1}">${x.t==="pouch"?pouchHTML(st.level,st.flavour):`<img src="${x.src}" alt="" loading="lazy">`}</button>`).join("");
+  $("thumbs").innerHTML=thumbs.map((x,i)=>`<button type="button" data-v="${i}" aria-pressed="${i===st.view}" aria-label="View image ${i+1}">${x.t==="pouch"?pouchHTML(st.level,st.flavour):`<img${/\/products\//.test(x.src)?' class="pfit"':""} src="${x.src}" alt="" loading="lazy">`}</button>`).join("");
   const sel=$("thumbs").querySelector('[aria-pressed="true"]');if(sel)$("thumbs").scrollTo({left:sel.offsetLeft-$("thumbs").offsetLeft-($("thumbs").clientWidth-sel.clientWidth)/2,behavior:"smooth"});
   $("stName").textContent=isDuo?`Starter Duo · Hard ${tr(st.duo[0])} + Ultra Hard ${tr(st.duo[1])}`:`${L.short} · ${mixTxt} · ${P.label}`;$("stPrice").textContent=eur(isSub?sp:pr);
 }

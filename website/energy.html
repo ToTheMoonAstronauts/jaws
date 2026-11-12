@@ -382,10 +382,10 @@ function render(){
   const thumbs=[{t:"img",...lead},...GALLERY.map(x=>({t:"img",...x}))];
   if(st.view>=thumbs.length)st.view=0;
   const v=thumbs[st.view];
-  $("stage").innerHTML=(st.view<1&&P.id>1?`<span class="badge accent">${P.label}</span>`:"")+`<img${/quad-/.test(v.src)?' class="qwide"':""} src="${v.src}" alt="${v.alt}">`
+  $("stage").innerHTML=(st.view<1&&P.id>1?`<span class="badge accent">${P.label}</span>`:"")+`<img${/\/products\//.test(v.src)?' class="pfit"':""} src="${v.src}" alt="${v.alt}">`
     +`<button type="button" class="nav prev" data-step="-1" aria-label="Previous image">‹</button><button type="button" class="nav next" data-step="1" aria-label="Next image">›</button><span class="count">${st.view+1} / ${thumbs.length}</span>`;
   st.nThumbs=thumbs.length;
-  $("thumbs").innerHTML=thumbs.map((x,i)=>`<button type="button" data-v="${i}" aria-pressed="${i===st.view}" aria-label="View image ${i+1}"><img src="${x.src}" alt="" loading="lazy"></button>`).join("");
+  $("thumbs").innerHTML=thumbs.map((x,i)=>`<button type="button" data-v="${i}" aria-pressed="${i===st.view}" aria-label="View image ${i+1}"><img${/\/products\//.test(x.src)?' class="pfit"':""} src="${x.src}" alt="" loading="lazy"></button>`).join("");
   $("stName").textContent=`${L.short} · ${mixed?mixLabel(st.mix,true):tr(st.flavour)} · ${P.label}`;$("stPrice").textContent=eur(isSub?sp:pr);
 }
 $("packs").addEventListener("click",e=>{if(e.target.closest("[data-reset]")){st.mix=DEF[st.pack].slice();render();return}const b=e.target.closest("button[data-p]");if(!b)return;st.pack=+b.dataset.p;st.view=0;render();});

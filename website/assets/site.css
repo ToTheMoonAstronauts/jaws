@@ -324,4 +324,5 @@ select{appearance:none;-webkit-appearance:none;background-image:url("data:image/
 [lang="lt"] .pdp{padding-top:24px}
 @media (max-width:900px){[lang="lt"] .pdp{padding-top:14px}}
 /* 4-bag lineup image: show it at its wide ratio inside the square stage instead of cropping to square */
-.stage img.qwide{object-fit:contain}
+.stage img.pfit{object-fit:contain}
+.thumbs img.pfit{object-fit:contain}
