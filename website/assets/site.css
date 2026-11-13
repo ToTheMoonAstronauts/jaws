@@ -331,6 +331,14 @@ select{appearance:none;-webkit-appearance:none;background-image:url("data:image/
 [lang="lt"] .lt-hide{display:none}
 .lt-only,li.lt-only{display:none}
 [lang="lt"] li.lt-only{display:grid}
+/* LT: drop card descriptions and the product-page secondary prices */
+[lang="lt"] .cards.c4 .desc{display:none}
+[lang="lt"] #priceLine small{display:none}
+/* LT: hardness rating dots on the level selector */
+.hdots{display:inline-flex;gap:3px;align-items:center;color:var(--ink)}
+.hdots svg{width:11px;height:11px;display:block}
+.hdots svg.on circle{fill:currentColor;stroke:none}
+.hdots svg.off circle{fill:none;stroke:currentColor;stroke-width:2.2;opacity:.5}
 /* 4-bag lineup image: show it at its wide ratio inside the square stage instead of cropping to square */
 .stage img.pfit{object-fit:contain}
 .thumbs img.pfit{object-fit:contain}

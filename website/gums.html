@@ -349,6 +349,11 @@ const INFO={
       <table class="nut"><tr><td>Energy per 100 g</td><td>202 kJ / 48 kcal</td></tr><tr><td>Carbohydrate</td><td>20 g</td></tr><tr><td>of which sugars</td><td>0 g</td></tr></table>
       <p class="warn">Contains a sweetener. Excessive consumption may produce laxative effects.</p>`}
 };
+function hardnessDots(n){let s='<span class="hdots" aria-hidden="true">';for(let i=0;i<5;i++)s+=`<svg viewBox="0 0 16 16" class="${i<n?"on":"off"}"><circle cx="8" cy="8" r="6"/></svg>`;return s+"</span>";}
+if(LANG==="lt"){
+  INFO.hard.bullets=["<b>Puikus</b> kietumo ir skonio balansas","<b>Didesni gabalėliai</b> – didesnė judesio amplitudė","<b>Be cukraus</b>","<b>30 dienų</b> pinigų grąžinimo garantija"];
+  INFO.ultra.bullets=["<b>Ypač kieta</b> – skirta pažengusiems arba vartojimui pakaitomis","<b>Didesni gabalėliai</b> – didesnė judesio amplitudė","<b>Be cukraus</b>","<b>30 dienų</b> pinigų grąžinimo garantija"];
+}
 // gallery slides after the two product shots; slide 2 has a Hard and an Ultra Hard version
 const GALLERY=[["2","Hard gum close-up: built to resist your bite"],["3","Modern soft diet vs JAWZR hard gum"],["4","How to chew in 4 steps"],["5","The science: it's muscle, not bone"],
   ["6","Feel your masseter working"],["7","Why your jaw needs work"],["8","Why modern jaws do less work"],["9","Hard vs Ultra Hard"],["10","Why JAWZR"],["11","Take the 30-day JAWZR challenge"],["12","Join the JAWZR challenge"]];
@@ -431,6 +436,7 @@ $("po").addEventListener("change",e=>{if(e.target.name==="po")track("purchase_op
 $("addBtn").addEventListener("click",add);$("stAdd").addEventListener("click",add);
 window.addEventListener("hashchange",()=>{fromHash();render();});
 fromHash();render();
+if(LANG==="lt"){const ss=document.querySelectorAll(".seg button small");if(ss[0])ss[0].innerHTML=hardnessDots(4);if(ss[1])ss[1].innerHTML=hardnessDots(5);}
 track("product_view",{level:st.level,page:"sub"});
 $("lvHard").innerHTML=pouchHTML("hard","Mango");$("lvUltra").innerHTML=pouchHTML("ultra","Watermelon");
 // sticky bar after the main button scrolls away

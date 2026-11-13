@@ -47,7 +47,7 @@ const PACKS=[
   {id:1,label:"1 Pack · 40 pieces",sub:"1-month supply",price:MK.price[1]},
   {id:2,label:"Starter Duo · 80 pieces",sub:"1 Hard + 1 Ultra Hard · 2-month supply",price:MK.price[2],duo:true},
   {id:3,label:"3 Packs · 120 pieces",sub:"3-month supply, mix flavours",price:MK.price[3],tag:"Bestseller"},
-  ...(LANG==="lt"?[{id:4,label:"4 pakuotės · 160 vnt.",sub:"Po vieną kiekvieno skonio · kaina preliminari",price:MK.price[4],tag:"Visi skoniai"}]:[]),
+  ...(LANG==="lt"?[{id:4,label:"4 pakuotės · 160 vnt.",sub:"Po vieną kiekvieno skonio",price:MK.price[4],tag:"Visi skoniai"}]:[]),
   {id:6,label:"6 Packs · 240 pieces",sub:"6-month supply, free shipping",price:MK.price[6],tag:"Best results",tagCls:"green"}
 ];
 const packPrice=(level,id)=>PACKS.find(p=>p.id===id).price[level];
