@@ -323,6 +323,14 @@ select{appearance:none;-webkit-appearance:none;background-image:url("data:image/
 :root[lang="lt"] .crumbs,[lang="lt"] .crumbs,:root[lang="lt"] #lvlEyebrow,[lang="lt"] #lvlEyebrow{display:none}
 [lang="lt"] .pdp{padding-top:24px}
 @media (max-width:900px){[lang="lt"] .pdp{padding-top:14px}}
+/* LT: drop the hero sub-line and all blue section eyebrows (keep the reworded hero eyebrow, the yellow energy-band one, and the off-screen form label) */
+[lang="lt"] .hero-sub{display:none}
+[lang="lt"] .eyebrow{display:none}
+[lang="lt"] .hero-eb,[lang="lt"] .energy-band .tx .eyebrow,[lang="lt"] form .eyebrow{display:block}
+/* LT bullet swaps */
+[lang="lt"] .lt-hide{display:none}
+.lt-only,li.lt-only{display:none}
+[lang="lt"] li.lt-only{display:grid}
 /* 4-bag lineup image: show it at its wide ratio inside the square stage instead of cropping to square */
 .stage img.pfit{object-fit:contain}
 .thumbs img.pfit{object-fit:contain}
