@@ -208,7 +208,10 @@ function totals(){const sub=cartTotal();const ship=sub===0?0:shipMethod()==="exp
 /* countries per market */
 const EU_C=["Austria","Belgium","Bulgaria","Croatia","Cyprus","Czechia","Denmark","Estonia","Finland","France","Germany","Greece","Hungary","Ireland","Italy","Latvia","Lithuania","Luxembourg","Malta","Netherlands","Poland","Portugal","Romania","Slovakia","Slovenia","Spain","Sweden"];
 const US_S=["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","District of Columbia","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"];
-if(US){$("country").innerHTML="<option>United States</option>";$("regionWrap").hidden=false;$("region").innerHTML='<option value="" selected disabled hidden></option>'+US_S.map(x=>`<option>${x}</option>`).join("");$("zipL").textContent="ZIP code";}
+const WORLD=["Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cabo Verde","Cambodia","Cameroon","Canada","Central African Republic","Chad","Chile","China","Colombia","Comoros","Congo","Costa Rica","Côte d’Ivoire","Croatia","Cuba","Cyprus","Czechia","Democratic Republic of the Congo","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda","Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"];
+function countryUI(){const isUSA=$("country").value==="United States";$("regionWrap").hidden=!isUSA;if(isUSA&&$("region").options.length===0)$("region").innerHTML='<option value="" selected disabled hidden></option>'+US_S.map(x=>`<option>${x}</option>`).join("");$("zipL").textContent=isUSA?"ZIP code":"Postal code";}
+if(MARKET==="useur"){$("country").innerHTML=WORLD.map(c=>`<option value="${c}"${c==="Lithuania"?" selected":""}>${tr(c)}</option>`).join("");countryUI();$("country").addEventListener("change",countryUI);}
+else if(US){$("country").innerHTML="<option>United States</option>";$("regionWrap").hidden=false;$("region").innerHTML='<option value="" selected disabled hidden></option>'+US_S.map(x=>`<option>${x}</option>`).join("");$("zipL").textContent="ZIP code";}
 else $("country").innerHTML=EU_C.map(c=>`<option value="${c}"${c===(LANG==="de"?"Germany":"Lithuania")?" selected":""}>${tr(c)}</option>`).join("");
 
 /* which wallets this device/browser can really use */
@@ -287,10 +290,11 @@ $("coForm").addEventListener("submit",async e=>{
   e.preventDefault();
   const v=id=>$(id).value.trim(),email=v("email");
   let ok=true,first=null;const chk=(id,cond,msg)=>{const good=setErr(id,cond?"":msg);if(!good&&!first)first=id;ok=ok&&good};
+  const isUSA=$("country").value==="United States";// state/ZIP follow the chosen country, not the market
   chk("email",/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email),"Enter a valid email address.");
   chk("fname",v("fname"),"Enter your first name.");chk("lname",v("lname"),"Enter your last name.");
   chk("addr1",v("addr1").length>3,"Enter your address.");chk("city",v("city"),"Enter your city.");
-  if(US){chk("region",v("region"),"Select a state.");chk("zip",/^\d{5}(-\d{4})?$/.test(v("zip")),"Enter a valid ZIP code.")}
+  if(isUSA){chk("region",v("region"),"Select a state.");chk("zip",/^\d{5}(-\d{4})?$/.test(v("zip")),"Enter a valid ZIP code.")}
   else chk("zip",v("zip").length>=3,"Enter your postal code.");
   const pm=document.querySelector('input[name=pm]:checked').value;
   if(pm==="card"&&!cardOk()){ok=false;if(!first)first=["ccNum","ccExp","ccCvc","ccName"].find(i=>$(i).closest(".fl").classList.contains("bad"))}
@@ -303,12 +307,12 @@ $("coForm").addEventListener("submit",async e=>{
   const r2=n=>Math.round(n*100)/100;
   leadOnce();
   /* Meta Purchase: the fake-door "order" passed validation; value = order total actually shown */
-  const user={email:email.toLowerCase(),first_name:v("fname"),last_name:v("lname"),phone:v("phone"),city:v("city"),zip:v("zip"),state:US?v("region"):"",country:$("country").value};
+  const user={email:email.toLowerCase(),first_name:v("fname"),last_name:v("lname"),phone:v("phone"),city:v("city"),zip:v("zip"),state:isUSA?v("region"):"",country:$("country").value};
   const metaId=metaEvent("Purchase",{value:r2(t.tot),currency:MK.cur,content_type:"product",content_ids:cartContents().map(c=>c.id),contents:cartContents(),num_items:cartCount()},{server:true,user});
   const att=metaAttribution();
   await Promise.all([
     sbInsert("leads",{session_id:getSID(),source:"checkout",lang:LANG,email:email.slice(0,254),first_name:v("fname").slice(0,100),last_name:v("lname").slice(0,100),
-      country:$("country").value,region:US?v("region").slice(0,100):null,address1:v("addr1").slice(0,200),address2:v("addr2").slice(0,200)||null,
+      country:$("country").value,region:isUSA?v("region").slice(0,100):null,address1:v("addr1").slice(0,200),address2:v("addr2").slice(0,200)||null,
       city:v("city").slice(0,100),postal_code:v("zip").slice(0,20),phone:v("phone").slice(0,40)||null,shipping_method:shipMethod(),
       payment_method:pm,items,market:MARKET,currency:MK.cur,total_local:r2(t.tot),total_eur:r2(MK.cur==="USD"?t.tot/1.1216:t.tot),
       marketing_consent:$("consent").checked,utm:UTM,meta_event_id:metaId,geo:(typeof GEO!=="undefined"&&GEO)||undefined,...(getConsent()==="granted"?att:{user_agent:att.user_agent})}),
