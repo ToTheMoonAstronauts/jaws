@@ -32,9 +32,11 @@ const tr=s=>(TR[LANG]&&TR[LANG][s])||s;
 /* ---------- market & currency: ?market=us | ?market=eu (remembered in this browser) ---------- */
 const MARKETS={
   eu:{cur:"EUR",sym:"€",free:49,ship:4.95,express:14.95,klarna:true,region:"EU",
-      price:{1:{hard:17.95,ultra:23.95,caffeine:19.95},2:{hard:37.95,ultra:37.95},3:{hard:31.95,ultra:41.95,caffeine:35.95},4:{hard:41.95,ultra:55.95,caffeine:46.95},6:{hard:53.95,ultra:71.95,caffeine:59.95}}},
+      price:{1:{hard:17.95,ultra:17.95,caffeine:19.95},2:{hard:31.95,ultra:31.95,caffeine:34.95},3:{hard:41.95,ultra:41.95,caffeine:46.95},4:{hard:49.95,ultra:49.95,caffeine:55.95},6:{hard:66.95,ultra:66.95,caffeine:73.95}},
+      sub:{17.95:16.99,31.95:28.99,41.95:37.99,49.95:44.99,66.95:59.99,19.95:17.99,34.95:31.99,46.95:42.99,55.95:49.99,73.95:66.99}},
   us:{cur:"USD",sym:"$",free:59,ship:9.95,express:24.95,klarna:false,region:"US",
-      price:{1:{hard:19.95,ultra:26.95,caffeine:22.95},2:{hard:41.95,ultra:41.95},3:{hard:35.95,ultra:46.95,caffeine:39.95},4:{hard:45.95,ultra:59.95,caffeine:51.95},6:{hard:59.95,ultra:79.95,caffeine:65.95}}}
+      price:{1:{hard:19.95,ultra:19.95,caffeine:22.95},2:{hard:34.95,ultra:34.95,caffeine:39.95},3:{hard:46.95,ultra:46.95,caffeine:53.95},4:{hard:55.95,ultra:55.95,caffeine:63.95},6:{hard:73.95,ultra:73.95,caffeine:84.95}},
+      sub:{19.95:17.99,34.95:30.99,46.95:41.99,55.95:49.99,73.95:66.99,22.95:20.99,39.95:35.99,53.95:48.99,63.95:57.99,84.95:75.99}}
 };
 /* ?market=useur: the US market (prices, shipping, rules) shown in euros */
 MARKETS.useur={...MARKETS.us,cur:"EUR",sym:"€"};
@@ -45,16 +47,16 @@ const MK=MARKETS[MARKET];
 const US=MK.region==="US";
 const PACKS=[
   {id:1,label:"1 Pack · 40 pieces",sub:"1-month supply",price:MK.price[1]},
-  {id:2,label:"Starter Duo · 80 pieces",sub:"1 Hard + 1 Ultra Hard · 2-month supply",price:MK.price[2],duo:true},
+  {id:2,label:"2 Packs · 80 pieces",sub:"2-month supply",price:MK.price[2]},
   {id:3,label:"3 Packs · 120 pieces",sub:"3-month supply, mix flavours",price:MK.price[3],tag:"Bestseller"},
   ...(LANG==="lt"?[{id:4,label:"4 pakuotės · 160 vnt.",sub:"Po vieną kiekvieno skonio",price:MK.price[4],tag:"Visi skoniai"}]:[]),
   {id:6,label:"6 Packs · 240 pieces",sub:"6-month supply, free shipping",price:MK.price[6],tag:"Best results",tagCls:"green"}
 ];
 const packPrice=(level,id)=>PACKS.find(p=>p.id===id).price[level];
 /* what the same pieces cost as single packs (for "Save x%") */
-const singlesPrice=(level,id)=>id===2?PACKS[0].price.hard+PACKS[0].price.ultra:PACKS[0].price[level]*id;
-const SUB_OFF=0.15;
-const subPrice=p=>Math.round(p*(1-SUB_OFF)*100)/100;
+const singlesPrice=(level,id)=>PACKS[0].price[level]*id;
+/* subscription prices are set per market (MK.sub maps a one-time price to its subscription price); ~10% off, beautified */
+const subPrice=p=>MK.sub&&MK.sub[p]!=null?MK.sub[p]:Math.round(p*0.9*100)/100;
 const FREE_SHIP=MK.free;
 /* money in the current market's format: €17,95 or $19.95 */
 const eur=n=>MK.cur==="USD"?"$"+n.toFixed(2):LANG!=="en"?n.toFixed(2).replace(".",",")+" €":"€"+n.toFixed(2).replace(".",",");
@@ -88,7 +90,7 @@ function addToCart(level,flavour,packId,mix,opts={}){
   const key=level+"|"+name+"|"+packId+"|"+(sub?sub.every:"once");
   const price=sub?subPrice(P.price[level]):P.price[level];
   const ex=cart.find(l=>l.key===key);
-  if(ex)ex.qty++;else cart.push({key,level,flavour,name,mix:mix||null,duo,sub,pack:packId,label:P.label+(sub?` · Subscription, every ${tr(sub.every)} (−${SUB_OFF*100}%)`:""),price,qty:1});
+  if(ex)ex.qty++;else cart.push({key,level,flavour,name,mix:mix||null,duo,sub,pack:packId,label:P.label+(sub?` · Subscription, every ${tr(sub.every)} (−${Math.round((1-price/P.price[level])*100)}%)`:""),price,qty:1});
   saveCart();renderCart();openCart();
 }
 function lineTitle(l){return l.duo?`Starter Duo · Hard ${tr(l.duo[0])} + Ultra Hard ${tr(l.duo[1])}`:`${CATALOG[l.level].short} · ${l.flavour===MIXED?"Mixed flavours":tr(l.name||l.flavour)}`}

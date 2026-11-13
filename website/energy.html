@@ -213,7 +213,7 @@
       <p class="opt-label">Purchase option</p>
       <div class="po" id="po" role="radiogroup" aria-label="Purchase option">
         <label><input type="radio" name="po" value="once" checked><b>One-time purchase</b><span class="pr" id="poOnce"></span></label>
-        <label><input type="radio" name="po" value="sub"><b>Subscribe &amp; save<span class="pill">−15%</span></b><span class="pr" id="poSub"></span>
+        <label><input type="radio" name="po" value="sub"><b>Subscribe &amp; save<span class="pill">−10%</span></b><span class="pr" id="poSub"></span>
           <span class="more">
             <span class="every-l">Deliver every</span><span id="everyBox"></span>
             <ul><li>Skip, change or cancel anytime</li><li>No commitment, no fees</li><li>Reminder email before every delivery</li></ul>
@@ -307,7 +307,7 @@
       <details><summary>How many pieces can I chew a day?</summary><p>No more than 4. EFSA considers up to 400 mg of caffeine a day safe for healthy adults, so count your coffee, tea and energy drinks too. For jaw training you only need one piece per session.</p></details>
       <details><summary>Who shouldn't use it?</summary><p>Children, pregnant or breastfeeding women and people sensitive to caffeine. It's also a hard training gum, so the usual rules apply: not for under 14s, and ask a dentist first if you have jaw-joint problems or dental work.</p></details>
       <details><summary>Is it as hard as JAWZR Hard?</summary><p>Yes. It's the same hardness as Hard, in mint, with caffeine added. If you want more resistance, train with Ultra Hard on full days.</p></details>
-      <details><summary>Can I subscribe?</summary><p>Yes. Subscribe &amp; save takes 15% off, and you can skip, change or cancel anytime.</p></details>
+      <details><summary>Can I subscribe?</summary><p>Yes. Subscribe &amp; save takes about 10% off, and you can skip, change or cancel anytime.</p></details>
     </div>
   </div>
 </section>
@@ -315,7 +315,7 @@
 
 <footer><div class="wrap">
   <div><a class="logo" href="./" style="color:var(--bg)"><i></i><span class="wm" aria-hidden="true"></span><span class="sr">JAWZR</span></a><p style="margin-top:12px;opacity:.75;max-width:40ch">Hard chewing gum. Train your jaw. Unleash the shark.</p></div>
-  <div><h4>Shop</h4><ul><li><a href="gums#hard">Hard Gum</a></li><li><a href="gums#ultra">Ultra Hard Gum</a></li><li><a href="gums#hard-mixed-3">3-Pack Bundle</a></li><li><a href="gums#duo">Starter Duo</a></li><li><a href="energy">Hard + Caffeine</a></li><li><a href="articles.html">Articles</a></li></ul></div>
+  <div><h4>Shop</h4><ul><li><a href="gums#hard">Hard Gum</a></li><li><a href="gums#ultra">Ultra Hard Gum</a></li><li><a href="gums#hard-mixed-3">3-Pack Bundle</a></li><li><a href="gums#duo">2 Packs</a></li><li><a href="energy">Hard + Caffeine</a></li><li><a href="articles.html">Articles</a></li></ul></div>
   <div><h4>Info</h4><ul><li><a href="terms.html">Terms of Service</a></li><li><a href="returns.html">Returns &amp; Refunds</a></li><li><a href="shipping.html">Shipping &amp; Payment</a></li><li><a href="privacy.html">Privacy &amp; Cookies</a></li><li><a href="safety.html">Safety Instructions</a></li><li><a href="legal.html">Legal Notice</a></li><li><a href="#" data-cookie-settings>Cookie settings</a></li></ul></div>
   <p class="legal">© 2026 JAWZR</p>
 </div></footer>
@@ -341,7 +341,7 @@ const INFO={eyebrow:"Hard · with caffeine",
     <table class="nut"><tr><td>Caffeine per piece</td><td>40 mg</td></tr><tr><td>Caffeine per 100 g</td><td>approx. 1 380 mg</td></tr><tr><td>Energy per 100 g</td><td>to confirm</td></tr><tr><td>Carbohydrate</td><td>to confirm</td></tr><tr><td>of which sugars</td><td>0 g</td></tr></table>
     <p class="warn">Contains caffeine. Not recommended for children or pregnant or breastfeeding women. Contains sweeteners. Excessive consumption may produce laxative effects.</p>`};
 const GALLERY=[{src:"images/gallery/caffeine-1.webp",alt:"JAWZR Hard + Caffeine gum bag, mint"},{src:"images/gallery/4.webp",alt:"How to chew in 4 steps"},{src:"images/gallery/6.webp",alt:"Feel your masseter working"},{src:"images/gallery/11.webp",alt:"Take the 30-day JAWZR challenge"}];
-const EVERY={1:{def:"4 weeks",list:["4 weeks","6 weeks","2 months"]},3:{def:"3 months",list:["2 months","3 months","4 months"]},4:{def:"4 months",list:["3 months","4 months","6 months"]},6:{def:"6 months",list:["4 months","6 months","8 months"]}};
+const EVERY={1:{def:"4 weeks",list:["4 weeks","6 weeks","2 months"]},2:{def:"2 months",list:["6 weeks","2 months","3 months"]},3:{def:"3 months",list:["2 months","3 months","4 months"]},4:{def:"4 months",list:["3 months","4 months","6 months"]},6:{def:"6 months",list:["4 months","6 months","8 months"]}};
 const PK=PACKS.filter(p=>!p.duo&&p.price[LEVEL]);
 const PKFL=Object.keys(CATALOG[LEVEL].flavours),MULTI=PKFL.length>1;
 const CAFF_TRIO=LANG==="lt"?[]:["Mint"];// EN/DE have an (English) mint caffeine trio; LT has none, so LT single-flavour multipacks show the single bag
@@ -356,7 +356,7 @@ function fromHash(){const m=location.hash.match(/(1|3|4|6)$/);if(m)st.pack=+m[1]
 function render(){
   const L=CATALOG[LEVEL],P=PK.find(p=>p.id===st.pack)||PK[0];st.pack=P.id;
   if(st.flavour===MIXED&&(st.pack<3||!MULTI))st.flavour=PKFL[0];
-  if(st.pack>1&&MULTI)st.flavour=MIXED;// caffeine multi-packs are assortments (we have 3-bag and 4-bag art, no per-flavour trios)
+  if(st.pack>2&&MULTI)st.flavour=MIXED;// 3+ caffeine packs are assortments (we have 3-bag and 4-bag art); the 2-pack is single-flavour
   if(st.flavour!==MIXED&&!L.flavours[st.flavour])st.flavour=PKFL[0];
   const mixed=st.flavour===MIXED;ensureMix();
   const pr=P.price[LEVEL],single=singlesPrice(LEVEL,P.id);
@@ -365,7 +365,7 @@ function render(){
   $("flName").textContent=mixed?`${tr(MIXED)} · ${mixLabel(st.mix,true)}`:tr(st.flavour);
   $("flRow").hidden=!MULTI;
   $("swatches").hidden=!MULTI;
-  $("swatches").innerHTML=!MULTI?"":PKFL.map(f=>`<button type="button" data-f="${f}" aria-pressed="${f===st.flavour}"${st.pack>1?" disabled":""} style="--c:${L.flavours[f]}">${flIcon(f)}${tr(f)}</button>`).join("")+`<button type="button" data-f="${MIXED}" aria-pressed="${mixed}" style="--c:${MIXED_C}" ${st.pack<3?`disabled title="${LANG==="lt"?"3+ pakuotėse":"3+ packs"}"`:""}><i></i>${tr(MIXED)}</button>`;
+  $("swatches").innerHTML=!MULTI?"":PKFL.map(f=>`<button type="button" data-f="${f}" aria-pressed="${f===st.flavour}"${st.pack>2?" disabled":""} style="--c:${L.flavours[f]}">${flIcon(f)}${tr(f)}</button>`).join("")+`<button type="button" data-f="${MIXED}" aria-pressed="${mixed}" style="--c:${MIXED_C}" ${st.pack<3?`disabled title="${LANG==="lt"?"3+ pakuotėse":"3+ packs"}"`:""}><i></i>${tr(MIXED)}</button>`;
   $("packs").innerHTML=PK.map(p=>{
     const pp=p.price[LEVEL],save=p.id>1?Math.round((1-pp/singlesPrice(LEVEL,p.id))*100):0;
     const open=p.id===st.pack&&mixed&&p.id>=3;
@@ -378,7 +378,7 @@ function render(){
   $("addPrice").textContent=eur(isSub?sp:pr);
   $("ingredients").innerHTML=INFO.ingredients;
   const lead=mixed?{src:st.pack===4?quadSrc(LEVEL):trioSrc(LEVEL,MIXED),alt:`JAWZR ${L.short} gum, ${tr(MIXED)}`}
-    :(st.pack>1&&CAFF_TRIO.includes(st.flavour))?{src:trioSrc(LEVEL,st.flavour),alt:`Three JAWZR ${L.short} gum bags, ${tr(st.flavour)}`}
+    :(st.pack>2&&CAFF_TRIO.includes(st.flavour))?{src:trioSrc(LEVEL,st.flavour),alt:`Three JAWZR ${L.short} gum bags, ${tr(st.flavour)}`}
     :{src:packSrc(LEVEL,st.flavour),alt:`JAWZR ${L.short} gum, ${tr(st.flavour)}`};
   const thumbs=[{t:"img",...lead},...GALLERY.map(x=>({t:"img",...x}))];
   if(st.view>=thumbs.length)st.view=0;
