@@ -450,6 +450,7 @@ T = {
 'gum,': 'Kaugummi,',
 'mixed flavours (mint, mango, watermelon)': 'gemischte Geschmäcker (Minze, Mango, Wassermelone)',
 '· Subscription, every': '· Abo, alle',
+'· Shipping each': '· Versand alle',
 'Mixed flavours': 'Gemischte Geschmäcker',
 'Your cart is empty.': 'Dein Warenkorb ist leer.',
 '" type="button">Remove': '" type="button">Entfernen',

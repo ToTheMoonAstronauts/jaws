@@ -383,8 +383,8 @@ function render(){
   const mixed=st.flavour===MIXED;ensureMix();
   document.title=L.name;
   $("pName").textContent=L.name;$("crumbName").textContent=L.short+" Gum";$("lvlEyebrow").textContent=I.eyebrow;
-  const pr=P.price[st.level],single=singlesPrice(st.level,P.id);
-  $("priceLine").innerHTML=`<b>${eur(pr)}</b>${P.id>1?`<small>vs ${eur(single)} ${tr("bought singly")}</small>`:""}<small>${eur(pr/(P.id*40))} ${tr("/ piece")}</small>`;
+  const pr=P.price[st.level],isSub=document.querySelector('input[name=po]:checked').value==="sub",sp=subPrice(pr),shown=isSub?sp:pr;
+  $("priceLine").innerHTML=`<b>${eur(shown)}</b><small>${eur(shown/(P.id*40))} ${tr("/ piece")}</small>`;
   $("bullets").innerHTML=I.bullets.map(b=>`<li><span>${b}</span></li>`).join("");
   document.querySelectorAll(".seg button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.level===st.level));
   $("flName").textContent=st.flavour;
@@ -393,10 +393,9 @@ function render(){
   $("flName").textContent=mixed?"Mixed · "+mixTxt:tr(st.flavour);
   $("swatches").hidden=isDuo;$("flRow").hidden=isDuo;
   $("packs").innerHTML=PACKS.map(p=>{
-    const pp=p.price[st.level],save=p.id>1?Math.round((1-pp/singlesPrice(st.level,p.id))*100):0;
+    const pp=p.price[st.level],ppShown=isSub?subPrice(pp):pp,save=p.id>1?Math.round((1-pp/singlesPrice(st.level,p.id))*100):0;
     const open=p.id===st.pack&&((mixed&&p.id>2)||p.duo);
-    return `<button type="button" data-p="${p.id}" aria-pressed="${p.id===st.pack}"${open?' class="has-mix"':""}>${p.tag?`<span class="tag${p.tagCls?" "+p.tagCls:""}">${p.tag}</span>`:""}<span class="radio"></span><span><strong>${p.label}${save?`<span class="save">${tr("Save")} ${save}%</span>`:""}</strong><span class="s">${p.sub}</span></span><span class="pr">${eur(pp)}<span>${eur(pp/p.id)} ${tr("/ pack")}</span></span></button>${open?(p.duo?duoPanel():mixPanel(st.level)):""}`;}).join("");
-  const isSub=document.querySelector('input[name=po]:checked').value==="sub",sp=subPrice(pr);
+    return `<button type="button" data-p="${p.id}" aria-pressed="${p.id===st.pack}"${open?' class="has-mix"':""}>${p.tag?`<span class="tag${p.tagCls?" "+p.tagCls:""}">${p.tag}</span>`:""}<span class="radio"></span><span><strong>${p.label}${save?`<span class="save">${tr("Save")} ${save}%</span>`:""}</strong><span class="s">${p.sub}</span></span><span class="pr">${eur(ppShown)}<span>${eur(ppShown/p.id)} ${tr("/ pack")}</span></span></button>${open?(p.duo?duoPanel():mixPanel(st.level)):""}`;}).join("");
   $("poOnce").textContent=eur(pr);$("poSub").innerHTML=`${eur(sp)}<s>${eur(pr)}</s>`;
   const opts=EVERY[st.pack];if(!opts.list.includes(st.every))st.every=opts.def;
   $("everyBox").innerHTML=fselHTML("every",0,st.every,"Delivery frequency",opts.list,false);

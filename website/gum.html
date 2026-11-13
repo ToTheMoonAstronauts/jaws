@@ -359,7 +359,7 @@ function render(){
   document.title=L.name;
   $("pName").textContent=L.name;$("crumbName").textContent=L.short+" Gum";$("lvlEyebrow").textContent=I.eyebrow;
   const pr=P.price[st.level],single=singlesPrice(st.level,P.id);
-  $("priceLine").innerHTML=`<b>${eur(pr)}</b>${P.id>1?`<small>vs ${eur(single)} ${tr("bought singly")}</small>`:""}<small>${eur(pr/(P.id*40))} ${tr("/ piece")}</small>`;
+  $("priceLine").innerHTML=`<b>${eur(pr)}</b><small>${eur(pr/(P.id*40))} ${tr("/ piece")}</small>`;
   $("bullets").innerHTML=I.bullets.map(b=>`<li><span>${b}</span></li>`).join("");
   document.querySelectorAll(".seg button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.level===st.level));
   $("flName").textContent=st.flavour;

@@ -397,6 +397,7 @@ T = {
 "mixed flavours (mint, mango, watermelon)": "mišrūs skoniai (mėtų, mangų, arbūzų)",
 "flavour": "skonis",
 "· Subscription, every": "· Prenumerata, kas",
+"· Shipping each": "· Siunčiama kas",
 "Mixed flavours": "Mišrūs skoniai",
 "Your cart is empty.": "Tavo krepšelis tuščias.",
 "\" type=\"button\">Remove": "\" type=\"button\">Pašalinti",

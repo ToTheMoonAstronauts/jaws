@@ -262,7 +262,7 @@ const PAYL={card:"Pay now",paypal:"Pay with PayPal",apple_pay:"Pay with Apple Pa
 function renderSummary(){
   if(!cart.length){$("emptyCo").hidden=false;$("co").hidden=true;return}
   $("co").hidden=false;$("emptyCo").hidden=true;
-  $("sLines").innerHTML=cart.map(l=>`<div class="s-line">${pouchHTML(l.level,l.flavour)}<div><b>${lineTitle(l)}</b><small>${l.label} · qty ${l.qty}</small></div><b>${eur(l.price*l.qty)}</b></div>`).join("");
+  $("sLines").innerHTML=cart.map(l=>`<div class="s-line">${pouchHTML(l.level,l.flavour)}<div><b>${lineTitle(l)}</b><small>${l.label}${l.qty>1?` · ×${l.qty}`:""}</small></div><b>${eur(l.price*l.qty)}</b></div>`).join("");
   const t=totals(),pm=(document.querySelector('input[name=pm]:checked')||{}).value||"card";
   $("sSub").textContent=eur(t.sub);$("sShip").textContent=t.ship?eur(t.ship):"Free";$("sTot").textContent=eur(t.tot);
   $("payBtn").innerHTML=`${PAYL[pm]} · <span id="payAmt">${eur(t.tot)}</span>`;

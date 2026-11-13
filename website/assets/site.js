@@ -90,7 +90,7 @@ function addToCart(level,flavour,packId,mix,opts={}){
   const key=level+"|"+name+"|"+packId+"|"+(sub?sub.every:"once");
   const price=sub?subPrice(P.price[level]):P.price[level];
   const ex=cart.find(l=>l.key===key);
-  if(ex)ex.qty++;else cart.push({key,level,flavour,name,mix:mix||null,duo,sub,pack:packId,label:P.label+(sub?` · Subscription, every ${tr(sub.every)} (−${Math.round((1-price/P.price[level])*100)}%)`:""),price,qty:1});
+  if(ex)ex.qty++;else cart.push({key,level,flavour,name,mix:mix||null,duo,sub,pack:packId,label:P.label+(sub?` · Shipping each ${tr(sub.every)}`:""),price,qty:1});
   saveCart();renderCart();openCart();
 }
 function lineTitle(l){return l.duo?`Starter Duo · Hard ${tr(l.duo[0])} + Ultra Hard ${tr(l.duo[1])}`:`${CATALOG[l.level].short} · ${l.flavour===MIXED?"Mixed flavours":tr(l.name||l.flavour)}`}
@@ -98,7 +98,7 @@ function renderCart(){
   document.querySelectorAll("[data-cart-count]").forEach(e=>e.textContent=cartCount());
   const lines=$("cartLines");if(!lines)return;
   if(!cart.length){lines.innerHTML='<p class="empty">Your cart is empty.</p>'}
-  else lines.innerHTML=cart.map((l,i)=>`<div class="line">${pouchHTML(l.level,l.flavour)}<div><b>${lineTitle(l)}</b><small>${l.label} · qty ${l.qty}</small><br><button class="rm" data-rm="${i}" type="button">Remove</button></div><b>${eur(l.price*l.qty)}</b></div>`).join("");
+  else lines.innerHTML=cart.map((l,i)=>`<div class="line">${pouchHTML(l.level,l.flavour)}<div><b>${lineTitle(l)}</b><small>${l.label}${l.qty>1?` · ×${l.qty}`:""}</small><br><button class="rm" data-rm="${i}" type="button">Remove</button></div><b>${eur(l.price*l.qty)}</b></div>`).join("");
   const t=cartTotal();$("cartTotal").textContent=eur(t);
   const left=FREE_SHIP-t;
   $("shipMsg").textContent=LANG==="lt"?(t===0?`Nemokamas pristatymas ES nuo ${eur0(FREE_SHIP)}`:left>0?`Iki nemokamo pristatymo trūksta ${eur(left)}`:"Tau taikomas nemokamas pristatymas"):
