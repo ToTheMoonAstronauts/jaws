@@ -79,9 +79,10 @@ def share_assets(text, lang, overrides):
     video) are served once from the site root, so translated pages point at /images/ and /media/
     instead of carrying a copy. images/gallery/ is the exception: its slides are localised and the
     product page builds their paths at runtime (images/gallery/${n}.webp), so that folder stays
-    relative and is duplicated per language. images/products/ is kept relative too for a language that
-    ships its own localised bag shots (i.e. has overrides under images/products/)."""
-    text = re.sub(r'(?<![\w/.])media/', '/media/', text)
+    relative and is duplicated per language. images/products/ and media/ are kept relative too for a
+    language that ships its own localised bag shots or video (i.e. has overrides under them)."""
+    if not any(p.startswith("media/") for p in overrides):
+        text = re.sub(r'(?<![\w/.])media/', '/media/', text)
     excl = "gallery/|products/" if any(p.startswith("images/products/") for p in overrides) else "gallery/"
     text = re.sub(r'(?<![\w/.])images/(?!' + excl + r')', '/images/', text)
     return text
@@ -118,6 +119,9 @@ def build(lang, src, out, report, local=False):
         # a language with its own bag shots keeps images/products/ per language too (overrides win below)
         if any(p.startswith("images/products/") for p in ov_paths):
             shutil.copytree(os.path.join(src, "images/products"), os.path.join(out, "images/products"), dirs_exist_ok=True)
+        # likewise media/ (e.g. a localised video) is kept per language when overridden
+        if any(p.startswith("media/") for p in ov_paths) and os.path.isdir(os.path.join(src, "media")):
+            shutil.copytree(os.path.join(src, "media"), os.path.join(out, "media"), dirs_exist_ok=True)
     for d in os.listdir(src):
         full = os.path.join(src, d)
         if os.path.isdir(full) and d not in ("assets", "dash", "images", "media"):

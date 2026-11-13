@@ -165,7 +165,7 @@ T = {
 "Shows best when paired with lower body fat": "Geriausiai matosi prie mažo kūno riebalų kiekio",
 "Start training": "Pradėk treniruotis",
 "Play video: how to chew hard gum the right way": "Žiūrėti vaizdo įrašą: kaip teisingai kramtyti kietą gumą",
-"Watch · 45 sec": "Žiūrėti · 45 s",
+"Watch · 45 sec": "Žiūrėti · 70 s",
 "General training information, not medical advice. If you have jaw or dental problems, ask your dentist before you start.": "Bendra informacija apie treniruotes, ne medicininė konsultacija. Jei turi žandikaulio ar dantų problemų, prieš pradėdamas pasitark su odontologu.",
 "Training advice": "Treniruočių patarimai",
 "Chew it the right way": "Kramtyk teisingai",
