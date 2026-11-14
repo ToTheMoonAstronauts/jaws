@@ -20,6 +20,7 @@
   var target=null;
   if(pin){target=pin;}
   else if(manual||cmd==="keep"){target=null;}       /* backstage, or one-shot campaign opt-out */
+  else if(cur!=="en"){target=null;}                 /* NEVER auto-redirect away from an explicit /lt/ or /de/ landing */
   else{
     var ua=navigator.userAgent||"";
     if(/bot|crawl|spider|slurp|bingpreview|facebookexternalhit|embedly|preview/i.test(ua)){target=null;}
