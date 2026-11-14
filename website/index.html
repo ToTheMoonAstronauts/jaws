@@ -2,6 +2,41 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<!--langrouter--><script>
+/* Language router: keeps ad audiences in their language, hides cross-language drift.
+   Runs before the Meta Pixel (site.js loads at end of body), so a redirected page
+   never fires the pixel. Backstage: ?lang=reset (unlock+show switcher), ?lang=auto
+   (relock), ?lang=en|lt|de (jump+unlock). Preserves full query string (market, fbclid, utm). */
+(function(){try{
+  var p=location.pathname;
+  if(/\/dash(\/|$)/.test(p))return;                 /* never touch the admin dashboard */
+  var LS; try{LS=window.localStorage}catch(e){LS=null}
+  var qs=new URLSearchParams(location.search), cmd=qs.get("lang");
+  if(cmd==="auto"){try{LS&&LS.removeItem("jzLang")}catch(e){}}
+  else if(cmd==="reset"||cmd==="en"||cmd==="lt"||cmd==="de"){try{LS&&LS.setItem("jzLang","manual")}catch(e){}}
+  var manual=false; try{manual=LS&&LS.getItem("jzLang")==="manual"}catch(e){}
+  var cur=/^\/lt(\/|$)/.test(p)?"lt":/^\/de(\/|$)/.test(p)?"de":"en";
+  var pin=(cmd==="en"||cmd==="lt"||cmd==="de")?cmd:null;
+  var target=null;
+  if(pin){target=pin;}
+  else if(manual||cmd==="keep"){target=null;}       /* backstage, or one-shot campaign opt-out */
+  else{
+    var ua=navigator.userAgent||"";
+    if(/bot|crawl|spider|slurp|bingpreview|facebookexternalhit|embedly|preview/i.test(ua)){target=null;}
+    else{var nl=((navigator.languages&&navigator.languages[0])||navigator.language||"").toLowerCase();
+      target=nl.indexOf("lt")===0?"lt":nl.indexOf("de")===0?"de":"en";}
+  }
+  if(target&&target!==cur){
+    var bare=p.replace(/^\/(lt|de)(?=\/|$)/,""); if(bare==="")bare="/";
+    if(target==="de"&&/\/(articles\.html|article-[^\/]+)$/.test(bare))bare="/";  /* DE has no article pages */
+    var np=(target==="en"?"":"/"+target)+bare;
+    var u=new URL(location.origin+np+location.search+location.hash);
+    u.searchParams.delete("lang");
+    location.replace(u.pathname+u.search+u.hash); return;
+  }
+  if(cmd){var u2=new URL(location.href);u2.searchParams.delete("lang");
+    history.replaceState(null,"",u2.pathname+u2.search+u2.hash);}  /* clean control param from address bar */
+}catch(e){}})();</script>
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">

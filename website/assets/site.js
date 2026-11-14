@@ -400,7 +400,8 @@ document.addEventListener("DOMContentLoaded",()=>{
     }
   }
   const f=document.querySelector("footer .legal");
-  if(f&&!document.getElementById("langLink")){
+  let langManual=false;try{langManual=localStorage.getItem("jzLang")==="manual"}catch(e){}
+  if(f&&langManual&&!document.getElementById("langLink")){
     const base=LANG==="en"?"":"../",page=LT_PAGES.includes(file)?clean:"";
     const a=document.createElement("p");a.id="langLink";a.className="mk-switch";
     a.innerHTML=Object.keys(LANGS).filter(l=>l!==LANG).map(l=>`<a href="${base}${l==="en"?"":l+"/"}${page}" hreflang="${l}" lang="${l}">${LANGS[l]}</a>`).join(" · ");
