@@ -255,6 +255,7 @@ T = {
 "Hardness + lasting flavour": "Kietumas + ilgai išliekantis skonis",
 "Maximum resistance": "Didžiausias pasipriešinimas",
 "Flavour": "Skonis",
+"Rating": "Įvertinimas",
 "Long-lasting flavour": "Ilgai išliekantis skonis",
 "Package": "Pakuotė",
 "Purchase option": "Pirkimo būdas",

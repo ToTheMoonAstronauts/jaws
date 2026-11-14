@@ -376,9 +376,9 @@ const FL=["Mint","Mango","Watermelon","Blueberry"];
 const DEF={3:["Mint","Mango","Watermelon"],6:["Mint","Mango","Watermelon","Blueberry","Mint","Mango"]};
 function ensureMix(){if(st.pack<3)return;const d=DEF[st.pack];st.mix=(st.mix||d).slice(0,st.pack);while(st.mix.length<st.pack)st.mix.push(d[st.mix.length]);}
 function mixPanel(level){const n=st.pack,c=CATALOG[level].flavours;
-  return `<div class="pk-mix"><div class="hd"><span>Choose a flavour for each pack</span><button type="button" data-reset>Reset</button></div><div class="slots n${n}">${st.mix.map((f,i)=>`<div class="slot"><small>${tr("Pack")} ${i+1}</small>${fselHTML("mix",i,f,`Pack ${i+1} flavour`)}</div>`).join("")}</div></div>`;}
+  return `<div class="pk-mix"><div class="hd"><span>Choose a flavour for each pack</span><button type="button" data-reset>Reset</button></div><div class="slots n${n}">${st.mix.map((f,i)=>`<div class="slot"><small>${tr("Pack")} ${i+1}</small>${fselHTML("mix",i,f,`${tr("Pack")} ${i+1}`)}</div>`).join("")}</div></div>`;}
 function duoPanel(){const lv=["hard","ultra"],nm=["Hard","Ultra Hard"];
-  return `<div class="pk-mix"><div class="hd"><span>Choose a flavour for each pack</span></div><div class="slots n2">${st.duo.map((f,i)=>`<div class="slot"><small>${nm[i]}</small>${fselHTML("duo",i,f,`${nm[i]} flavour`)}</div>`).join("")}</div></div>`;}
+  return `<div class="pk-mix"><div class="hd"><span>Choose a flavour for each pack</span></div><div class="slots n2">${st.duo.map((f,i)=>`<div class="slot"><small>${nm[i]}</small>${fselHTML("duo",i,f,`${nm[i]}`)}</div>`).join("")}</div></div>`;}
 function fromHash(){
   const h=location.hash.slice(1);
   if(h.startsWith("ultra"))st.level="ultra";else if(h.startsWith("hard"))st.level="hard";

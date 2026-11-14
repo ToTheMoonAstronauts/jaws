@@ -236,6 +236,7 @@ T = {
 'Ultra Hard': 'Ultra Hard',
 'Maximum resistance': 'Maximaler Widerstand',
 'Flavour': 'Geschmack',
+'Rating': 'Bewertung',
 'Long-lasting flavour': 'Lang anhaltender Geschmack',
 'Package': 'Paket',
 'Purchase option': 'Kaufoption',

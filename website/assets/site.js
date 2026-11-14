@@ -38,8 +38,9 @@ const MARKETS={
       price:{1:{hard:19.95,ultra:19.95,caffeine:22.95},2:{hard:34.95,ultra:34.95,caffeine:39.95},3:{hard:46.95,ultra:46.95,caffeine:53.95},4:{hard:55.95,ultra:55.95,caffeine:63.95},6:{hard:73.95,ultra:73.95,caffeine:84.95}},
       sub:{19.95:17.99,34.95:30.99,46.95:41.99,55.95:49.99,73.95:66.99,22.95:20.99,39.95:35.99,53.95:48.99,63.95:57.99,84.95:75.99}}
 };
-/* ?market=useur: the US market (prices, shipping, rules) shown in euros */
-MARKETS.useur={...MARKETS.us,cur:"EUR",sym:"€"};
+/* ?market=useur: the normal EU/Lithuanian store (euros, EU prices & rules) — it only skips
+   the cookie banner and forces Meta tracking on. No US pricing or wording. */
+MARKETS.useur={...MARKETS.eu,autoConsent:true};
 const MARKET=(()=>{let m=new URLSearchParams(location.search).get("market");
   try{if(m&&MARKETS[m.toLowerCase()]){m=m.toLowerCase();localStorage.setItem("jawzr-market",m)}else m=localStorage.getItem("jawzr-market")}catch(e){}
   /* non-English pages stay on EUR/EU, except ?market=useur: treat the visitor as US
@@ -72,7 +73,7 @@ function trioSrc(level,flavour){return flavour===MIXED?`images/products/bundle-$
 function quadSrc(level){return `images/products/quad-${level}.webp`}
 function pouchHTML(level,flavour,extra=""){
   const L=CATALOG[level];const c=L.flavours[flavour]||Object.values(L.flavours)[0];
-  return `<div class="pouch ${L.cls} ${extra} ${flavour===MIXED?"mixed":""}"><img src="${packSrc(level,flavour)}" alt="JAWZR ${L.short} gum, ${flavour===MIXED?"mixed flavours (mint, mango, watermelon)":tr(flavour)+" flavour"}" loading="lazy"></div>`;
+  return `<div class="pouch ${L.cls} ${extra} ${flavour===MIXED?"mixed":""}"><img src="${packSrc(level,flavour)}" alt="JAWZR ${L.short} gum, ${flavour===MIXED?"mixed flavours (mint, mango, watermelon)":tr(flavour)}" loading="lazy"></div>`;
 }
 
 /* cart (kept in this browser only) */
@@ -155,7 +156,7 @@ const SB_KEY="sb_publishable_JP7_gwTXfMBITq2e2gHe8A_snjOsWTT";
    via "Your privacy choices" or their browser sends Global Privacy Control. */
 const GPC=navigator.globalPrivacyControl===true;
 function getConsent(){let v=null;try{v=localStorage.getItem("cutline-consent")}catch(e){}
-  if(v)return v;return US?(GPC?"denied":"granted"):null}
+  if(v)return v;return (US||MK.autoConsent)?(GPC?"denied":"granted"):null}
 function setConsent(v){try{localStorage.setItem("cutline-consent",v)}catch(e){}}
 const TMP_SID="tmp-"+Math.random().toString(36).slice(2,12);
 function getSID(){
@@ -398,13 +399,4 @@ document.addEventListener("DOMContentLoaded",()=>{
       sp.addEventListener("click",e=>{const a=e.target.closest("a");if(a)track("currency_switch",{to:a.textContent.trim()})});
     }
   }
-  const f=document.querySelector("footer .legal");
-  let langManual=false;try{langManual=localStorage.getItem("jzLang")==="manual"}catch(e){}
-  if(f&&langManual&&!document.getElementById("langLink")){
-    const base=LANG==="en"?"":"../",page=LT_PAGES.includes(file)?clean:"";
-    const a=document.createElement("p");a.id="langLink";a.className="mk-switch";
-    a.innerHTML=Object.keys(LANGS).filter(l=>l!==LANG).map(l=>`<a href="${base}${l==="en"?"":l+"/"}${page}" hreflang="${l}" lang="${l}">${LANGS[l]}</a>`).join(" · ");
-    f.parentNode.insertBefore(a,f);
-  }
-  if(LANG!=="en"){const m=document.getElementById("mkSwitch");if(m)m.remove()}
 });
