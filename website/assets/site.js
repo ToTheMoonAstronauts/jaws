@@ -96,11 +96,13 @@ function addToCart(level,flavour,packId,mix,opts={}){
   saveCart();renderCart();openCart();
 }
 function lineTitle(l){return l.duo?`Starter Duo · Hard ${tr(l.duo[0])} + Ultra Hard ${tr(l.duo[1])}`:`${CATALOG[l.level].short} · ${l.flavour===MIXED?"Mixed flavours":tr(l.name||l.flavour)}`}
+/* recompute the pack sub-label in the current language (so a cart stored in another language/older build self-heals) */
+function packLabel(l){const P=PACKS.find(p=>p.id===l.pack);const base=(P&&P.label)||l.label||"";return base+(l.sub?` · Shipping each ${tr(l.sub.every)}`:"")}
 function renderCart(){
   document.querySelectorAll("[data-cart-count]").forEach(e=>e.textContent=cartCount());
   const lines=$("cartLines");if(!lines)return;
   if(!cart.length){lines.innerHTML='<p class="empty">Your cart is empty.</p>'}
-  else lines.innerHTML=cart.map((l,i)=>`<div class="line">${pouchHTML(l.level,l.flavour)}<div><b>${lineTitle(l)}</b><small>${l.label}${l.qty>1?` · ×${l.qty}`:""}</small><br><button class="rm" data-rm="${i}" type="button">Remove</button></div><b>${eur(l.price*l.qty)}</b></div>`).join("");
+  else lines.innerHTML=cart.map((l,i)=>`<div class="line">${pouchHTML(l.level,l.flavour)}<div><b>${lineTitle(l)}</b><small>${packLabel(l)}${l.qty>1?` · ×${l.qty}`:""}</small><br><button class="rm" data-rm="${i}" type="button">Remove</button></div><b>${eur(l.price*l.qty)}</b></div>`).join("");
   const t=cartTotal();$("cartTotal").textContent=eur(t);
   const left=FREE_SHIP-t;
   $("shipMsg").textContent=LANG==="lt"?(t===0?`Nemokamas pristatymas ES nuo ${eur0(FREE_SHIP)}`:left>0?`Iki nemokamo pristatymo trūksta ${eur(left)}`:"Tau taikomas nemokamas pristatymas"):
