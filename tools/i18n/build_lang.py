@@ -6,13 +6,14 @@ copied over the result last."""
 import os, re, sys, shutil, html, importlib
 sys.path.insert(0, os.path.dirname(__file__))
 from segments import html_segments, js_segments
-from pages import PAGES, JS
+from pages import PAGES, ARTICLES, JS
 
 SITE = "https://jawzr.com"
 LANGS = {  # code: (dict modules, og:locale, joining word for "A and B" links)
-    "lt": (["lt_strings", "lt_legal"], "lt_LT", "ir"),
+    "lt": (["lt_strings", "lt_legal", "lt_articles"], "lt_LT", "ir"),
     "de": (["de_strings"], "de_DE", "und"),
 }
+ARTICLE_LANGS = {"lt"}  # languages that ship translated article pages (others link up to the English ones)
 ALL = ["en"] + list(LANGS)
 LOCALE = {"en": "en_US", **{k: v[1] for k, v in LANGS.items()}}
 missing = {}
@@ -50,7 +51,9 @@ def fix_og(doc, lang):
 
 def fix_links(doc, lang):
     # pages that exist only in English live one level up
-    doc = re.sub(r'(href|src)="(articles\.html|article-[^"]+|dash/[^"]*|v1\.html|product-pick\.html)', r'\1="../\2', doc)
+    eng_only = r'dash/[^"]*|v1\.html|product-pick\.html'
+    if lang not in ARTICLE_LANGS: eng_only = r'articles\.html|article-[^"]+|' + eng_only
+    doc = re.sub(r'(href|src)="(' + eng_only + r')', r'\1="../\2', doc)
     doc = re.sub(r'<html lang="en"', f'<html lang="{lang}"', doc)
     doc = re.sub(r"€(\d+(?:,\d\d)?)(?![\d,])", r"\1 €", doc)  # €31,95 -> 31,95 € (prices with no words are skipped by the translator)
     w = LANGS[lang][2]  # single lowercase words are skipped as code, so join words are fixed here
@@ -94,9 +97,10 @@ def build(lang, src, out, report, local=False):
     T = load(lang)
     ov_paths = override_paths(lang)
     os.makedirs(out, exist_ok=True)
-    for p in PAGES:
+    pages = list(PAGES) + (list(ARTICLES) if lang in ARTICLE_LANGS else [])
+    for p in pages:
         doc = open(os.path.join(src, p), encoding="utf-8").read()
-        if 'name="robots" content="noindex' not in doc: doc = add_hreflang(doc, p)
+        if p in PAGES and 'name="robots" content="noindex' not in doc: doc = add_hreflang(doc, p)
         doc = html_segments(doc, make_fn(T, p))
         doc = fix_og(fix_links(doc, lang), lang)
         if not local: doc = share_assets(doc, lang, ov_paths)
