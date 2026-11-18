@@ -442,7 +442,7 @@ function render(){
   const singleShot={t:"img",src:packSrc(st.level,st.flavour),alt:`JAWZR ${L.short} gum, ${tr(st.flavour)}`};
   const trioShot={t:"img",src:trioSrc(st.level,st.flavour),alt:`Three JAWZR ${L.short} gum bags, ${tr(st.flavour)}`};
   const thumbs=isDuo?[{t:"img",src:packSrc("hard",st.duo[0]),alt:`JAWZR Hard gum, ${tr(st.duo[0])}`},{t:"img",src:packSrc("ultra",st.duo[1]),alt:`JAWZR Ultra Hard gum, ${tr(st.duo[1])}`},...IMGS(st.level).map(x=>({t:"img",...x}))]
-    :mixed?[{t:"img",src:st.pack===4?quadSrc(st.level):trioSrc(st.level,MIXED),fb:st.pack===4?trioSrc(st.level,MIXED):undefined,alt:st.pack===4?`Four JAWZR ${L.short} gum bags, all flavours`:`Three JAWZR ${L.short} gum bags: mint, mango and watermelon`},...IMGS(st.level).map(x=>({t:"img",...x}))]
+    :mixed?[{t:"img",src:st.pack===4?quadSrc(st.level):trioSrc(st.level,MIXED),fb:st.pack===4?packSrc(st.level,"Mint"):undefined,alt:st.pack===4?`Four JAWZR ${L.short} gum bags, all flavours`:`Three JAWZR ${L.short} gum bags: mint, mango and watermelon`},...IMGS(st.level).map(x=>({t:"img",...x}))]
     :st.pack<=2?[singleShot,...IMGS(st.level).map(x=>({t:"img",...x}))]
     :[trioShot,singleShot,...IMGS(st.level).map(x=>({t:"img",...x}))];// multi-pack: three bags first, then the single
   if(st.view>=thumbs.length)st.view=0;

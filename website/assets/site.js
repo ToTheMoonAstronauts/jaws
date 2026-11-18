@@ -45,7 +45,7 @@ const MARKET=(()=>{let m=new URLSearchParams(location.search).get("market");
   try{if(m&&MARKETS[m.toLowerCase()]){m=m.toLowerCase();localStorage.setItem("jawzr-market",m)}else m=localStorage.getItem("jawzr-market")}catch(e){}
   /* non-English pages stay on EUR/EU, except ?market=useur: treat the visitor as US
      (tracking on by default, no consent banner, US rules) while keeping euro display */
-  return LANG!=="en"?(m==="useur"?"useur":"eu"):(MARKETS[m]?m:"eu")})();
+  return LANG!=="en"?(m==="useur"?"useur":"eu"):(MARKETS[m]?m:"us")})();
 const MK=MARKETS[MARKET];
 const US=MK.region==="US";
 const PACKS=[
