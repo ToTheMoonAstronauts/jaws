@@ -387,21 +387,3 @@ function skuOf(l){return `${l.duo?"duo":l.level}-${l.pack}${l.sub?"-sub":""}`}
 function cartContents(){return cart.map(l=>({id:skuOf(l),quantity:l.qty,item_price:l.price}))}
 document.addEventListener("DOMContentLoaded",metaBoot);
 
-/* ---------- top bar currency switch (English pages) + footer language link ---------- */
-const LANGS={en:"English",de:"Deutsch",lt:"Lietuviškai"};
-const LT_PAGES=["index.html","gums.html","gum.html","energy.html","checkout.html","terms.html","returns.html","shipping.html","privacy.html","safety.html","legal.html"];
-document.addEventListener("DOMContentLoaded",()=>{
-  let file=(location.pathname.split("/").pop()||"index.html");if(!file.includes("."))file+=".html";
-  const clean=file==="index.html"?"":file.replace(/\.html$/,"");
-  if(LANG==="en"){
-    const w=document.querySelector(".top-bar .wrap");
-    if(w&&!w.querySelector(".cur-sw")){
-      const link=m=>{const u=new URL(location.href);u.searchParams.set("market",m);return u.pathname.split("/").pop()+u.search+u.hash};
-      const sp=document.createElement("span");sp.className="cur-sw";sp.setAttribute("aria-label","Currency");
-      sp.innerHTML=`<a href="${link("eu")}" ${MARKET==="eu"?'aria-current="true"':""}>€ EUR</a><a href="${link("us")}" ${MARKET==="us"?'aria-current="true"':""}>$ USD</a>`;
-      const t=document.createElement("span");t.className="tb-txt";while(w.firstChild)t.appendChild(w.firstChild);w.appendChild(t);
-      w.classList.add("has-sw");w.appendChild(sp);
-      sp.addEventListener("click",e=>{const a=e.target.closest("a");if(a)track("currency_switch",{to:a.textContent.trim()})});
-    }
-  }
-});
