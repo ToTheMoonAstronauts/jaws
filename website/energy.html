@@ -412,7 +412,8 @@ function render(){
   $("addBtn").firstChild.textContent=isSub?"Add subscription to cart · ":"Add to cart · ";
   $("addPrice").textContent=eur(isSub?sp:pr);
   $("ingredients").innerHTML=INFO.ingredients;
-  const lead=mixed?{src:st.pack===4?quadSrc(LEVEL):trioSrc(LEVEL,MIXED),alt:`JAWZR ${L.short} gum, ${tr(MIXED)}`}
+  const lead=st.pack===4?{src:quadSrc(LEVEL),alt:`Four JAWZR ${L.short} gum bags`}
+    :mixed?{src:trioSrc(LEVEL,MIXED),alt:`JAWZR ${L.short} gum, ${tr(MIXED)}`}
     :(st.pack>2&&CAFF_TRIO.includes(st.flavour))?{src:trioSrc(LEVEL,st.flavour),alt:`Three JAWZR ${L.short} gum bags, ${tr(st.flavour)}`}
     :{src:packSrc(LEVEL,st.flavour),alt:`JAWZR ${L.short} gum, ${tr(st.flavour)}`};
   const thumbs=[{t:"img",...lead},...GALLERY.map(x=>({t:"img",...x}))];

@@ -317,7 +317,8 @@ const US_TEXT=[
  ["Free EU shipping from €49 · Ships from Lithuania","Free US shipping from $59 · Fast, tracked shipping"],
  ["Standard shipping is €4,95 and free on orders from €49. DHL Express is €14,95 (1–3 business days).","Standard shipping (duties included) is $9.95 and free on orders from $59. DHL Express is $24.95 (3–5 business days)."],
  ["EU delivery usually takes 2–6 business days.","US delivery usually takes 7–12 business days."],
- ["We ship across the EU from Lithuania.","We ship to the US from the EU, with import duties included."],
+ ["Orders ship from Lithuania in 1–2 business days.","Orders ship within 1–2 business days."],
+ ["We ship across the EU from Lithuania.","Orders ship fast with tracking, and import duties are included."],
  ["Free EU shipping on orders from €49.","Free US shipping on orders from $59."],
  ["Shipping is free on orders from €49.","Shipping is free on orders from $59."],
  ["Free EU shipping from €49","Free US shipping from $59"],
@@ -325,14 +326,17 @@ const US_TEXT=[
  ["Incl. VAT, plus shipping","Import duties included, plus shipping"],
  ["Incl. VAT.","Import duties included."],
  ["€0,22–0,60","$0.25–0.67"],
- ["from €17,95","from $19.95"],["from €23,95","from $26.95"],
- ["vs €53,85 bought singly","vs $59.85 bought singly"],["€31,95","$35.95"],["save 41%","save 40%"]
+ ["from €17,95","from $19.95"],["from €23,95","from $26.95"],["from €19,95","from $22.95"],
+ ["vs €53,85 bought singly","vs $59.85 bought singly"],["€31,95","$35.95"],["save 41%","save 40%"],
+ ["Prices are in euros and include VAT where applicable.","Prices are in US dollars. Import duties are included where applicable."],
+ ["Coffee and energy drink values are typical amounts from the European Food Safety Authority (EFSA); real drinks vary.","Coffee and energy drink values are typical published amounts; real drinks vary."],
+ ["No more than 4. EFSA considers up to 400 mg of caffeine a day safe for healthy adults, so count your coffee, tea and energy drinks too. For jaw training you only need one piece per session.","No more than 4. Up to 400 mg of caffeine a day is considered safe for healthy adults, so count your coffee, tea and energy drinks too. For jaw training you only need one piece per session."]
 ];
 function applyMarketText(root){
   if(!US)return;
   const toLocal=t=>MK.cur==="USD"?t:t.replace(/\$(\d+)(?:\.(\d\d))?/g,(m,x,c)=>"€"+x+(c?","+c:""));
   const w=document.createTreeWalker(root||document.body,NodeFilter.SHOW_TEXT);let n;
-  while((n=w.nextNode())){let t=n.nodeValue,o=t;if(!/[€]|EU/.test(t))continue;US_TEXT.forEach(([a,b])=>{if(t.includes(a))t=t.split(a).join(toLocal(b))});if(t!==o)n.nodeValue=t}
+  while((n=w.nextNode())){let t=n.nodeValue,o=t;if(!/[€]|EU|European|EFSA|VAT/.test(t))continue;US_TEXT.forEach(([a,b])=>{if(t.includes(a))t=t.split(a).join(toLocal(b))});if(t!==o)n.nodeValue=t}
 }
 document.addEventListener("DOMContentLoaded",()=>{applyMarketText();document.documentElement.dataset.market=MARKET;});
 

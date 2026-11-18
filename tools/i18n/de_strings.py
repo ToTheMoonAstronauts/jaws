@@ -75,6 +75,7 @@ T = {
 "Best results": "Beste Ergebnisse",
 'JAWZR · Hard Chewing Gum': 'JAWZR · Harter Kaugummi',
 'Hard chewing gum for jaw training. Two hardness levels, sugar-free and vegan. Ships from Lithuania.': 'Harter Kaugummi für das Kiefertraining. Zwei Härtegrade, zuckerfrei und vegan. Versand aus Litauen.',
+'Hard chewing gum for jaw training. Two hardness levels, sugar-free and vegan. Fast, tracked shipping.': 'Harter Kaugummi für das Kiefertraining. Zwei Härtegrade, zuckerfrei und vegan. Versand aus Litauen.',
 'JAWZR hard chewing gum': 'JAWZR harter Kaugummi',
 'Free EU shipping from €49 · Ships from Lithuania': 'Kostenloser EU-Versand ab 49 € · Versand aus Litauen',
 'Shop': 'Shop',

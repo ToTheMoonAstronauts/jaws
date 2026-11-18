@@ -88,6 +88,7 @@ T = {
 # ---------- shared / nav / footer ----------
 "JAWZR · Hard Chewing Gum": "JAWZR · Kieta kramtomoji guma",
 "Hard chewing gum for jaw training. Two hardness levels, sugar-free and vegan. Ships from Lithuania.": "Kieta kramtomoji guma žandikaulio treniruotėms. Du kietumo lygiai, be cukraus, veganiška. Siunčiame iš Lietuvos.",
+"Hard chewing gum for jaw training. Two hardness levels, sugar-free and vegan. Fast, tracked shipping.": "Kieta kramtomoji guma žandikaulio treniruotėms. Du kietumo lygiai, be cukraus, veganiška. Siunčiame iš Lietuvos.",
 "Free EU shipping from €49 · Ships from Lithuania": "Nemokamas pristatymas ES nuo 49 € · Siunčiame iš Lietuvos",
 "Shop": "Parduotuvė",
 "How it works": "Kaip tai veikia",

@@ -334,6 +334,10 @@ select{appearance:none;-webkit-appearance:none;background-image:url("data:image/
 /* drop card descriptions and the product-page secondary prices (all languages) */
 .cards.c4 .desc{display:none}
 #priceLine small{display:none}
+/* per-market content blocks (US store hides the EU version, shows the US one) */
+.m-us{display:none}
+[data-market="us"] .m-eu{display:none}
+[data-market="us"] .m-us{display:block}
 /* LT: hardness rating dots on the level selector */
 .hdots{display:inline-flex;gap:3px;align-items:center;color:var(--ink)}
 .hdots svg{width:11px;height:11px;display:block}
