@@ -314,6 +314,7 @@ document.addEventListener("keydown",e=>{
 
 /* ---------- US market: swap EU shipping/price wording in static page text ---------- */
 const US_TEXT=[
+ ["Free EU shipping from €49 · Ships from Lithuania","Free US shipping from $59 · Fast, tracked shipping"],
  ["Standard shipping is €4,95 and free on orders from €49. DHL Express is €14,95 (1–3 business days).","Standard shipping (duties included) is $9.95 and free on orders from $59. DHL Express is $24.95 (3–5 business days)."],
  ["EU delivery usually takes 2–6 business days.","US delivery usually takes 7–12 business days."],
  ["We ship across the EU from Lithuania.","We ship to the US from the EU, with import duties included."],
