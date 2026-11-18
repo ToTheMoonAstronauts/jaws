@@ -432,7 +432,7 @@ const add=()=>addToCart(st.level,st.flavour,st.pack,st.flavour===MIXED&&st.pack>
 $("addBtn").addEventListener("click",add);$("stAdd").addEventListener("click",add);
 window.addEventListener("hashchange",()=>{fromHash();render();});
 fromHash();render();
-if(LANG==="lt"){const ss=document.querySelectorAll(".seg button small");if(ss[0])ss[0].innerHTML=hardnessDots(4);if(ss[1])ss[1].innerHTML=hardnessDots(5);}
+{const ss=document.querySelectorAll(".seg button small");if(ss[0])ss[0].innerHTML=hardnessDots(4);if(ss[1])ss[1].innerHTML=hardnessDots(5);}
 track("product_view",{level:st.level});
 $("lvHard").innerHTML=pouchHTML("hard","Mango");$("lvUltra").innerHTML=pouchHTML("ultra","Watermelon");
 // sticky bar after the main button scrolls away

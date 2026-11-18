@@ -319,21 +319,21 @@ select{appearance:none;-webkit-appearance:none;background-image:url("data:image/
 }
 /* "New" marker next to the Energy menu link */
 .new-dot{font:700 .6rem/1 var(--mono);text-transform:uppercase;letter-spacing:.06em;background:#f5c518;color:#121614;padding:3px 5px;border-radius:3px;margin-left:4px;vertical-align:2px}
-/* LT: product pages drop the breadcrumb and the hardness eyebrow, keeping a small gap under the nav */
-:root[lang="lt"] .crumbs,[lang="lt"] .crumbs,:root[lang="lt"] #lvlEyebrow,[lang="lt"] #lvlEyebrow{display:none}
-[lang="lt"] .pdp{padding-top:24px}
-@media (max-width:900px){[lang="lt"] .pdp{padding-top:14px}}
-/* LT: drop the hero sub-line and all blue section eyebrows (keep the reworded hero eyebrow, the yellow energy-band one, and the off-screen form label) */
-[lang="lt"] .hero-sub{display:none}
-[lang="lt"] .eyebrow{display:none}
-[lang="lt"] .hero-eb,[lang="lt"] .energy-band .tx .eyebrow,[lang="lt"] form .eyebrow{display:block}
-/* LT bullet swaps */
+/* product pages drop the breadcrumb and the hardness eyebrow, keeping a small gap under the nav (all languages) */
+.crumbs,#lvlEyebrow{display:none}
+.pdp{padding-top:24px}
+@media (max-width:900px){.pdp{padding-top:14px}}
+/* drop the hero sub-line and all blue section eyebrows (keep the hero eyebrow, the yellow energy-band one, and the off-screen form label) */
+.hero-sub{display:none}
+.eyebrow{display:none}
+.hero-eb,.energy-band .tx .eyebrow,form .eyebrow{display:block}
+/* LT bullet swaps (language-specific content toggles stay LT-scoped) */
 [lang="lt"] .lt-hide{display:none}
 .lt-only,li.lt-only{display:none}
 [lang="lt"] li.lt-only{display:grid}
-/* LT: drop card descriptions and the product-page secondary prices */
-[lang="lt"] .cards.c4 .desc{display:none}
-[lang="lt"] #priceLine small{display:none}
+/* drop card descriptions and the product-page secondary prices (all languages) */
+.cards.c4 .desc{display:none}
+#priceLine small{display:none}
 /* LT: hardness rating dots on the level selector */
 .hdots{display:inline-flex;gap:3px;align-items:center;color:var(--ink)}
 .hdots svg{width:11px;height:11px;display:block}

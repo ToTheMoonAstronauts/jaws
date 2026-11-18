@@ -442,16 +442,16 @@ function render(){
   const singleShot={t:"img",src:packSrc(st.level,st.flavour),alt:`JAWZR ${L.short} gum, ${tr(st.flavour)}`};
   const trioShot={t:"img",src:trioSrc(st.level,st.flavour),alt:`Three JAWZR ${L.short} gum bags, ${tr(st.flavour)}`};
   const thumbs=isDuo?[{t:"img",src:packSrc("hard",st.duo[0]),alt:`JAWZR Hard gum, ${tr(st.duo[0])}`},{t:"img",src:packSrc("ultra",st.duo[1]),alt:`JAWZR Ultra Hard gum, ${tr(st.duo[1])}`},...IMGS(st.level).map(x=>({t:"img",...x}))]
-    :mixed?[{t:"img",src:st.pack===4?quadSrc(st.level):trioSrc(st.level,MIXED),alt:st.pack===4?`Four JAWZR ${L.short} gum bags, all flavours`:`Three JAWZR ${L.short} gum bags: mint, mango and watermelon`},...IMGS(st.level).map(x=>({t:"img",...x}))]
+    :mixed?[{t:"img",src:st.pack===4?quadSrc(st.level):trioSrc(st.level,MIXED),fb:st.pack===4?trioSrc(st.level,MIXED):undefined,alt:st.pack===4?`Four JAWZR ${L.short} gum bags, all flavours`:`Three JAWZR ${L.short} gum bags: mint, mango and watermelon`},...IMGS(st.level).map(x=>({t:"img",...x}))]
     :st.pack<=2?[singleShot,...IMGS(st.level).map(x=>({t:"img",...x}))]
     :[trioShot,singleShot,...IMGS(st.level).map(x=>({t:"img",...x}))];// multi-pack: three bags first, then the single
   if(st.view>=thumbs.length)st.view=0;
   const v=thumbs[st.view];
   const nProd=mixed?1:(st.pack>2?2:1);
-  $("stage").innerHTML=(st.view<nProd&&P.id>1?`<span class="badge accent">${P.label}</span>`:"")+`<img${/\/products\//.test(v.src)&&!/quad-/.test(v.src)?' class="pfit"':""} src="${v.src}" alt="${v.alt}">`
+  $("stage").innerHTML=(st.view<nProd&&P.id>1?`<span class="badge accent">${P.label}</span>`:"")+`<img${/\/products\//.test(v.src)&&!/quad-/.test(v.src)?' class="pfit"':""} src="${v.src}" alt="${v.alt}"${v.fb?` onerror="this.onerror=null;this.className='pfit';this.src='${v.fb}'"`:""}>`
     +`<button type="button" class="nav prev" data-step="-1" aria-label="Previous image">‹</button><button type="button" class="nav next" data-step="1" aria-label="Next image">›</button><span class="count">${st.view+1} / ${thumbs.length}</span>`;
   st.nThumbs=thumbs.length;
-  $("thumbs").innerHTML=thumbs.map((x,i)=>`<button type="button" data-v="${i}" aria-pressed="${i===st.view}" aria-label="View image ${i+1}">${x.t==="pouch"?pouchHTML(st.level,st.flavour):`<img${/\/products\//.test(x.src)&&!/quad-/.test(x.src)?' class="pfit"':""} src="${x.src}" alt="" loading="lazy">`}</button>`).join("");
+  $("thumbs").innerHTML=thumbs.map((x,i)=>`<button type="button" data-v="${i}" aria-pressed="${i===st.view}" aria-label="View image ${i+1}">${x.t==="pouch"?pouchHTML(st.level,st.flavour):`<img${/\/products\//.test(x.src)&&!/quad-/.test(x.src)?' class="pfit"':""} src="${x.src}" alt="" loading="lazy"${x.fb?` onerror="this.onerror=null;this.className='pfit';this.src='${x.fb}'"`:""}>`}</button>`).join("");
   const sel=$("thumbs").querySelector('[aria-pressed="true"]');if(sel)$("thumbs").scrollTo({left:sel.offsetLeft-$("thumbs").offsetLeft-($("thumbs").clientWidth-sel.clientWidth)/2,behavior:"smooth"});
   $("stName").textContent=isDuo?`Starter Duo · Hard ${tr(st.duo[0])} + Ultra Hard ${tr(st.duo[1])}`:`${L.short} · ${mixTxt} · ${P.label}`;$("stPrice").textContent=eur(isSub?sp:pr);
 }
@@ -470,7 +470,7 @@ $("po").addEventListener("change",e=>{if(e.target.name==="po")track("purchase_op
 $("addBtn").addEventListener("click",add);$("stAdd").addEventListener("click",add);
 window.addEventListener("hashchange",()=>{fromHash();render();});
 fromHash();render();
-if(LANG==="lt"){const ss=document.querySelectorAll(".seg button small");if(ss[0])ss[0].innerHTML=hardnessDots(4);if(ss[1])ss[1].innerHTML=hardnessDots(5);}
+{const ss=document.querySelectorAll(".seg button small");if(ss[0])ss[0].innerHTML=hardnessDots(4);if(ss[1])ss[1].innerHTML=hardnessDots(5);}
 track("product_view",{level:st.level,page:"sub"});
 $("lvHard").innerHTML=pouchHTML("hard","Mango");$("lvUltra").innerHTML=pouchHTML("ultra","Watermelon");
 // sticky bar after the main button scrolls away
